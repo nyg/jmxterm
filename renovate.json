@@ -3,5 +3,7 @@
   "extends": [
     "github>nyg/renovate-presets:kraken-api-java"
   ],
-  "baseBranches": ["renovate"]
+  "baseBranches": ["renovate"],
+  "osvVulnerabilityAlerts": false,
+  "dependencyDashboardOSVVulnerabilitySummary": "none"
 }
