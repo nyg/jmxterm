@@ -2,207 +2,115 @@
 
 ## Project Overview
 
-JMXTerm is an interactive command-line based JMX (Java Management Extensions) client that allows users to connect to JMX-enabled Java applications for monitoring and management. This tool provides a terminal interface for browsing MBeans, executing operations, and monitoring attributes.
+JMXTerm is an interactive command-line JMX client. Users connect to JMX-enabled Java applications to browse MBeans, get/set attributes, and invoke operations.
 
-**Repository Size**: ~200 Java source files, 8MB uber JAR  
-**Languages**: Java 17, Maven build system, Shell scripts  
-**Target Runtime**: JDK 17+ (works with JDK 21)  
-**Main Entry Point**: `org.cyclopsgroup.jmxterm.boot.CliMain`
+- **Java 17**, Maven build, no Maven wrapper (use system `mvn`)
+- **Entry point**: `org.cyclopsgroup.jmxterm.boot.CliMain`
+- **CI tests on**: JDK 17, 21, 25
 
-## Build and Validation Commands
+## Build Commands
 
-### Prerequisites
-- **Java 17 or higher** (JDK 21 supported)
-- **Maven 3.6+** (uses Maven wrapper)
-- No additional tools required - all dependencies managed via Maven
-
-### Essential Build Commands
-
-**ALWAYS run commands in this specific order:**
-
-1. **Clean**: `mvn -B -q --no-transfer-progress clean`
-2. **Compile**: `mvn -B -q --no-transfer-progress compile` 
-3. **Test**: `mvn -B -q --no-transfer-progress test`
-4. **Verify**: `mvn -B -q --no-transfer-progress verify` (includes integration tests)
-5. **Package**: `mvn -B -q --no-transfer-progress package` (creates uber JAR)
-
-### Key Build Artifacts
-- **Main JAR**: `target/jmxterm-${version}.jar` (library only)
-- **Uber JAR**: `target/jmxterm-${version}-uber.jar` (executable with dependencies)
-- **Debian Package**: `target/jmxterm_${version}_all.deb`
-- **Sources JAR**: `target/jmxterm-${version}-sources.jar`
-
-### Running the Application
-```bash
-# Interactive mode
-java -jar target/jmxterm-*-uber.jar
-
-# Non-interactive with script file
-java -jar target/jmxterm-*-uber.jar -n -i script.txt
-
-# Help
-java -jar target/jmxterm-*-uber.jar --help
-```
-
-### Common Build Issues & Workarounds
-
-**Issue**: Maven compile failures with "package does not exist"  
-**Solution**: Always run `mvn clean` before `mvn compile` when switching branches
-
-**Issue**: Test failures on different JDK versions  
-**Solution**: Tests are configured to exclude JDK-specific tests (`org.cyclopsgroup.jmxterm.jdk*`)
-
-**Issue**: Docker build fails  
-**Solution**: Ensure uber JAR exists: `mvn package` must complete successfully first
-
-**Timing**: Full build including tests takes ~30-60 seconds. Package step adds ~10 seconds for uber JAR creation.
-
-## Project Architecture & Key Files
-
-### Core Architecture
-```
-src/main/java/org/cyclopsgroup/jmxterm/
-├── boot/              # Application bootstrap (CliMain)
-├── cmd/              # Command implementations (15+ commands)
-├── cc/               # Command center and session management  
-├── io/               # Input/output handling (file, console, streams)
-├── pm/               # Process management for JVM discovery
-├── utils/            # Utility classes
-├── jdk5/            # JDK 5 compatibility layer
-├── jdk6/            # JDK 6 specific implementations  
-└── jdk9/            # JDK 9+ specific implementations
-```
-
-### Critical Files
-- **Main Class**: `src/main/java/org/cyclopsgroup/jmxterm/boot/CliMain.java`
-- **Base Command**: `src/main/java/org/cyclopsgroup/jmxterm/Command.java`
-- **Command Center**: `src/main/java/org/cyclopsgroup/jmxterm/cc/CommandCenter.java`
-- **Build Config**: `pom.xml` (Maven configuration)
-- **Shell Script**: `src/main/script/jmxterm.sh` (system installation)
-
-### Configuration Files
-- **Maven**: `pom.xml` (dependencies, plugins, build configuration)
-- **CI/CD**: `.github/workflows/maven.yaml` (GitHub Actions)
-- **Docker**: `Dockerfile` (containerization)
-- **Packaging**: `src/main/deb/` (Debian packaging)
-
-### Available Commands (in src/main/java/org/cyclopsgroup/jmxterm/cmd/)
-- `OpenCommand` - Connect to JMX server
-- `CloseCommand` - Disconnect from server
-- `DomainsCommand` - List MBean domains
-- `BeansCommand` - List MBeans in domain
-- `InfoCommand` - Show MBean information
-- `GetCommand` - Get attribute values
-- `SetCommand` - Set attribute values
-- `RunCommand` - Execute MBean operations
-- `WatchCommand` - Monitor attribute changes
-- `SubscribeCommand` - Subscribe to notifications
-
-## CI/CD & Validation Pipeline
-
-### GitHub Actions Workflow (`.github/workflows/maven.yaml`)
-1. **Test Job**: Runs `mvn verify` on JDK 17 & 21
-2. **Build Job**: Creates packages, runs Trivy security scan
-3. **Docker Job**: Builds multi-arch Docker images
-
-### Validation Steps to Replicate CI
 ```bash
 # Full validation (matches CI)
 mvn -B -q --no-transfer-progress verify
 
-# Security scanning (if Trivy installed)
-trivy fs . --format sarif --output trivy-results.sarif
+# Compile only
+mvn -B -q --no-transfer-progress compile
+
+# Package (creates uber JAR at target/jmxterm-*-uber.jar)
+mvn -B -q --no-transfer-progress package
+
+# Run a single test class
+mvn -B -q --no-transfer-progress test -Dtest=GetCommandTest
+
+# Run a single test method
+mvn -B -q --no-transfer-progress test -Dtest=GetCommandTest#testExecute
+
+# Run the application
+java -jar target/jmxterm-*-uber.jar
 ```
 
-### Pre-commit Checks
-No specific pre-commit hooks, but always ensure:
-1. `mvn verify` passes completely
-2. No new compiler warnings
-3. All tests pass
-4. Uber JAR builds and runs with `--help`
+Run `mvn clean` before `mvn compile` when switching branches to avoid stale class errors.
 
-## Dependencies & Security Notes
+Surefire excludes `org.cyclopsgroup.jmxterm.jdk*` tests (platform-specific JVM attach tests).
 
-### Key Dependencies
-- **SLF4J 2.0.17**: Logging framework
-- **JLine 3.30.6**: Console/readline functionality  
-- **Apache Commons**: Lang3, IO, Collections4, Configuration2
-- **Guava 33.5.0-jre**: Google core libraries
-- **JCLI 1.0.1**: Command line interface framework
+## Architecture
 
-### Security Considerations
-- **Exclusions**: Old commons-collections and commons-logging excluded due to vulnerabilities
-- **Trivy Scanning**: Automated vulnerability scanning in CI
-- **SSL Support**: Built-in SSL/TLS support for RMI connections
+### Execution Flow
 
-## Common Development Patterns
+`CliMain` → creates `CommandOutput` + `CommandInput` → creates `CommandCenter` → REPL loop reads lines and calls `commandCenter.execute(line)`.
 
-### Adding New Commands
-1. Create class extending `org.cyclopsgroup.jmxterm.Command`
-2. Add command registration in command center
-3. Follow existing command patterns (see `GetCommand.java`)
-4. Add corresponding test in `src/test/java/.../cmd/`
+### Command System
 
-### Testing Approach
-- **JUnit 4**: Primary testing framework
-- **JMock**: Mocking framework for unit tests
-- **Integration Tests**: Real JMX connection tests excluded by default
+Commands extend the abstract `Command` class and implement `execute()`. They are **transient** — a new instance is created per execution.
 
-## File Structure Reference
+Commands are registered via the properties file `src/main/resources/META-INF/cyclopsgroup/jmxterm.properties`, which maps command names to implementation classes and defines aliases (e.g., `quit` → `exit`, `bye`). `HelpCommand` is added programmatically in `PredefinedCommandFactory`.
 
-### Repository Root Files
+Arguments and options use annotations from `org.cyclopsgroup.jcli.annotation`:
+- `@Cli(name="...")` on the class
+- `@Option(name="x", longName="xxx", description="...")` on setter methods
+- `@Argument` and `@MultiValue` on setter methods for positional args
+
+### Session & Connection
+
+`Session` (abstract class) holds the JMX connection state plus the currently selected domain and bean. `SessionImpl` in `cc/` is the concrete implementation. Session is **not thread-safe** — `CommandCenter` synchronizes all calls. Commands receive the session via `setSession()` before each `execute()` call.
+
+### IO Abstraction
+
+`CommandInput` and `CommandOutput` are abstract base classes with implementations for interactive console (JLine), files, streams, and writers. `VerboseCommandOutput` is a decorator that filters output based on `VerboseLevel` (SILENT, BRIEF, VERBOSE).
+
+### JVM Process Discovery
+
+`jdk9/` provides JVM discovery using the `com.sun.tools.attach` API (`VirtualMachine`/`VirtualMachineDescriptor`). Created via `JPMFactory.createProcessManager()`. Used by the `jvms` and `open` commands.
+
+## Conventions
+
+### Commit Messages
+
+Follow **Conventional Commits**: `type(scope): description`
+
+Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+Scopes: `cmd`, `io`, `build`, `deps`, `docker`, `ci`
+
+### Testing
+
+- **JUnit 5** (Jupiter) with `@Test`, `@BeforeEach` from `org.junit.jupiter.api`
+- **JMock 2** for mocking with `Mockery` + `Expectations` DSL
+- Use `ByteBuddyClassImposteriser.INSTANCE` when mocking concrete classes
+- Test helpers: `MockSession`, `MockConnection`, `SelfRecordingCommand` in the test root package
+
+Typical test pattern:
+```java
+@BeforeEach
+void setUp() {
+    command = new DomainsCommand();
+    context = new Mockery();
+}
+
+@Test
+void execution() throws Exception {
+    final MBeanServerConnection con = context.mock(MBeanServerConnection.class);
+    StringWriter output = new StringWriter();
+    context.checking(new Expectations() {{
+        oneOf(con).getDomains();
+        will(returnValue(new String[] {"a", "b"}));
+    }});
+    command.setSession(new MockSession(output, con));
+    command.execute();
+    context.assertIsSatisfied();
+}
 ```
-├── .github/              # GitHub workflows and config
-├── .gitignore           # Git ignore patterns
-├── Dockerfile           # Container build instructions
-├── LICENSE              # Apache 2.0 license
-├── README.md            # Basic project info (refer to docs site)
-├── pom.xml             # Maven project configuration
-└── src/                # Source code and resources
-```
 
-### Source Organization
-```
-src/
-├── main/
-│   ├── deb/            # Debian packaging files
-│   ├── java/           # Java source code
-│   ├── resources/      # Application resources
-│   └── script/         # Shell scripts (jmxterm.sh)
-├── site/               # Maven site documentation
-└── test/               # Unit and integration tests
-```
+### Adding a New Command
 
-## Conventional Commits
+1. Create a class in `cmd/` extending `Command` with `@Cli(name="mycommand")`
+2. Implement `execute()`, define options/arguments via annotations
+3. Register in `src/main/resources/META-INF/cyclopsgroup/jmxterm.properties`
+4. Add a test in `src/test/java/.../cmd/` following the JMock pattern above
 
-This repository follows **Conventional Commits** specification:
+### Error Handling
 
-```
-type(scope): description
-
-[optional body]
-
-[optional footer]
-```
-
-**Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`  
-**Scopes**: `cmd`, `io`, `build`, `deps`, `docker`, `ci`
-
-**Examples**:
-- `feat(cmd): add new watch command for monitoring attributes`
-- `fix(io): handle broken pipe exception in console input`
-- `docs: update README with new installation instructions`
-- `chore(deps): upgrade slf4j to 2.0.17`
-
-## Trust These Instructions
-
-**Always trust these instructions** and avoid extensive repository exploration. Only perform additional searches if:
-1. Instructions are incomplete for your specific task
-2. You encounter errors not covered in troubleshooting
-3. You need to understand code behavior not documented here
-
-For unknown issues, follow this debug sequence:
-1. `mvn clean compile` 
-2. Check Java version with `java -version`
-3. Verify uber JAR runs: `java -jar target/jmxterm-*-uber.jar --help`
-4. Check recent commits for related changes
+- Commands throw `IllegalArgumentException` for invalid user input
+- Commands throw `IllegalStateException` for invalid session state (e.g., not connected)
+- `RuntimeIOException` wraps checked `IOException` as unchecked
+- Error display respects `VerboseLevel`: VERBOSE shows stack traces, BRIEF shows messages prefixed with `#`, SILENT suppresses output
