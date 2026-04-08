@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm.io;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -23,7 +23,7 @@ class InputStreamCommandInputTest {
     String input = "aaaa\nbbbb";
     InputStreamCommandInput in =
         new InputStreamCommandInput(new ByteArrayInputStream(input.getBytes()));
-    assertEquals("aaaa", in.readLine());
-    assertEquals("bbbb", in.readLine());
+    assertThat(in.readLine()).isEqualTo("aaaa");
+    assertThat(in.readLine()).isEqualTo("bbbb");
   }
 }

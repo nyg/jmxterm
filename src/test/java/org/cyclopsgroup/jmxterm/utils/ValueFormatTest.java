@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.utils;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
@@ -15,14 +14,14 @@ class ValueFormatTest {
   /** Test parse method */
   @Test
   void parse() {
-    assertNull(ValueFormat.parseValue("null"));
-    assertNull(ValueFormat.parseValue(null));
-    assertNull(ValueFormat.parseValue(""));
-    assertEquals("", ValueFormat.parseValue("\"\""));
-    assertEquals("abc", ValueFormat.parseValue("abc"));
-    assertEquals("abc", ValueFormat.parseValue("\"abc\""));
-    assertEquals("ab c", ValueFormat.parseValue("ab c"));
-    assertEquals("ab\nc", ValueFormat.parseValue("ab\\nc"));
-    assertEquals("ab\u3160c", ValueFormat.parseValue("ab\\u3160c"));
+    assertThat(ValueFormat.parseValue("null")).isNull();
+    assertThat(ValueFormat.parseValue(null)).isNull();
+    assertThat(ValueFormat.parseValue("")).isNull();
+    assertThat(ValueFormat.parseValue("\"\"")).isEqualTo("");
+    assertThat(ValueFormat.parseValue("abc")).isEqualTo("abc");
+    assertThat(ValueFormat.parseValue("\"abc\"")).isEqualTo("abc");
+    assertThat(ValueFormat.parseValue("ab c")).isEqualTo("ab c");
+    assertThat(ValueFormat.parseValue("ab\\nc")).isEqualTo("ab\nc");
+    assertThat(ValueFormat.parseValue("ab\\u3160c")).isEqualTo("ab\u3160c");
   }
 }

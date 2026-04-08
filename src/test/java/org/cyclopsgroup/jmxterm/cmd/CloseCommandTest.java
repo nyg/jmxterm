@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.StringWriter;
 import org.cyclopsgroup.jmxterm.MockSession;
@@ -34,6 +34,6 @@ class CloseCommandTest {
     MockSession session = new MockSession(output, null);
     command.setSession(session);
     command.execute();
-    assertFalse(session.isConnected());
+    assertThat(session.isConnected()).isFalse();
   }
 }

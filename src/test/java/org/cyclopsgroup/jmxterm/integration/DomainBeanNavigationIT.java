@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm.integration;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.StringWriter;
 import org.cyclopsgroup.jmxterm.cc.CommandCenter;
@@ -24,7 +24,7 @@ class DomainBeanNavigationIT {
     resultWriter = new StringWriter();
     messageWriter = new StringWriter();
     cc = new CommandCenter(new WriterCommandOutput(resultWriter, messageWriter), null);
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
   }
 
   @AfterEach
@@ -35,67 +35,67 @@ class DomainBeanNavigationIT {
   @Test
   void testListDomains() {
     resultWriter.getBuffer().setLength(0);
-    assertTrue(cc.execute("domains"));
+    assertThat(cc.execute("domains")).isTrue();
     String result = resultWriter.toString();
-    assertTrue(result.contains("test"), "Expected 'test' domain, got: " + result);
-    assertTrue(
-        result.contains("JMImplementation"),
-        "Expected 'JMImplementation' domain, got: " + result);
+    assertThat(result).as("Expected 'test' domain, got: " + result).contains("test");
+    assertThat(result)
+        .as("Expected 'JMImplementation' domain, got: " + result)
+        .contains("JMImplementation");
   }
 
   @Test
   void testSelectDomain() {
-    assertTrue(cc.execute("domain test"));
+    assertThat(cc.execute("domain test")).isTrue();
     resultWriter.getBuffer().setLength(0);
-    assertTrue(cc.execute("domain"));
+    assertThat(cc.execute("domain")).isTrue();
     String result = resultWriter.toString();
-    assertTrue(result.contains("test"), "Expected current domain 'test', got: " + result);
+    assertThat(result).as("Expected current domain 'test', got: " + result).contains("test");
   }
 
   @Test
   void testListBeans() {
-    assertTrue(cc.execute("domain test"));
+    assertThat(cc.execute("domain test")).isTrue();
     resultWriter.getBuffer().setLength(0);
-    assertTrue(cc.execute("beans"));
+    assertThat(cc.execute("beans")).isTrue();
     String result = resultWriter.toString();
-    assertTrue(
-        result.contains("test:type=TestMBean"),
-        "Expected 'test:type=TestMBean' in beans output, got: " + result);
+    assertThat(result)
+        .as("Expected 'test:type=TestMBean' in beans output, got: " + result)
+        .contains("test:type=TestMBean");
   }
 
   @Test
   void testSelectBean() {
-    assertTrue(cc.execute("bean test:type=TestMBean"));
+    assertThat(cc.execute("bean test:type=TestMBean")).isTrue();
     resultWriter.getBuffer().setLength(0);
-    assertTrue(cc.execute("bean"));
+    assertThat(cc.execute("bean")).isTrue();
     String result = resultWriter.toString();
-    assertTrue(
-        result.contains("test:type=TestMBean"),
-        "Expected current bean 'test:type=TestMBean', got: " + result);
+    assertThat(result)
+        .as("Expected current bean 'test:type=TestMBean', got: " + result)
+        .contains("test:type=TestMBean");
   }
 
   @Test
   void testListBeansWithDomainOption() {
     resultWriter.getBuffer().setLength(0);
-    assertTrue(cc.execute("beans -d test"));
+    assertThat(cc.execute("beans -d test")).isTrue();
     String result = resultWriter.toString();
-    assertTrue(
-        result.contains("test:type=TestMBean"),
-        "Expected 'test:type=TestMBean' in beans output, got: " + result);
+    assertThat(result)
+        .as("Expected 'test:type=TestMBean' in beans output, got: " + result)
+        .contains("test:type=TestMBean");
   }
 
   @Test
   void testInfoCommand() {
-    assertTrue(cc.execute("bean test:type=TestMBean"));
+    assertThat(cc.execute("bean test:type=TestMBean")).isTrue();
     resultWriter.getBuffer().setLength(0);
-    assertTrue(cc.execute("info"));
+    assertThat(cc.execute("info")).isTrue();
     String result = resultWriter.toString();
     // Verify attributes are listed
-    assertTrue(result.contains("Name"), "Expected attribute 'Name' in info, got: " + result);
-    assertTrue(result.contains("Count"), "Expected attribute 'Count' in info, got: " + result);
+    assertThat(result).as("Expected attribute 'Name' in info, got: " + result).contains("Name");
+    assertThat(result).as("Expected attribute 'Count' in info, got: " + result).contains("Count");
     // Verify operations are listed
-    assertTrue(result.contains("echo"), "Expected operation 'echo' in info, got: " + result);
-    assertTrue(result.contains("add"), "Expected operation 'add' in info, got: " + result);
-    assertTrue(result.contains("reset"), "Expected operation 'reset' in info, got: " + result);
+    assertThat(result).as("Expected operation 'echo' in info, got: " + result).contains("echo");
+    assertThat(result).as("Expected operation 'add' in info, got: " + result).contains("add");
+    assertThat(result).as("Expected operation 'reset' in info, got: " + result).contains("reset");
   }
 }

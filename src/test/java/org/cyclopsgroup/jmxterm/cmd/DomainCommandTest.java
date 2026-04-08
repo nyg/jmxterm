@@ -1,7 +1,7 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -10,8 +10,6 @@ import javax.management.JMException;
 import javax.management.MBeanServerConnection;
 
 import org.cyclopsgroup.jmxterm.MockSession;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,23 +23,15 @@ class DomainCommandTest {
 
   private StringWriter output;
 
-  private void setDomainAndVerify(String domainName, final String[] knownDomains)
-      throws IOException {
-    Mockery context = new Mockery();
-    final MBeanServerConnection con = context.mock(MBeanServerConnection.class);
+  private void setDomainAndVerify(String domainName, String[] knownDomains) throws IOException {
+    MBeanServerConnection con = mock(MBeanServerConnection.class);
     command.setDomain(domainName);
     MockSession session = new MockSession(output, con);
-    context.checking(
-        new Expectations() {
-          {
-            oneOf(con).getDomains();
-            will(returnValue(knownDomains));
-          }
-        });
+    when(con.getDomains()).thenReturn(knownDomains);
     command.setSession(session);
     command.execute();
-    assertEquals(domainName, session.getDomain());
-    context.assertIsSatisfied();
+    assertThat(session.getDomain()).isEqualTo(domainName);
+    verify(con).getDomains();
   }
 
   /** Set up command to test */
@@ -61,7 +51,7 @@ class DomainCommandTest {
   void executeWithGettingNull() throws Exception {
     command.setSession(new MockSession(output, null));
     command.execute();
-    assertEquals("null", output.toString().trim());
+    assertThat(output.toString().trim()).isEqualTo("null");
   }
 
   /**
@@ -76,7 +66,7 @@ class DomainCommandTest {
     session.setDomain("something");
     command.setSession(session);
     command.execute();
-    assertEquals("something", output.toString().trim());
+    assertThat(output.toString().trim()).isEqualTo("something");
   }
 
   /**
@@ -87,8 +77,8 @@ class DomainCommandTest {
    */
   @Test
   void settingWithInvalidDomain() throws Exception {
-    assertThrows(IllegalArgumentException.class, () ->
-      setDomainAndVerify("invalid", new String[]{"something"}));
+    assertThatThrownBy(() -> setDomainAndVerify("invalid", new String[] {"something"}))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 
   /**

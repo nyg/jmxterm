@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.io;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,9 +22,9 @@ class FileCommandInputTest {
   void read() throws Exception {
     File testFile = new File("src/test/testscript.jmx");
     try(FileCommandInput input = new FileCommandInput(testFile)) {
-      assertEquals("beans", input.readLine());
-      assertEquals("exit", input.readLine());
-      assertNull(input.readLine());
+      assertThat(input.readLine()).isEqualTo("beans");
+      assertThat(input.readLine()).isEqualTo("exit");
+      assertThat(input.readLine()).isNull();
     }
   }
 }

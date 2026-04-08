@@ -1,7 +1,7 @@
 package org.cyclopsgroup.jmxterm.cc;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.cyclopsgroup.jmxterm.cc.CommandCenter.ESCAPE_CHAR_REGEX;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -39,7 +39,7 @@ class CommandCenterTest {
 
   private void runCommandAndVerifyArguments(String command, List<String> expectedArguments) {
     cc.execute(command);
-    assertEquals(expectedArguments, getRecordedCommand(0).getArguments());
+    assertThat(getRecordedCommand(0).getArguments()).isEqualTo(expectedArguments);
   }
 
   /**
@@ -74,11 +74,11 @@ class CommandCenterTest {
     cc.execute("# test 4");
     cc.execute("test 5 # test 6");
 
-    assertEquals(4, executedCommands.size());
-    assertEquals("1", getArgsFromList(0));
-    assertEquals("2 a b", getArgsFromList(1));
-    assertEquals("3", getArgsFromList(2));
-    assertEquals("5", getArgsFromList(3));
+    assertThat(executedCommands).hasSize(4);
+    assertThat(getArgsFromList(0)).isEqualTo("1");
+    assertThat(getArgsFromList(1)).isEqualTo("2 a b");
+    assertThat(getArgsFromList(2)).isEqualTo("3");
+    assertThat(getArgsFromList(3)).isEqualTo("5");
   }
 
   @Test
@@ -115,11 +115,11 @@ class CommandCenterTest {
     final String s5 = "a \\#b c #".split(ESCAPE_CHAR_REGEX)[0];
     final String s6 = "a #b c \\# something".split(ESCAPE_CHAR_REGEX)[0];
 
-    assertEquals("", s1);
-    assertEquals("a b c", s2);
-    assertEquals("a ", s3);
-    assertEquals("a ", s4);
-    assertEquals("a \\#b c ", s5);
-    assertEquals("a ", s6);
+    assertThat(s1).isEqualTo("");
+    assertThat(s2).isEqualTo("a b c");
+    assertThat(s3).isEqualTo("a ");
+    assertThat(s4).isEqualTo("a ");
+    assertThat(s5).isEqualTo("a \\#b c ");
+    assertThat(s6).isEqualTo("a ");
   }
 }

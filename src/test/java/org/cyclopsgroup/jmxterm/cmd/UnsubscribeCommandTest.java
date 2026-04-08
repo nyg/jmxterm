@@ -1,6 +1,8 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import java.io.StringWriter;
 import javax.management.MBeanInfo;
@@ -10,9 +12,6 @@ import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import org.cyclopsgroup.jmxterm.MockSession;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.imposters.ByteBuddyClassImposteriser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,15 +25,11 @@ class UnsubscribeCommandTest {
   private SubscribeCommand subscribeCommand;
   private UnsubscribeCommand unsubscribeCommand;
 
-  private Mockery context;
-
   private StringWriter output;
 
   /** Setup objects to test */
   @BeforeEach
   void setUp() {
-    context = new Mockery();
-    context.setImposteriser(ByteBuddyClassImposteriser.INSTANCE);
     subscribeCommand = new SubscribeCommand();
     unsubscribeCommand = new UnsubscribeCommand();
     output = new StringWriter();
@@ -51,39 +46,30 @@ class UnsubscribeCommandTest {
     subscribeCommand.setBean("a:type=x");
     unsubscribeCommand.setBean("a:type=x");
 
-    final MBeanServerConnection con = context.mock(MBeanServerConnection.class);
-    final MBeanInfo beanInfo = context.mock(MBeanInfo.class);
-    final ObjectName objectName = new ObjectName("a:type=x");
+    MBeanServerConnection con = mock(MBeanServerConnection.class);
+    MBeanInfo beanInfo = mock(MBeanInfo.class);
+    ObjectName objectName = new ObjectName("a:type=x");
 
-    context.checking(
-        new Expectations() {
-          {
-            atLeast(2).of(con).getMBeanInfo(objectName);
-            will(returnValue(beanInfo));
-
-            oneOf(con)
-                .addNotificationListener(
-                    with(equal(objectName)),
-                    with(any(NotificationListener.class)),
-                    with(aNull(NotificationFilter.class)),
-                    with(aNull(Object.class)));
-
-            oneOf(con)
-                .removeNotificationListener(
-                    with(equal(objectName)), with(any(NotificationListener.class)));
-          }
-        });
+    when(con.getMBeanInfo(objectName)).thenReturn(beanInfo);
 
     MockSession session = new MockSession(output, con);
     subscribeCommand.setSession(session);
     subscribeCommand.execute();
-    assertEquals(1, SubscribeCommand.getListeners().size());
+    assertThat(SubscribeCommand.getListeners()).hasSize(1);
 
     unsubscribeCommand.setSession(session);
     unsubscribeCommand.execute();
-    assertTrue(SubscribeCommand.getListeners().isEmpty());
+    assertThat(SubscribeCommand.getListeners()).isEmpty();
 
-    context.assertIsSatisfied();
+    verify(con, atLeast(2)).getMBeanInfo(objectName);
+    verify(con)
+        .addNotificationListener(
+            eq(objectName),
+            any(NotificationListener.class),
+            isNull(),
+            isNull());
+    verify(con)
+        .removeNotificationListener(eq(objectName), any(NotificationListener.class));
   }
 
   /** @throws Exception */
@@ -91,43 +77,23 @@ class UnsubscribeCommandTest {
   void executeTwoNotifications() throws Exception {
     subscribeCommand.setBean("a:type=x");
 
-    final MBeanServerConnection con = context.mock(MBeanServerConnection.class);
-    final MBeanInfo beanInfo = context.mock(MBeanInfo.class);
-    final Notification notification = context.mock(Notification.class);
+    MBeanServerConnection con = mock(MBeanServerConnection.class);
+    MBeanInfo beanInfo = mock(MBeanInfo.class);
+    Notification notification = mock(Notification.class);
 
-    final ObjectName objectName = new ObjectName("a:type=x");
-    context.checking(
-        new Expectations() {
-          {
-            atLeast(1).of(con).getMBeanInfo(objectName);
-            will(returnValue(beanInfo));
+    ObjectName objectName = new ObjectName("a:type=x");
+    when(con.getMBeanInfo(objectName)).thenReturn(beanInfo);
+    when(notification.getTimeStamp()).thenReturn(123L);
+    when(notification.getSource()).thenReturn("xyz");
+    when(notification.getType()).thenReturn("azerty");
+    when(notification.getMessage()).thenReturn("qwerty");
 
-            oneOf(con)
-                .addNotificationListener(
-                    with(equal(objectName)),
-                    with(any(NotificationListener.class)),
-                    with(aNull(NotificationFilter.class)),
-                    with(aNull(Object.class)));
-
-            atLeast(1).of(notification).getTimeStamp();
-            will(returnValue(123L));
-
-            atLeast(1).of(notification).getSource();
-            will(returnValue("xyz"));
-
-            atLeast(1).of(notification).getType();
-            will(returnValue("azerty"));
-
-            atLeast(1).of(notification).getMessage();
-            will(returnValue("qwerty"));
-          }
-        });
     subscribeCommand.setSession(new MockSession(output, con));
     subscribeCommand.execute();
-    assertEquals(1, SubscribeCommand.getListeners().size());
+    assertThat(SubscribeCommand.getListeners()).hasSize(1);
 
     NotificationListener notificationListener = SubscribeCommand.getListeners().get(objectName);
-    assertNotNull(notificationListener);
+    assertThat(notificationListener).isNotNull();
 
     notificationListener.handleNotification(notification, null);
     notificationListener.handleNotification(notification, null);
@@ -141,8 +107,6 @@ class UnsubscribeCommandTest {
             + notification.getClass().getName()
             + ",source=xyz,type=azerty,message=qwerty";
 
-    assertEquals(expected, output.toString().trim());
-
-    context.assertIsSatisfied();
+    assertThat(output.toString().trim()).isEqualTo(expected);
   }
 }

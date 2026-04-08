@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm.io;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -22,7 +22,7 @@ class ValueOutputFormatTest {
     StringWriter out = new StringWriter();
     f.printExpression(new WriterCommandOutput(out), "a", "aaa", "astring");
     String s = out.toString().replaceAll("\\s", "");
-    assertEquals("\"a\"=\"aaa\";(astring)", s);
+    assertThat(s).isEqualTo("\"a\"=\"aaa\";(astring)");
   }
 
   /** Print out a list value and verify output */
@@ -31,7 +31,7 @@ class ValueOutputFormatTest {
     ValueOutputFormat f = new ValueOutputFormat();
     StringWriter out = new StringWriter();
     f.printValue(new WriterCommandOutput(out), Arrays.asList("abc", "xyz"));
-    assertEquals("( \"abc\", \"xyz\" )", out.toString());
+    assertThat(out.toString()).isEqualTo("( \"abc\", \"xyz\" )");
   }
 
   /** Print out a map and verify output */
@@ -44,6 +44,6 @@ class ValueOutputFormatTest {
     map.put("b", "bbb");
     f.printValue(new WriterCommandOutput(out), map);
     String s = out.toString().replaceAll("\\s", "");
-    assertEquals("{\"a\"=\"aaa\";\"b\"=\"bbb\";}", s);
+    assertThat(s).isEqualTo("{\"a\"=\"aaa\";\"b\"=\"bbb\";}");
   }
 }

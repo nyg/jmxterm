@@ -1,7 +1,8 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -16,11 +17,6 @@ import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
 import org.cyclopsgroup.jmxterm.MockSession;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.api.Invocation;
-import org.jmock.imposters.ByteBuddyClassImposteriser;
-import org.jmock.lib.action.CustomAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,8 +28,6 @@ import org.junit.jupiter.api.Test;
 class SetCommandTest {
   private SetCommand command;
 
-  private Mockery context;
-
   private StringWriter output;
 
   /** Set up objects to test */
@@ -41,58 +35,36 @@ class SetCommandTest {
   void setUp() {
     command = new SetCommand();
     output = new StringWriter();
-    context = new Mockery();
-    context.setImposteriser(ByteBuddyClassImposteriser.INSTANCE);
   }
 
-  private void setValueAndVerify(String expr, final String type, final Object expected) {
+  private void setValueAndVerify(String expr, String type, Object expected) {
     command.setBean("a:type=x");
     command.setArguments(Arrays.asList("var", expr));
 
-    final MBeanServerConnection con = context.mock(MBeanServerConnection.class);
-    final MBeanInfo beanInfo = context.mock(MBeanInfo.class);
-    final MBeanAttributeInfo attributeInfo = context.mock(MBeanAttributeInfo.class);
-    final AtomicReference<Attribute> setAttribute = new AtomicReference<>();
+    MBeanServerConnection con = mock(MBeanServerConnection.class);
+    MBeanInfo beanInfo = mock(MBeanInfo.class);
+    MBeanAttributeInfo attributeInfo = mock(MBeanAttributeInfo.class);
+    AtomicReference<Attribute> setAttribute = new AtomicReference<>();
     try {
-      context.checking(
-          new Expectations() {
-            {
-              atLeast(1).of(con).getMBeanInfo(new ObjectName("a:type=x"));
-              will(returnValue(beanInfo));
-              atLeast(1).of(beanInfo).getAttributes();
-              will(returnValue(new MBeanAttributeInfo[] {attributeInfo}));
-              atLeast(1).of(attributeInfo).getName();
-              will(returnValue("var"));
-              atLeast(1).of(attributeInfo).getType();
-              will(returnValue(type));
-              atLeast(1).of(attributeInfo).isWritable();
-              will(returnValue(true));
-              oneOf(con)
-                  .setAttribute(
-                      with(equal(new ObjectName("a:type=x"))),
-                      with(aNonNull(Attribute.class)));
-              will(
-                  doAll(
-                      new CustomAction("SetAttribute") {
-
-                        public Object invoke(Invocation invocation) throws Throwable {
-                          setAttribute.set((Attribute) invocation.getParameter(1));
-                          return null;
-                        }
-                      }));
-            }
-          });
+      when(con.getMBeanInfo(new ObjectName("a:type=x"))).thenReturn(beanInfo);
+      when(beanInfo.getAttributes()).thenReturn(new MBeanAttributeInfo[] {attributeInfo});
+      when(attributeInfo.getName()).thenReturn("var");
+      when(attributeInfo.getType()).thenReturn(type);
+      when(attributeInfo.isWritable()).thenReturn(true);
+      doAnswer(invocation -> {
+        setAttribute.set(invocation.getArgument(1));
+        return null;
+      }).when(con).setAttribute(eq(new ObjectName("a:type=x")), any(Attribute.class));
 
       command.setSession(new MockSession(output, con));
       command.execute();
     } catch (IOException | JMException e) {
       throw new RuntimeException(e);
     }
-    context.assertIsSatisfied();
 
-    assertNotNull(setAttribute.get());
-    assertEquals("var", setAttribute.get().getName());
-    assertEquals(expected, setAttribute.get().getValue());
+    assertThat(setAttribute.get()).isNotNull();
+    assertThat(setAttribute.get().getName()).isEqualTo("var");
+    assertThat(setAttribute.get().getValue()).isEqualTo(expected);
   }
 
   /** Test setting an integer */

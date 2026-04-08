@@ -1,6 +1,7 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -10,9 +11,6 @@ import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import org.cyclopsgroup.jmxterm.MockSession;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.imposters.ByteBuddyClassImposteriser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,15 +22,11 @@ import org.junit.jupiter.api.Test;
 class RunCommandTest {
   private RunCommand command;
 
-  private Mockery context;
-
   private StringWriter output;
 
   /** Setup objects to test */
   @BeforeEach
   void setUp() {
-    context = new Mockery();
-    context.setImposteriser(ByteBuddyClassImposteriser.INSTANCE);
     command = new RunCommand();
     output = new StringWriter();
   }
@@ -43,32 +37,20 @@ class RunCommandTest {
     command.setBean("a:type=x");
     command.setParameters(Arrays.asList("exe", "33"));
 
-    final MBeanServerConnection con = context.mock(MBeanServerConnection.class);
-    final MBeanInfo beanInfo = context.mock(MBeanInfo.class);
-    final MBeanOperationInfo opInfo = context.mock(MBeanOperationInfo.class);
-    final MBeanParameterInfo paramInfo = context.mock(MBeanParameterInfo.class);
-    context.checking(
-        new Expectations() {
-          {
-            atLeast(1).of(con).getMBeanInfo(new ObjectName("a:type=x"));
-            will(returnValue(beanInfo));
-            oneOf(beanInfo).getOperations();
-            will(returnValue(new MBeanOperationInfo[] {opInfo}));
-            atLeast(1).of(opInfo).getName();
-            will(returnValue("exe"));
-            atLeast(1).of(opInfo).getSignature();
-            will(returnValue(new MBeanParameterInfo[] {paramInfo}));
-            atLeast(1).of(paramInfo).getType();
-            will(returnValue("int"));
-            oneOf(con)
-                .invoke(new ObjectName("a:type=x"), "exe", new Object[] {33}, new String[] {"int"});
-            will(returnValue("bingo"));
-          }
-        });
+    MBeanServerConnection con = mock(MBeanServerConnection.class);
+    MBeanInfo beanInfo = mock(MBeanInfo.class);
+    MBeanOperationInfo opInfo = mock(MBeanOperationInfo.class);
+    MBeanParameterInfo paramInfo = mock(MBeanParameterInfo.class);
+    when(con.getMBeanInfo(new ObjectName("a:type=x"))).thenReturn(beanInfo);
+    when(beanInfo.getOperations()).thenReturn(new MBeanOperationInfo[] {opInfo});
+    when(opInfo.getName()).thenReturn("exe");
+    when(opInfo.getSignature()).thenReturn(new MBeanParameterInfo[] {paramInfo});
+    when(paramInfo.getType()).thenReturn("int");
+    when(con.invoke(new ObjectName("a:type=x"), "exe", new Object[] {33}, new String[] {"int"}))
+        .thenReturn("bingo");
     command.setSession(new MockSession(output, con));
     command.execute();
-    context.assertIsSatisfied();
-    assertEquals("bingo", output.toString().trim());
+    assertThat(output.toString().trim()).isEqualTo("bingo");
   }
 
   /** @throws Exception */
@@ -78,49 +60,32 @@ class RunCommandTest {
     command.setTypes("java.lang.String");
     command.setParameters(Arrays.asList("exe", "33"));
 
-    final MBeanServerConnection con = context.mock(MBeanServerConnection.class);
-    final MBeanInfo beanInfo = context.mock(MBeanInfo.class);
-    final MBeanOperationInfo opInfo1 = context.mock(MBeanOperationInfo.class, "opInfo1");
-    final MBeanParameterInfo paramInfoInt = context.mock(MBeanParameterInfo.class, "paramInfoInt");
-    final MBeanOperationInfo opInfo2 = context.mock(MBeanOperationInfo.class, "opInfo2");
-    final MBeanParameterInfo paramInfoString =
-        context.mock(MBeanParameterInfo.class, "paramInfoString");
-    context.checking(
-        new Expectations() {
-          {
-            atLeast(1).of(con).getMBeanInfo(new ObjectName("a:type=x"));
-            will(returnValue(beanInfo));
-            oneOf(beanInfo).getOperations();
-            will(returnValue(new MBeanOperationInfo[] {opInfo1, opInfo2}));
-            // exe <int>
-            atLeast(1).of(opInfo1).getName();
-            will(returnValue("exe"));
-            atLeast(1).of(opInfo1).getSignature();
-            will(returnValue(new MBeanParameterInfo[] {paramInfoInt}));
-            atLeast(1).of(paramInfoInt).getType();
-            will(returnValue("int"));
-            never(con)
-                .invoke(new ObjectName("a:type=x"), "exe", new Object[] {33}, new String[] {"int"});
-            will(returnValue("bingo-int"));
-            // exe <java.lang.String>
-            atLeast(1).of(opInfo2).getName();
-            will(returnValue("exe"));
-            atLeast(1).of(opInfo2).getSignature();
-            will(returnValue(new MBeanParameterInfo[] {paramInfoString}));
-            atLeast(1).of(paramInfoString).getType();
-            will(returnValue("java.lang.String"));
-            oneOf(con)
-                .invoke(
-                    new ObjectName("a:type=x"),
-                    "exe",
-                    new Object[] {"33"},
-                    new String[] {"java.lang.String"});
-            will(returnValue("bingo-string"));
-          }
-        });
+    MBeanServerConnection con = mock(MBeanServerConnection.class);
+    MBeanInfo beanInfo = mock(MBeanInfo.class);
+    MBeanOperationInfo opInfo1 = mock(MBeanOperationInfo.class);
+    MBeanParameterInfo paramInfoInt = mock(MBeanParameterInfo.class);
+    MBeanOperationInfo opInfo2 = mock(MBeanOperationInfo.class);
+    MBeanParameterInfo paramInfoString = mock(MBeanParameterInfo.class);
+    when(con.getMBeanInfo(new ObjectName("a:type=x"))).thenReturn(beanInfo);
+    when(beanInfo.getOperations()).thenReturn(new MBeanOperationInfo[] {opInfo1, opInfo2});
+    // exe <int>
+    when(opInfo1.getName()).thenReturn("exe");
+    when(opInfo1.getSignature()).thenReturn(new MBeanParameterInfo[] {paramInfoInt});
+    when(paramInfoInt.getType()).thenReturn("int");
+    // exe <java.lang.String>
+    when(opInfo2.getName()).thenReturn("exe");
+    when(opInfo2.getSignature()).thenReturn(new MBeanParameterInfo[] {paramInfoString});
+    when(paramInfoString.getType()).thenReturn("java.lang.String");
+    when(con.invoke(
+            new ObjectName("a:type=x"),
+            "exe",
+            new Object[] {"33"},
+            new String[] {"java.lang.String"}))
+        .thenReturn("bingo-string");
     command.setSession(new MockSession(output, con));
     command.execute();
-    context.assertIsSatisfied();
-    assertEquals("bingo-string", output.toString().trim());
+    verify(con, never())
+        .invoke(new ObjectName("a:type=x"), "exe", new Object[] {33}, new String[] {"int"});
+    assertThat(output.toString().trim()).isEqualTo("bingo-string");
   }
 }

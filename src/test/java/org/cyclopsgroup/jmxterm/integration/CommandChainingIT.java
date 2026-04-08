@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.integration;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.StringWriter;
 import org.cyclopsgroup.jmxterm.cc.CommandCenter;
@@ -43,49 +42,50 @@ class CommandChainingIT {
 
   @Test
   void testCommandChaining() {
-    assertTrue(
-        cc.execute(
-            "open " + jmxServer.getConnectionUrl() + " && domains && beans -d test"));
+    assertThat(
+            cc.execute(
+                "open " + jmxServer.getConnectionUrl() + " && domains && beans -d test"))
+        .isTrue();
     String result = resultWriter.toString();
-    assertTrue(result.contains("test"), "Expected 'test' domain in output, got: " + result);
-    assertTrue(
-        result.contains("JMImplementation"),
-        "Expected 'JMImplementation' domain in output, got: " + result);
-    assertTrue(
-        result.contains("test:type=TestMBean"),
-        "Expected 'test:type=TestMBean' in output, got: " + result);
+    assertThat(result).as("Expected 'test' domain in output, got: " + result).contains("test");
+    assertThat(result)
+        .as("Expected 'JMImplementation' domain in output, got: " + result)
+        .contains("JMImplementation");
+    assertThat(result)
+        .as("Expected 'test:type=TestMBean' in output, got: " + result)
+        .contains("test:type=TestMBean");
   }
 
   @Test
   void testCommentHandling() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
     resultWriter.getBuffer().setLength(0);
-    assertTrue(cc.execute("domains # this is a comment"));
+    assertThat(cc.execute("domains # this is a comment")).isTrue();
     String result = resultWriter.toString();
-    assertTrue(result.contains("test"), "Expected domains output, got: " + result);
+    assertThat(result).as("Expected domains output, got: " + result).contains("test");
   }
 
   @Test
   void testFullLineComment() {
-    assertTrue(cc.execute("# this is a comment"));
-    assertEquals("", resultWriter.toString(), "Full-line comment should produce no output");
+    assertThat(cc.execute("# this is a comment")).isTrue();
+    assertThat(resultWriter.toString()).as("Full-line comment should produce no output").isEqualTo("");
   }
 
   @Test
   void testEscapedHash() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertTrue(cc.execute("set -b test:type=TestMBean Name value\\#with\\#hashes"));
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("set -b test:type=TestMBean Name value\\#with\\#hashes")).isTrue();
     resultWriter.getBuffer().setLength(0);
-    assertTrue(cc.execute("get -b test:type=TestMBean Name"));
+    assertThat(cc.execute("get -b test:type=TestMBean Name")).isTrue();
     String result = resultWriter.toString();
-    assertTrue(
-        result.contains("value#with#hashes"),
-        "Expected value with unescaped hashes, got: " + result);
+    assertThat(result)
+        .as("Expected value with unescaped hashes, got: " + result)
+        .contains("value#with#hashes");
   }
 
   @Test
   void testEmptyCommand() {
-    assertTrue(cc.execute(""), "Empty command should succeed");
-    assertEquals("", resultWriter.toString(), "Empty command should produce no output");
+    assertThat(cc.execute("")).as("Empty command should succeed").isTrue();
+    assertThat(resultWriter.toString()).as("Empty command should produce no output").isEqualTo("");
   }
 }
