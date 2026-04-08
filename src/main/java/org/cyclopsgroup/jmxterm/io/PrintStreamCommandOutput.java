@@ -1,7 +1,7 @@
 package org.cyclopsgroup.jmxterm.io;
 
 import java.io.PrintStream;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 
 /**
  * Implementation of CommandOutput where output is written in given PrintStream objects
@@ -32,8 +32,8 @@ public class PrintStreamCommandOutput extends CommandOutput {
    * @param messageOutput PrintStream where message is written to
    */
   public PrintStreamCommandOutput(PrintStream resultOutput, PrintStream messageOutput) {
-    Validate.notNull(resultOutput, "Result output can't be NULL");
-    Validate.notNull(messageOutput, "Message output can't be NULL");
+    Objects.requireNonNull(resultOutput, "Result output can't be NULL");
+    Objects.requireNonNull(messageOutput, "Message output can't be NULL");
     this.resultOutput = resultOutput;
     this.messageOutput = messageOutput;
   }

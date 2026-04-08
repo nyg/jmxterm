@@ -2,7 +2,7 @@ package org.cyclopsgroup.jmxterm.jdk9;
 
 import java.io.IOException;
 
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jmxterm.JavaProcess;
 
 import com.sun.tools.attach.AttachNotSupportedException;
@@ -24,7 +24,7 @@ public class Jdk9JavaProcess implements JavaProcess {
    * @param address Connector address, if any
    */
   Jdk9JavaProcess(VirtualMachineDescriptor vmd, String address) {
-    Validate.notNull(vmd, "VirtualMachineDescriptor can't be NULL");
+    Objects.requireNonNull(vmd, "VirtualMachineDescriptor can't be NULL");
     this.vmd = vmd;
     this.address = address;
   }

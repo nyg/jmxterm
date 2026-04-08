@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jcli.annotation.Argument;
 import org.cyclopsgroup.jcli.annotation.Cli;
 import org.cyclopsgroup.jmxterm.Command;
@@ -32,8 +32,10 @@ public class DomainCommand extends Command {
    * @throws IOException
    */
   static String getDomainName(String domain, Session session) {
-    Validate.notNull(session, "Session can't be NULL");
-    Validate.isTrue(session.getConnection() != null, "Session isn't opened");
+    Objects.requireNonNull(session, "Session can't be NULL");
+    if (session.getConnection() == null) {
+      throw new IllegalArgumentException("Session isn't opened");
+    }
     if (domain == null) {
       return session.getDomain();
     }

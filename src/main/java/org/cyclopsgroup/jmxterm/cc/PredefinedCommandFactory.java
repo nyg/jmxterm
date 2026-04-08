@@ -5,8 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.CommandFactory;
 import org.cyclopsgroup.jmxterm.utils.ConfigurationUtils;
@@ -36,7 +35,7 @@ class PredefinedCommandFactory implements CommandFactory {
    */
   @SuppressWarnings("unchecked")
   public PredefinedCommandFactory(String configPath) throws IOException {
-    Validate.notNull(configPath, "configPath can't be NULL");
+    Objects.requireNonNull(configPath, "configPath can't be NULL");
     ClassLoader classLoader = getClass().getClassLoader();
     Configuration props = ConfigurationUtils.loadFromOverlappingResources(configPath, classLoader);
     if (props == null) {
@@ -59,7 +58,7 @@ class PredefinedCommandFactory implements CommandFactory {
       }
       commands.put(name, commandType);
       String[] aliases = props.getStringArray(name + ".alias");
-      if (!ArrayUtils.isEmpty(aliases)) {
+      if (aliases != null && aliases.length != 0) {
         for (String alias : aliases) {
           commands.put(alias, commandType);
         }

@@ -17,10 +17,7 @@ import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
-import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.builder.CompareToBuilder;
+import java.util.Comparator;
 import org.cyclopsgroup.jcli.annotation.Cli;
 import org.cyclopsgroup.jcli.annotation.Option;
 import org.cyclopsgroup.jmxterm.Command;
@@ -36,10 +33,8 @@ import org.cyclopsgroup.jmxterm.Session;
     description = "Display detail information about an MBean",
     note = "If -b option is not specified, current selected MBean is applied")
 public class InfoCommand extends Command {
-  private static final Comparator<MBeanFeatureInfo> INFO_COMPARATOR = (o1, o2) -> new CompareToBuilder()
-      .append(o1.getName(), o2.getName())
-      .append(o1.hashCode(), o2.hashCode())
-      .toComparison();
+  private static final Comparator<MBeanFeatureInfo> INFO_COMPARATOR =
+      Comparator.comparing(MBeanFeatureInfo::getName).thenComparingInt(MBeanFeatureInfo::hashCode);
 
   private static final String TEXT_ATTRIBUTES = "# attributes";
 
@@ -95,7 +90,7 @@ public class InfoCommand extends Command {
               "  %%%-3d - %s(%s)" + (showDescription ? ", %s" : ""),
               index++,
               notification.getName(),
-              StringUtils.join(notification.getNotifTypes(), ","),
+              String.join(",", notification.getNotifTypes()),
               notification.getDescription()));
     }
   }
@@ -118,9 +113,9 @@ public class InfoCommand extends Command {
         paramTypes.add(paramInfo.getType() + " " + paramInfo.getName());
         paramDescriptions.add("       " + paramInfo.getName() + ": " + paramInfo.getDescription());
       }
-      String parameters = StringUtils.join(paramTypes, ',');
+      String parameters = String.join(",", paramTypes);
       String parametersDesc =
-          paramDescriptions.isEmpty() ? "" : '\n' + StringUtils.join(paramDescriptions, '\n');
+          paramDescriptions.isEmpty() ? "" : '\n' + String.join("\n", paramDescriptions);
       session.output.println(
           String.format(
               "  %%%-3d - %s %s(%s)" + (showDescription ? ", %s%s" : ""),
@@ -145,7 +140,7 @@ public class InfoCommand extends Command {
     boolean found = false;
     for (MBeanOperationInfo op : operationInfos) {
       String opName = op.getName();
-      if (Strings.CS.equals(opName, operation)) {
+      if (opName.equals(operation)) {
         found = true;
         MBeanParameterInfo[] paramInfos = op.getSignature();
         List<String> paramTypes = new ArrayList<>(paramInfos.length);
@@ -164,7 +159,7 @@ public class InfoCommand extends Command {
                 index++,
                 op.getReturnType(),
                 opName,
-                StringUtils.join(paramTypes, ','),
+                String.join(",", paramTypes),
                 op.getDescription()));
         session.output.println(paramsDesc.toString());
       }
@@ -243,8 +238,12 @@ public class InfoCommand extends Command {
       description =
           "Types(a|o|u) to display, for example aon for all attributes, operations and notifications")
   public void setType(String type) {
-    Validate.isTrue(StringUtils.isNotEmpty(type), "Type can't be NULL");
-    Validate.isTrue(Pattern.matches("^a?o?n?$", type), "Type must be a?|o?|n?");
+    if (type == null || type.isEmpty()) {
+      throw new IllegalArgumentException("Type can't be NULL");
+    }
+    if (!Pattern.matches("^a?o?n?$", type)) {
+      throw new IllegalArgumentException("Type must be a?|o?|n?");
+    }
     this.type = type;
   }
 
@@ -253,7 +252,9 @@ public class InfoCommand extends Command {
       longName = "op",
       description = "Show a single operation with more details (including parameters information)")
   public void setOperation(String operation) {
-    Validate.isTrue(StringUtils.isNotEmpty(operation), "Operation can't be NULL");
+    if (operation == null || operation.isEmpty()) {
+      throw new IllegalArgumentException("Operation can't be NULL");
+    }
     this.operation = operation;
   }
 }

@@ -10,7 +10,7 @@ import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jcli.annotation.Argument;
 import org.cyclopsgroup.jcli.annotation.Cli;
 import org.cyclopsgroup.jcli.annotation.MultiValue;
@@ -62,7 +62,9 @@ public class SetCommand extends Command {
 
   @Override
   public void execute() throws JMException, IOException {
-    Validate.isTrue(arguments.size() >= 2, "At least two arguments are required");
+    if (arguments.size() < 2) {
+      throw new IllegalArgumentException("At least two arguments are required");
+    }
     Session session = getSession();
     String attributeName = arguments.get(0);
 
@@ -97,7 +99,7 @@ public class SetCommand extends Command {
   @MultiValue(listType = ArrayList.class, minValues = 2)
   @Argument(description = "name, value, value2...")
   public final void setArguments(List<String> arguments) {
-    Validate.notNull(arguments, "Arguments can't be NULL");
+    Objects.requireNonNull(arguments, "Arguments can't be NULL");
     this.arguments = arguments;
   }
 

@@ -4,9 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.StringWriter;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import org.apache.commons.collections4.map.ListOrderedMap;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -39,7 +38,7 @@ class ValueOutputFormatTest {
   void printMap() {
     ValueOutputFormat f = new ValueOutputFormat();
     StringWriter out = new StringWriter();
-    Map<String, String> map = ListOrderedMap.listOrderedMap(new HashMap<String, String>());
+    Map<String, String> map = new LinkedHashMap<>();
     map.put("a", "aaa");
     map.put("b", "bbb");
     f.printValue(new WriterCommandOutput(out), map);

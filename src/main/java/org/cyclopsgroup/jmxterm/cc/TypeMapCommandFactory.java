@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Map;
 
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.CommandFactory;
 
@@ -18,13 +18,13 @@ public class TypeMapCommandFactory implements CommandFactory {
 
   /** @param commandTypes Map of command types */
   public TypeMapCommandFactory(Map<String, Class<? extends Command>> commandTypes) {
-    Validate.notNull(commandTypes, "Command type can't be NULL");
+    Objects.requireNonNull(commandTypes, "Command type can't be NULL");
     this.commandTypes = Collections.unmodifiableMap(commandTypes);
   }
 
   @Override
   public Command createCommand(String commandName) {
-    Validate.notNull(commandName, "commandName can't be NULL");
+    Objects.requireNonNull(commandName, "commandName can't be NULL");
     Class<? extends Command> commandType = commandTypes.get(commandName);
     if (commandType == null) {
       throw new IllegalArgumentException(

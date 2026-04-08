@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.io;
 
-import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import java.util.Objects;
 
 /**
  * Command output implementation where detail message can be turned on and off dynamically
@@ -18,8 +17,8 @@ public class VerboseCommandOutput extends CommandOutput {
    * @param config Dynamic config
    */
   public VerboseCommandOutput(CommandOutput output, VerboseCommandOutputConfig config) {
-    Validate.notNull(output, "The proxy'ed output can't be NULL");
-    Validate.notNull(config, "Config can't be NULL");
+    Objects.requireNonNull(output, "The proxy'ed output can't be NULL");
+    Objects.requireNonNull(config, "Config can't be NULL");
     this.output = output;
     this.config = config;
   }
@@ -44,7 +43,7 @@ public class VerboseCommandOutput extends CommandOutput {
         break;
       case BRIEF:
       default:
-        output.printMessage("#" + ExceptionUtils.getMessage(e));
+        output.printMessage("#" + e.getClass().getName() + ": " + e.getMessage());
         break;
     }
   }

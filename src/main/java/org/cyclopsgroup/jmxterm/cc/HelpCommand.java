@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jcli.ArgumentProcessor;
 import org.cyclopsgroup.jcli.annotation.Argument;
 import org.cyclopsgroup.jcli.annotation.Cli;
@@ -31,7 +31,7 @@ public class HelpCommand extends Command {
 
   @Override
   public void execute() {
-    Validate.notNull(commandCenter, "Command center hasn't been set yet");
+    Objects.requireNonNull(commandCenter, "Command center hasn't been set yet");
     if (argNames.isEmpty()) {
       List<String> commandNames = commandCenter.getCommandNames().stream().sorted().toList();
       getSession().output.printMessage("following commands are available to use:");
@@ -60,13 +60,13 @@ public class HelpCommand extends Command {
   @MultiValue(listType = ArrayList.class)
   @Argument
   public final void setArgNames(List<String> argNames) {
-    Validate.notNull(argNames, "argNames can't be NULL");
+    Objects.requireNonNull(argNames, "argNames can't be NULL");
     this.argNames = argNames;
   }
 
   /** @param commandCenter CommandCenter object that calls this help command */
   final void setCommandCenter(CommandCenter commandCenter) {
-    Validate.notNull(commandCenter, "commandCenter can't be NULL");
+    Objects.requireNonNull(commandCenter, "commandCenter can't be NULL");
     this.commandCenter = commandCenter;
   }
 }

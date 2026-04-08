@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.management.JMException;
 
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jcli.AutoCompletable;
 import org.cyclopsgroup.jcli.annotation.Option;
 import org.slf4j.Logger;
@@ -75,7 +75,7 @@ public abstract class Command implements AutoCompletable {
 
   /** @param session Session where command runs */
   public final void setSession(Session session) {
-    Validate.notNull(session, "Session can't be NULL");
+    Objects.requireNonNull(session, "Session can't be NULL");
     this.session = session;
   }
 

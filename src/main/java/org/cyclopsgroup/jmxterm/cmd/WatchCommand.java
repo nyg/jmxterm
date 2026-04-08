@@ -13,7 +13,7 @@ import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
-import org.apache.commons.lang3.Validate;
+
 import org.cyclopsgroup.jcli.annotation.Argument;
 import org.cyclopsgroup.jcli.annotation.Cli;
 import org.cyclopsgroup.jcli.annotation.MultiValue;
@@ -215,7 +215,9 @@ public class WatchCommand extends Command {
       description = "Optional number of seconds between consecutive poll, default is 1 second",
       defaultValue = "1")
   public final void setRefreshInterval(int refreshInterval) {
-    Validate.isTrue(refreshInterval > 0, "Invalid interval value " + refreshInterval);
+    if (refreshInterval <= 0) {
+      throw new IllegalArgumentException("Invalid interval value " + refreshInterval);
+    }
     this.refreshInterval = refreshInterval;
   }
 
@@ -232,7 +234,9 @@ public class WatchCommand extends Command {
       displayName = "sec",
       description = "Stop after watching a number of seconds")
   public final void setStopAfter(int stopAfter) {
-    Validate.isTrue(stopAfter >= 0, "Invalid stop after argument " + stopAfter);
+    if (stopAfter < 0) {
+      throw new IllegalArgumentException("Invalid stop after argument " + stopAfter);
+    }
     this.stopAfter = stopAfter;
   }
 }

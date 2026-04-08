@@ -1,8 +1,7 @@
 package org.cyclopsgroup.jmxterm.io;
 
 import java.io.IOException;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.jline.reader.impl.LineReaderImpl;
 
 /**
@@ -20,9 +19,9 @@ public class JlineCommandInput extends CommandInput {
    * @param prompt Prompt string
    */
   public JlineCommandInput(LineReaderImpl console, String prompt) {
-    Validate.notNull(console, "Jline console reader can't be NULL");
+    Objects.requireNonNull(console, "Jline console reader can't be NULL");
     this.console = console;
-    this.prompt = StringUtils.trimToEmpty(prompt);
+    this.prompt = prompt == null ? "" : prompt.trim();
   }
 
   /** @return Jline console */

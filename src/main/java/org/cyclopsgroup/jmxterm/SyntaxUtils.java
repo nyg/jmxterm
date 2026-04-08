@@ -1,17 +1,13 @@
 package org.cyclopsgroup.jmxterm;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.regex.Pattern;
 
 import javax.management.remote.JMXServiceURL;
 
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.io.output.NullOutputStream;
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
-import org.apache.commons.lang3.math.NumberUtils;
+import org.cyclopsgroup.jmxterm.utils.TypeConverter;
 import org.cyclopsgroup.jmxterm.utils.ValueFormat;
 
 /**
@@ -24,7 +20,7 @@ public final class SyntaxUtils {
   public static final String NULL = ValueFormat.NULL;
 
   /** Null print stream to redirect std streams */
-  public static final PrintStream NULL_PRINT_STREAM = new PrintStream(new NullOutputStream(), true);
+  public static final PrintStream NULL_PRINT_STREAM = new PrintStream(OutputStream.nullOutputStream(), true);
 
   private static final Pattern PATTERN_HOST_PORT = Pattern.compile("^(\\w|\\.|\\-)+\\:\\d+$");
 
@@ -35,9 +31,9 @@ public final class SyntaxUtils {
    * @throws IOException IO error
    */
   public static JMXServiceURL getUrl(String url, JavaProcessManager jpm) throws IOException {
-    if (StringUtils.isEmpty(url)) {
+    if (url == null || url.isEmpty()) {
       throw new IllegalArgumentException("Empty URL is not allowed");
-    } else if (NumberUtils.isDigits(url) && jpm != null) {
+    } else if (isDigits(url) && jpm != null) {
       int pid = Integer.parseInt(url);
       JavaProcess p = jpm.get(pid);
       if (p == null) {
@@ -65,7 +61,7 @@ public final class SyntaxUtils {
    * @return True if value is <code>null</code>
    */
   public static boolean isNull(String s) {
-    return Strings.CI.equals(NULL, s) || Strings.CS.equals("*", s);
+    return NULL.equalsIgnoreCase(s) || "*".equals(s);
   }
 
   /**
@@ -76,22 +72,40 @@ public final class SyntaxUtils {
    * @return Object of value
    */
   public static Object parse(String expression, String type) {
-    if (expression == null || Strings.CI.equals(NULL, expression)) {
+    if (expression == null || NULL.equalsIgnoreCase(expression)) {
       return null;
     }
     Class<?> c;
     try {
-      c = ClassUtils.getClass(type);
+      c = TypeConverter.resolveClass(type);
     } catch (ClassNotFoundException e) {
       throw new IllegalArgumentException("Type " + type + " isn't valid", e);
     }
     if (c == String.class) {
       return expression;
     }
-    if (StringUtils.isEmpty(expression)) {
+    if (expression.isEmpty()) {
       return null;
     }
-    return ConvertUtils.convert(expression, c);
+    return TypeConverter.convert(expression, c);
+  }
+
+  /**
+   * Check if string contains only ASCII digits
+   *
+   * @param s String value
+   * @return True if string is non-null, non-empty, and contains only digits
+   */
+  public static boolean isDigits(String s) {
+    if (s == null || s.isEmpty()) {
+      return false;
+    }
+    for (int i = 0; i < s.length(); i++) {
+      if (!Character.isDigit(s.charAt(i))) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private SyntaxUtils() {}

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 
 /**
  * Implementation of {@link CommandInput} with an input stream
@@ -16,7 +16,7 @@ public class InputStreamCommandInput extends CommandInput {
 
   /** @param in Given input stream */
   public InputStreamCommandInput(InputStream in) {
-    Validate.notNull(in, "Input stream can't be NULL");
+    Objects.requireNonNull(in, "Input stream can't be NULL");
     reader = new LineNumberReader(new InputStreamReader(in));
   }
 

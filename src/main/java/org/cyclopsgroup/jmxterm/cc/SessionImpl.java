@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jmxterm.Connection;
 import org.cyclopsgroup.jmxterm.JavaProcessManager;
 import org.cyclopsgroup.jmxterm.Session;
@@ -31,7 +31,7 @@ class SessionImpl extends Session {
 
   @Override
   public void connect(JMXServiceURL url, Map<String, Object> env) throws IOException {
-    Validate.notNull(url, "URL can't be NULL");
+    Objects.requireNonNull(url, "URL can't be NULL");
     if (connection != null) {
       throw new IllegalStateException("Session is already opened");
     }

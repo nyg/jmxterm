@@ -11,7 +11,7 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 
 /**
  * Utilities for loading overlapping properties files from classpath
@@ -27,8 +27,8 @@ public final class ConfigurationUtils {
    */
   public static Configuration loadFromOverlappingResources(
       String resourcePath, ClassLoader classLoader) throws IOException {
-    Validate.notNull(resourcePath, "Resource path can't be NULL");
-    Validate.notNull(classLoader, "ClassLoader can't be NULL");
+    Objects.requireNonNull(resourcePath, "Resource path can't be NULL");
+    Objects.requireNonNull(classLoader, "ClassLoader can't be NULL");
     PropertiesConfiguration props = new PropertiesConfiguration();
     props.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
     Enumeration<URL> resources = classLoader.getResources(resourcePath);

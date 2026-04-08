@@ -1,8 +1,5 @@
 package org.cyclopsgroup.jmxterm.utils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringEscapeUtils;
-
 /**
  * This is an utility to parse string value from input. It's only to parse a value such as MBean
  * attribute value or parameter of operation. It's NOT designed to parse MBean name or other type of
@@ -24,7 +21,7 @@ public final class ValueFormat {
    * @return Escaped string value
    */
   public static String parseValue(String value) {
-    if (StringUtils.isEmpty(value)) {
+    if (value == null || value.isEmpty()) {
       return null;
     }
     if (NULL.equals(value)) {
@@ -36,6 +33,6 @@ public final class ValueFormat {
     } else {
       s = value;
     }
-    return StringEscapeUtils.unescapeJava(s);
+    return JavaStringUnescape.unescapeJava(s);
   }
 }

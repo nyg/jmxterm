@@ -3,8 +3,7 @@ package org.cyclopsgroup.jmxterm.io;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import org.apache.commons.io.output.NullWriter;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 
 /**
  * A command output that writes result and message to given writers
@@ -26,9 +25,9 @@ public class WriterCommandOutput extends CommandOutput {
    * @param messageOutput IO Writer for message output
    */
   public WriterCommandOutput(Writer resultOutput, Writer messageOutput) {
-    Validate.notNull(resultOutput, "Result output can't be NULL");
+    Objects.requireNonNull(resultOutput, "Result output can't be NULL");
     this.resultOutput = resultOutput;
-    this.messageOutput = messageOutput == null ? new NullWriter() : messageOutput;
+    this.messageOutput = messageOutput == null ? Writer.nullWriter() : messageOutput;
   }
 
   @Override

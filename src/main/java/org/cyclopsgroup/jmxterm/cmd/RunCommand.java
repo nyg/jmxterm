@@ -13,7 +13,7 @@ import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jcli.annotation.Argument;
 import org.cyclopsgroup.jcli.annotation.Cli;
 import org.cyclopsgroup.jcli.annotation.MultiValue;
@@ -74,12 +74,15 @@ public class RunCommand extends Command {
           "Please specify MBean to invoke either using -b option or bean command");
     }
 
-    Validate.isTrue(!parameters.isEmpty(), "At least one parameter is needed");
+    if (parameters.isEmpty()) {
+      throw new IllegalArgumentException("At least one parameter is needed");
+    }
     String[] paramTypes = null;
     if (types != null) {
       paramTypes = types.split(",");
-      Validate.isTrue(
-          paramTypes.length == parameters.size() - 1, "Signature does not match parameter count");
+      if (paramTypes.length != parameters.size() - 1) {
+        throw new IllegalArgumentException("Signature does not match parameter count");
+      }
     }
     String operationName = parameters.get(0);
     ObjectName name = new ObjectName(beanName);
@@ -131,9 +134,10 @@ public class RunCommand extends Command {
     // Now set parameters to invoke with
     Object[] params = new Object[parameters.size() - 1];
     MBeanParameterInfo[] paramInfos = operationInfo.getSignature();
-    Validate.isTrue(
-        params.length == paramInfos.length,
-        "%d parameters are expected but %d are provided".formatted(paramInfos.length, params.length));
+    if (params.length != paramInfos.length) {
+      throw new IllegalArgumentException(
+          "%d parameters are expected but %d are provided".formatted(paramInfos.length, params.length));
+    }
     String[] signatures = new String[paramInfos.length];
     for (int i = 0; i < paramInfos.length; i++) {
       MBeanParameterInfo paramInfo = paramInfos[i];
@@ -202,7 +206,7 @@ public class RunCommand extends Command {
   @Argument(
       description = "The first parameter is operation name, which is followed by list of arguments")
   public final void setParameters(List<String> parameters) {
-    Validate.notNull(parameters, "Parameters can't be NULL");
+    Objects.requireNonNull(parameters, "Parameters can't be NULL");
     this.parameters = parameters;
   }
 
