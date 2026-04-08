@@ -1,4 +1,4 @@
-# JMXTerm Modernization TODO
+# jmxsh Modernization TODO
 
 Improvement opportunities identified by auditing the codebase, build configuration, CI pipeline,
 and dependency graph. Items are organized by category. Each item is labeled with a priority:
@@ -14,7 +14,6 @@ and dependency graph. Items are organized by category. Each item is labeled with
 
 Target: **Java 25** (upcoming LTS, September 2025).
 
-- 🟠 **Upgrade compiler target from 17 to 25** — Update `<release>17</release>` in pom.xml. Enables records, sealed classes, pattern matching, virtual threads, and other post-17 features across the codebase.
 - 🟠 **Replace `FileReader`/`FileWriter` with NIO APIs** — These don't specify a charset and are effectively deprecated. Use `Files.newBufferedReader(path, charset)` / `Files.newBufferedWriter(path, charset)`. Affected files: `FileCommandInput.java`, `FileCommandOutput.java`.
 - 🟡 **Replace `StringBuffer` with `StringBuilder`** — `StringBuffer` is synchronized and unnecessary here. Affected file: `WatchCommand.java:170`.
 - 🟡 **Replace `java.util.Date` with `java.time.Instant`** — The old Date API is discouraged since Java 8. Affected file: `WatchCommand.java:159`.
@@ -53,17 +52,14 @@ Several dependencies are unused or barely used and can be replaced with JDK stan
 
 ## GitHub Actions / CI
 
-- 🔴 **Pin Trivy action to a release tag** — Currently `aquasecurity/trivy-action@master` in both `maven.yaml` and the Docker scan step. Using `@master` means every CI run pulls arbitrary latest code. Pin to a specific version (e.g., `@0.28.0`).
 - 🟡 **Enable CodeQL scanning** — No SAST (static application security testing) is configured. Add a CodeQL workflow for Java to catch security issues in PRs.
-- 🟡 **Fix nightly build schedule** — The cron expression in `nightly-build.yml` is commented out, so the workflow only runs on manual dispatch. Either un-comment or remove the workflow if nightly builds aren't needed.
-- 🟡 **Remove nightly version manipulation** — The nightly workflow runs `mvn versions:set` to modify the POM version in CI. Consider using Git-based versioning (e.g., `${version}+nightly.${date}.${sha}`) without modifying source files.
 - 🟢 **Verify action versions stay current** — Dependabot covers this, but worth auditing periodically. The major versions (checkout, setup-java, upload/download-artifact) should all be on their latest major.
 
 ---
 
 ## Dockerfile
 
-- 🟠 **Run as non-root user** — The image currently runs as root. Add a dedicated `jmxterm` user and switch to it with `USER`.
+- 🟠 **Run as non-root user** — The image currently runs as root. Add a dedicated `jmxsh` user and switch to it with `USER`.
 - 🟡 **Add OCI labels** — Add `org.opencontainers.image.title`, `description`, `url`, `source`, `version`, `licenses` labels for registry metadata.
 - 🟡 **Add `HEALTHCHECK`** — Useful for orchestration (Docker Compose, Kubernetes). A simple `java -version` check suffices.
 - 🟢 **Consider multi-stage build** — Currently copies a pre-built JAR from `target/`. A multi-stage build would make the Dockerfile self-contained, though CI already handles the build step.

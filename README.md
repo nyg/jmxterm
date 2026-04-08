@@ -1,28 +1,33 @@
-# JMXTerm
+# jmxsh
 
 > Interactive command-line JMX client for monitoring and managing Java applications.
 
-JMXTerm lets you connect to any JMX-enabled JVM, browse MBeans, read and write attributes, and
+jmxsh lets you connect to any JMX-enabled JVM, browse MBeans, read and write attributes, and
 invoke operations — all from the comfort of your terminal. Think of it as a Swiss Army knife for JMX.
+
+> **Fork notice** — jmxsh is an actively maintained fork of
+> [jiaqi/jmxterm](https://github.com/jiaqi/jmxterm), incorporating contributions from
+> [LeMyst/jmxterm](https://github.com/LeMyst/jmxterm). The goal is to keep the project alive with
+> regular updates, dependency maintenance, and new features.
 
 ## Quick Start
 
-Download the latest [uber JAR from Releases](https://github.com/nyg/jmxterm/releases) and run:
+Download the latest [uber JAR from Releases](https://github.com/nyg/jmxsh/releases) and run:
 
 ```bash
-java -jar jmxterm-uber.jar
+java -jar jmxsh-uber.jar
 ```
 
 Or use Docker:
 
 ```bash
-docker run -it ghcr.io/lemyst/jmxterm
+docker run -it ghcr.io/nyg/jmxsh
 ```
 
 ## Usage
 
 ```
-$ java -jar jmxterm-uber.jar
+$ java -jar jmxsh-uber.jar
 Welcome to JMX terminal. Type "help" for available commands.
 $> open localhost:9999
 #Connection to localhost:9999 is opened
@@ -66,13 +71,13 @@ $> quit
 Run commands from a script file:
 
 ```bash
-java -jar jmxterm-uber.jar -l localhost:9999 --input commands.txt
+java -jar jmxsh-uber.jar -l localhost:9999 --input commands.txt
 ```
 
 Or pipe commands via stdin:
 
 ```bash
-echo "open localhost:9999 && beans" | java -jar jmxterm-uber.jar -n
+echo "open localhost:9999 && beans" | java -jar jmxsh-uber.jar -n
 ```
 
 ## Installation
@@ -80,36 +85,20 @@ echo "open localhost:9999 && beans" | java -jar jmxterm-uber.jar -n
 ### JAR (all platforms)
 
 ```bash
-java -jar jmxterm-uber.jar
+java -jar jmxsh-uber.jar
 ```
 
 ### Docker
 
 ```bash
-docker run -it ghcr.io/lemyst/jmxterm
+docker run -it ghcr.io/nyg/jmxsh
 ```
 
 ### Debian/Ubuntu
 
 ```bash
-sudo dpkg -i jmxterm-<version>.deb
-jmxterm
-```
-
-### Maven Dependency
-
-```xml
-<repositories>
-    <repository>
-        <id>github</id>
-        <url>https://maven.pkg.github.com/LeMyst/jmxterm</url>
-    </repository>
-</repositories>
-<dependency>
-    <groupId>io.github.lemyst</groupId>
-    <artifactId>jmxterm</artifactId>
-    <version>1.1.0</version>
-</dependency>
+sudo dpkg -i jmxsh-<version>.deb
+jmxsh
 ```
 
 ## Features
@@ -126,6 +115,8 @@ jmxterm
 
 - [Architecture](docs/architecture.md)
 - [Build Process](docs/build-process.md)
+- [Integration Tests](docs/integration-tests.md)
+- [E2E Tests](docs/e2e-tests.md)
 
 ## License
 
