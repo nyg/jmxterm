@@ -53,8 +53,6 @@ Several dependencies are unused or barely used and can be replaced with JDK stan
 ## GitHub Actions / CI
 
 - 🟡 **Enable CodeQL scanning** — No SAST (static application security testing) is configured. Add a CodeQL workflow for Java to catch security issues in PRs.
-- 🟡 **Fix nightly build schedule** — The cron expression in `nightly-build.yml` is commented out, so the workflow only runs on manual dispatch. Either un-comment or remove the workflow if nightly builds aren't needed.
-- 🟡 **Remove nightly version manipulation** — The nightly workflow runs `mvn versions:set` to modify the POM version in CI. Consider using Git-based versioning (e.g., `${version}+nightly.${date}.${sha}`) without modifying source files.
 - 🟢 **Verify action versions stay current** — Dependabot covers this, but worth auditing periodically. The major versions (checkout, setup-java, upload/download-artifact) should all be on their latest major.
 
 ---
