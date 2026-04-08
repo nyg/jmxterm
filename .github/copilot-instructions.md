@@ -4,9 +4,9 @@
 
 JMXTerm is an interactive command-line JMX client. Users connect to JMX-enabled Java applications to browse MBeans, get/set attributes, and invoke operations.
 
-- **Java 17**, Maven build, no Maven wrapper (use system `mvn`)
+- **Java 25**, Maven build, no Maven wrapper (use system `mvn`)
 - **Entry point**: `org.cyclopsgroup.jmxterm.boot.CliMain`
-- **CI tests on**: JDK 17, 21, 25
+- **CI tests on**: JDK 25
 
 ## Build Commands
 
