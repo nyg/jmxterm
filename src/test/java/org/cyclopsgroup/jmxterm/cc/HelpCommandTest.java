@@ -1,6 +1,7 @@
 package org.cyclopsgroup.jmxterm.cc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.beans.IntrospectionException;
 import java.io.IOException;
@@ -10,9 +11,6 @@ import java.util.HashSet;
 
 import org.cyclopsgroup.jmxterm.MockSession;
 import org.cyclopsgroup.jmxterm.SelfRecordingCommand;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.imposters.ByteBuddyClassImposteriser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,8 +22,6 @@ import org.junit.jupiter.api.Test;
 class HelpCommandTest {
   private HelpCommand command;
 
-  private Mockery context;
-
   private StringWriter output;
 
   /** Set up objects to test */
@@ -33,8 +29,6 @@ class HelpCommandTest {
   void setUp() {
     command = new HelpCommand();
     output = new StringWriter();
-    context = new Mockery();
-    context.setImposteriser(ByteBuddyClassImposteriser.INSTANCE);
   }
 
   /**
@@ -46,21 +40,15 @@ class HelpCommandTest {
   @Test
   void executeWithOption() throws Exception {
     command.setArgNames(Arrays.asList("a", "b"));
-    final CommandCenter cc = context.mock(CommandCenter.class);
+    CommandCenter cc = mock(CommandCenter.class);
     command.setCommandCenter(cc);
 
-    context.checking(
-        new Expectations() {
-          {
-            oneOf(cc).getCommandType("a");
-            will(returnValue(SelfRecordingCommand.class));
-            oneOf(cc).getCommandType("b");
-            will(returnValue(SelfRecordingCommand.class));
-          }
-        });
+    doReturn(SelfRecordingCommand.class).when(cc).getCommandType("a");
+    doReturn(SelfRecordingCommand.class).when(cc).getCommandType("b");
     command.setSession(new MockSession(output, null));
     command.execute();
-    context.assertIsSatisfied();
+    verify(cc).getCommandType("a");
+    verify(cc).getCommandType("b");
   }
 
   /**
@@ -70,22 +58,14 @@ class HelpCommandTest {
    */
   @Test
   void executeWithoutOption() throws Exception {
-    final CommandCenter cc = context.mock(CommandCenter.class);
+    CommandCenter cc = mock(CommandCenter.class);
     command.setCommandCenter(cc);
-    context.checking(
-        new Expectations() {
-          {
-            oneOf(cc).getCommandNames();
-            will(returnValue(new HashSet<String>(Arrays.asList("a", "b"))));
-            oneOf(cc).getCommandType("a");
-            will(returnValue(SelfRecordingCommand.class));
-            oneOf(cc).getCommandType("b");
-            will(returnValue(SelfRecordingCommand.class));
-          }
-        });
+    when(cc.getCommandNames()).thenReturn(new HashSet<String>(Arrays.asList("a", "b")));
+    doReturn(SelfRecordingCommand.class).when(cc).getCommandType("a");
+    doReturn(SelfRecordingCommand.class).when(cc).getCommandType("b");
     command.setSession(new MockSession(output, null));
     command.execute();
-    assertEquals(
-        "a        - desc" + System.lineSeparator() + "b        - desc", output.toString().trim());
+    assertThat(output.toString().trim())
+        .isEqualTo("a        - desc" + System.lineSeparator() + "b        - desc");
   }
 }

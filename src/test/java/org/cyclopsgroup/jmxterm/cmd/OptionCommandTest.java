@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.StringWriter;
 import org.cyclopsgroup.jmxterm.MockSession;
@@ -31,7 +31,7 @@ class OptionCommandTest {
     Session session = new MockSession(output, null);
     command.setVerboseLevel("xyz");
     command.setSession(session);
-    assertThrows(IllegalArgumentException.class, () ->
-      command.execute());
+    assertThatThrownBy(() ->
+      command.execute()).isInstanceOf(IllegalArgumentException.class);
   }
 }

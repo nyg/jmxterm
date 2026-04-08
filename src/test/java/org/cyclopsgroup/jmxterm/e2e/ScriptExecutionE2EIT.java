@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm.e2e;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.Duration;
 import org.junit.jupiter.api.AfterAll;
@@ -36,9 +36,9 @@ class ScriptExecutionE2EIT {
           "open localhost:" + targetJvm.getJmxPort(), "domains", "quit");
       String output = jmxterm.readAllOutput(TIMEOUT);
       // The platform MBeanServer always exposes the JMImplementation domain
-      assertTrue(
-          output.contains("JMImplementation"),
-          "Expected 'JMImplementation' domain in output: " + output);
+      assertThat(output)
+          .as("Expected 'JMImplementation' domain in output: " + output)
+          .contains("JMImplementation");
     }
   }
 
@@ -52,7 +52,7 @@ class ScriptExecutionE2EIT {
           "get Name",
           "quit");
       String output = jmxterm.readAllOutput(TIMEOUT);
-      assertTrue(output.contains("default"), "Expected 'default' in output: " + output);
+      assertThat(output).as("Expected 'default' in output: " + output).contains("default");
     }
   }
 
@@ -66,7 +66,7 @@ class ScriptExecutionE2EIT {
           "get Name",
           "quit");
       String output = jmxterm.readAllOutput(TIMEOUT);
-      assertTrue(output.contains("hello"), "Expected 'hello' in output: " + output);
+      assertThat(output).as("Expected 'hello' in output: " + output).contains("hello");
     }
   }
 
@@ -79,7 +79,7 @@ class ScriptExecutionE2EIT {
           "run echo world",
           "quit");
       String output = jmxterm.readAllOutput(TIMEOUT);
-      assertTrue(output.contains("echo:world"), "Expected 'echo:world' in output: " + output);
+      assertThat(output).as("Expected 'echo:world' in output: " + output).contains("echo:world");
     }
   }
 }

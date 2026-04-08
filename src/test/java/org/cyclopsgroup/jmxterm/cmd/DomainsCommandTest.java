@@ -1,12 +1,11 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.io.StringWriter;
 import javax.management.MBeanServerConnection;
 import org.cyclopsgroup.jmxterm.MockSession;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,13 +17,10 @@ import org.junit.jupiter.api.Test;
 class DomainsCommandTest {
   private DomainsCommand command;
 
-  private Mockery context;
-
   /** Set up objects to test */
   @BeforeEach
   void setUp() {
     command = new DomainsCommand();
-    context = new Mockery();
   }
 
   /**
@@ -34,18 +30,12 @@ class DomainsCommandTest {
    */
   @Test
   void execution() throws Exception {
-    final MBeanServerConnection con = context.mock(MBeanServerConnection.class);
+    MBeanServerConnection con = mock(MBeanServerConnection.class);
     StringWriter output = new StringWriter();
-    context.checking(
-        new Expectations() {
-          {
-            oneOf(con).getDomains();
-            will(returnValue(new String[] {"a", "b"}));
-          }
-        });
+    when(con.getDomains()).thenReturn(new String[] {"a", "b"});
     command.setSession(new MockSession(output, con));
     command.execute();
-    context.assertIsSatisfied();
-    assertEquals("a" + System.lineSeparator() + "b", output.toString().trim());
+    verify(con).getDomains();
+    assertThat(output.toString().trim()).isEqualTo("a" + System.lineSeparator() + "b");
   }
 }

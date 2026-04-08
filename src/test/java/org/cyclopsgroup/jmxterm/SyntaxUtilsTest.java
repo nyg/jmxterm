@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
 
@@ -19,31 +19,30 @@ class SyntaxUtilsTest {
    */
   @Test
   void getUrl() throws Exception {
-    assertEquals(
-        "/jndi/rmi://xyz-host.cyclopsgroup.org:12345/jmxrmi",
-        SyntaxUtils.getUrl("xyz-host.cyclopsgroup.org:12345", null).getURLPath());
-    assertEquals(
-        "/jndi/rmi://xyz-host.cyclopsgroup.org:12345/jmxrmi",
+    assertThat(SyntaxUtils.getUrl("xyz-host.cyclopsgroup.org:12345", null).getURLPath())
+        .isEqualTo("/jndi/rmi://xyz-host.cyclopsgroup.org:12345/jmxrmi");
+    assertThat(
         SyntaxUtils.getUrl(
                 "service:jmx:rmi:///jndi/rmi://xyz-host.cyclopsgroup.org:12345/jmxrmi", null)
-            .getURLPath());
+            .getURLPath())
+        .isEqualTo("/jndi/rmi://xyz-host.cyclopsgroup.org:12345/jmxrmi");
   }
 
   /** Verify string expression of type is correctly parsed */
   @Test
   void parseNormally() {
-    assertEquals("x", SyntaxUtils.parse("x", "java.lang.String"));
-    assertEquals(3, SyntaxUtils.parse("3", "int"));
-    assertEquals(3L, SyntaxUtils.parse("3", "long"));
-    assertEquals("", SyntaxUtils.parse("", "java.lang.String"));
-    assertNull(SyntaxUtils.parse("", "java.util.Date"));
-    assertNull(SyntaxUtils.parse("null", "java.lang.String"));
+    assertThat(SyntaxUtils.parse("x", "java.lang.String")).isEqualTo("x");
+    assertThat(SyntaxUtils.parse("3", "int")).isEqualTo(3);
+    assertThat(SyntaxUtils.parse("3", "long")).isEqualTo(3L);
+    assertThat(SyntaxUtils.parse("", "java.lang.String")).isEqualTo("");
+    assertThat(SyntaxUtils.parse("", "java.util.Date")).isNull();
+    assertThat(SyntaxUtils.parse("null", "java.lang.String")).isNull();
   }
 
   /** Verify that Exception is thrown when type is wrong */
   @Test
   void parseWithWrongType() {
-    assertThrows(IllegalArgumentException.class, () ->
-      SyntaxUtils.parse("x", "x"));
+    assertThatThrownBy(() -> SyntaxUtils.parse("x", "x"))
+        .isInstanceOf(IllegalArgumentException.class);
   }
 }

@@ -1,13 +1,11 @@
 package org.cyclopsgroup.jmxterm.cc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import javax.management.remote.JMXConnector;
 import org.cyclopsgroup.jmxterm.SyntaxUtils;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -23,19 +21,12 @@ class ConnectionImplTest {
    */
   @Test
   void construction() throws Exception {
-    Mockery context = new Mockery();
-    final JMXConnector con = context.mock(JMXConnector.class);
+    JMXConnector con = mock(JMXConnector.class);
     ConnectionImpl c = new ConnectionImpl(con, SyntaxUtils.getUrl("localhost:9991", null));
-    assertSame(con, c.getConnector());
+    assertThat(c.getConnector()).isSameAs(con);
 
-    context.checking(
-        new Expectations() {
-          {
-            oneOf(con).getConnectionId();
-            will(returnValue("xyz"));
-          }
-        });
-    assertEquals("xyz", c.getConnectorId());
-    context.assertIsSatisfied();
+    when(con.getConnectionId()).thenReturn("xyz");
+    assertThat(c.getConnectorId()).isEqualTo("xyz");
+    verify(con).getConnectionId();
   }
 }

@@ -60,8 +60,8 @@
     <guava.version>33.5.0-jre</guava.version>
 
     <!-- Test dependencies -->
-    <jmock.version>2.13.1</jmock.version>
-    <byte-buddy.version>1.18.7</byte-buddy.version>
+    <mockito.version>5.18.0</mockito.version>
+    <assertj.version>3.27.3</assertj.version>
     <junit.version>6.0.3</junit.version>
 
     <!-- Plugins -->
@@ -166,21 +166,15 @@
 
     <!-- Test dependencies -->
     <dependency>
-      <groupId>net.bytebuddy</groupId>
-      <artifactId>byte-buddy</artifactId>
-      <version>${byte-buddy.version}</version>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.jmock</groupId>
-      <artifactId>jmock</artifactId>
-      <version>${jmock.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jmock</groupId>
-      <artifactId>jmock-imposters</artifactId>
-      <version>${jmock.version}</version>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>${assertj.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

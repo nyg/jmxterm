@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.integration;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.StringWriter;
 import org.cyclopsgroup.jmxterm.cc.CommandCenter;
@@ -36,58 +35,56 @@ class VerboseLevelIT {
   @Test
   void testBriefMessages() {
     // Default level is BRIEF — messages should appear with '#' prefix
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
     String messages = messageWriter.toString();
-    assertTrue(
-        messages.contains("#"),
-        "Expected '#' prefixed messages in BRIEF mode, got: " + messages);
-    assertTrue(
-        messages.contains("Connection to"),
-        "Expected connection message, got: " + messages);
+    assertThat(messages)
+        .as("Expected '#' prefixed messages in BRIEF mode, got: " + messages)
+        .contains("#");
+    assertThat(messages).as("Expected connection message, got: " + messages).contains("Connection to");
   }
 
   @Test
   void testSilentSuppressesMessages() {
     cc.setVerboseLevel(VerboseLevel.SILENT);
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertTrue(cc.execute("bean test:type=TestMBean"));
-    assertTrue(cc.execute("get Name"));
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("bean test:type=TestMBean")).isTrue();
+    assertThat(cc.execute("get Name")).isTrue();
     String messages = messageWriter.toString();
-    assertTrue(messages.isEmpty(), "Expected no messages in SILENT mode, got: " + messages);
+    assertThat(messages).as("Expected no messages in SILENT mode, got: " + messages).isEmpty();
   }
 
   @Test
   void testSilentStillShowsValues() {
     cc.setVerboseLevel(VerboseLevel.SILENT);
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertTrue(cc.execute("bean test:type=TestMBean"));
-    assertTrue(cc.execute("get Name"));
-    assertTrue(
-        resultWriter.toString().contains("default"),
-        "Expected result value 'default' even in SILENT mode, got: " + resultWriter);
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("bean test:type=TestMBean")).isTrue();
+    assertThat(cc.execute("get Name")).isTrue();
+    assertThat(resultWriter.toString())
+        .as("Expected result value 'default' even in SILENT mode, got: " + resultWriter)
+        .contains("default");
   }
 
   @Test
   void testVerboseShowsStackTraces() {
     cc.setVerboseLevel(VerboseLevel.VERBOSE);
     // Execute a command that will fail (get attribute without connection)
-    assertFalse(cc.execute("get Name"));
+    assertThat(cc.execute("get Name")).isFalse();
     String messages = messageWriter.toString();
-    assertTrue(
-        messages.contains("at "),
-        "Expected stack trace lines in VERBOSE mode, got: " + messages);
+    assertThat(messages)
+        .as("Expected stack trace lines in VERBOSE mode, got: " + messages)
+        .contains("at ");
   }
 
   @Test
   void testBriefShowsShortErrors() {
     // Default level is BRIEF
-    assertFalse(cc.execute("get Name"));
+    assertThat(cc.execute("get Name")).isFalse();
     String messages = messageWriter.toString();
-    assertTrue(
-        messages.contains("#"),
-        "Expected '#' prefixed error in BRIEF mode, got: " + messages);
-    assertFalse(
-        messages.contains("\tat "),
-        "Expected no full stack trace in BRIEF mode, got: " + messages);
+    assertThat(messages)
+        .as("Expected '#' prefixed error in BRIEF mode, got: " + messages)
+        .contains("#");
+    assertThat(messages)
+        .as("Expected no full stack trace in BRIEF mode, got: " + messages)
+        .doesNotContain("\tat ");
   }
 }

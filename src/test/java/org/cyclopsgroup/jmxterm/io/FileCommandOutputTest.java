@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm.io;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,8 +54,8 @@ class FileCommandOutputTest {
     output.printMessage("say hello");
     output.close();
 
-    assertEquals(
-        "helloworld", FileUtils.readFileToString(testFile, Charset.forName("UTF-8")).trim());
+    assertThat(FileUtils.readFileToString(testFile, Charset.forName("UTF-8")).trim())
+        .isEqualTo("helloworld");
   }
 
   /**
@@ -75,8 +75,7 @@ class FileCommandOutputTest {
     output2.printMessage("say hello2");
     output2.close();
 
-    assertEquals(
-        "helloworld" + System.lineSeparator() + "helloworld2",
-        FileUtils.readFileToString(testFile, Charset.forName("UTF-8")).trim());
+    assertThat(FileUtils.readFileToString(testFile, Charset.forName("UTF-8")).trim())
+        .isEqualTo("helloworld" + System.lineSeparator() + "helloworld2");
   }
 }

@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.e2e;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.Duration;
 import org.junit.jupiter.api.AfterAll;
@@ -33,7 +32,7 @@ class ExitCodeE2EIT {
       jmxterm.sendCommandAndClose(
           "open localhost:" + targetJvm.getJmxPort(), "domains", "quit");
       jmxterm.readAllOutput(TIMEOUT);
-      assertEquals(0, jmxterm.getExitCode(), "Successful execution should return exit code 0");
+      assertThat(jmxterm.getExitCode()).as("Successful execution should return exit code 0").isEqualTo(0);
     }
   }
 
@@ -45,12 +44,12 @@ class ExitCodeE2EIT {
       jmxterm.readAllOutput(TIMEOUT);
       int exitCode = jmxterm.getExitCode();
       // System.exit(-2) produces 254 on POSIX (unsigned byte: 256 - 2)
-      assertTrue(
-          exitCode != 0,
-          "Expected non-zero exit code for failure with -e, but got: " + exitCode);
-      assertTrue(
-          exitCode == -2 || exitCode == 254,
-          "Exit code should be -2 (or 254 unsigned), but got: " + exitCode);
+      assertThat(exitCode)
+          .as("Expected non-zero exit code for failure with -e, but got: " + exitCode)
+          .isNotEqualTo(0);
+      assertThat(exitCode)
+          .as("Exit code should be -2 (or 254 unsigned), but got: " + exitCode)
+          .isIn(-2, 254);
     }
   }
 
@@ -59,7 +58,7 @@ class ExitCodeE2EIT {
     try (JmxTermProcessHelper jmxterm = new JmxTermProcessHelper()) {
       jmxterm.sendCommandAndClose("quit");
       jmxterm.readAllOutput(TIMEOUT);
-      assertEquals(0, jmxterm.getExitCode(), "Quit command should return exit code 0");
+      assertThat(jmxterm.getExitCode()).as("Quit command should return exit code 0").isEqualTo(0);
     }
   }
 }

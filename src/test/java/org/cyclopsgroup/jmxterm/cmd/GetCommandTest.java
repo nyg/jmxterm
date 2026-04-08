@@ -1,6 +1,7 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -20,9 +21,6 @@ import javax.management.openmbean.SimpleType;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.cyclopsgroup.jmxterm.MockSession;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.imposters.ByteBuddyClassImposteriser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,18 +32,16 @@ import org.junit.jupiter.api.Test;
 class GetCommandTest {
   private GetCommand command;
 
-  private Mockery context;
-
   private StringWriter output;
 
   private void getAttributeAndVerify(
-      final String domain,
+      String domain,
       String bean,
-      final String attribute,
-      final String expectedBean,
-      final Object expectedValue,
-      final boolean singleLine,
-      final String delimiter) {
+      String attribute,
+      String expectedBean,
+      Object expectedValue,
+      boolean singleLine,
+      String delimiter) {
     command.setDomain(domain);
     command.setBean(bean);
     command.setAttributes(Arrays.asList(attribute));
@@ -53,32 +49,23 @@ class GetCommandTest {
     command.setSingleLine(singleLine);
     command.setDelimiter(delimiter);
 
-    final String[] attributePath = attribute.split("\\.");
+    String[] attributePath = attribute.split("\\.");
 
-    final MBeanServerConnection con = context.mock(MBeanServerConnection.class);
-    final MBeanInfo beanInfo = context.mock(MBeanInfo.class);
-    final MBeanAttributeInfo attributeInfo = context.mock(MBeanAttributeInfo.class);
+    MBeanServerConnection con = mock(MBeanServerConnection.class);
+    MBeanInfo beanInfo = mock(MBeanInfo.class);
+    MBeanAttributeInfo attributeInfo = mock(MBeanAttributeInfo.class);
     try {
-      context.checking(
-          new Expectations() {
-            {
-              oneOf(con).getDomains();
-              will(returnValue(new String[] {domain, RandomStringUtils.secure().nextAlphabetic(5)}));
-              allowing(con).getMBeanInfo(new ObjectName(expectedBean));
-              will(returnValue(beanInfo));
-              oneOf(beanInfo).getAttributes();
-              will(returnValue(new MBeanAttributeInfo[] {attributeInfo}));
-              allowing(attributeInfo).getName();
-              will(returnValue(attributePath[0]));
-              allowing(attributeInfo).isReadable();
-              will(returnValue(true));
-              oneOf(con).getAttribute(new ObjectName(expectedBean), attributePath[0]);
-              will(returnValue(expectedValue));
-            }
-          });
+      when(con.getDomains())
+          .thenReturn(new String[] {domain, RandomStringUtils.secure().nextAlphabetic(5)});
+      when(con.getMBeanInfo(new ObjectName(expectedBean))).thenReturn(beanInfo);
+      when(beanInfo.getAttributes()).thenReturn(new MBeanAttributeInfo[] {attributeInfo});
+      when(attributeInfo.getName()).thenReturn(attributePath[0]);
+      when(attributeInfo.isReadable()).thenReturn(true);
+      when(con.getAttribute(new ObjectName(expectedBean), attributePath[0]))
+          .thenReturn(expectedValue);
+
       command.setSession(new MockSession(output, con));
       command.execute();
-      context.assertIsSatisfied();
 
       Object nestedExpectedValue = expectedValue;
 
@@ -86,9 +73,11 @@ class GetCommandTest {
         nestedExpectedValue = support.get(attributePath[1]);
       }
 
-      assertEquals(
-          nestedExpectedValue.toString() + delimiter + (singleLine ? "" : System.lineSeparator()),
-          output.toString());
+      assertThat(output.toString())
+          .isEqualTo(
+              nestedExpectedValue.toString()
+                  + delimiter
+                  + (singleLine ? "" : System.lineSeparator()));
     } catch (JMException e) {
       throw new RuntimeException("Test failed for unexpected JMException", e);
     } catch (IOException e) {
@@ -100,8 +89,6 @@ class GetCommandTest {
   @BeforeEach
   void setUp() {
     command = new GetCommand();
-    context = new Mockery();
-    context.setImposteriser(ByteBuddyClassImposteriser.INSTANCE);
     output = new StringWriter();
   }
 
@@ -129,18 +116,11 @@ class GetCommandTest {
    */
   @Test
   void executeWithStrangeAttributeName() throws Exception {
-    final Map<String, Object> entries = new HashMap<>();
+    Map<String, Object> entries = new HashMap<>();
     entries.put("d", "bingo");
-    final CompositeType compositeType = context.mock(CompositeType.class);
-    context.checking(
-        new Expectations() {
-          {
-            oneOf(compositeType).keySet();
-            will(returnValue(entries.keySet()));
-            oneOf(compositeType).getType("d");
-            will(returnValue(SimpleType.STRING));
-          }
-        });
+    CompositeType compositeType = mock(CompositeType.class);
+    when(compositeType.keySet()).thenReturn(entries.keySet());
+    doReturn(SimpleType.STRING).when(compositeType).getType("d");
     Object expectedValue = new CompositeDataSupport(compositeType, entries);
     getAttributeAndVerify("a", "type=x", "a_b-c.d", "a:type=x", expectedValue, false, "");
   }

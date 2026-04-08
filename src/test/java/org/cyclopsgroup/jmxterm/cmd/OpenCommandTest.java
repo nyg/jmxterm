@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.StringWriter;
 import org.cyclopsgroup.jmxterm.MockSession;
@@ -34,8 +33,8 @@ class OpenCommandTest {
     Session session = new MockSession(output, null);
     command.setSession(session);
     command.execute();
-    assertEquals(
-        "id,service:jmx:rmi:///jndi/rmi://localhost:9991/jmxrmi", output.toString().trim());
+    assertThat(output.toString().trim())
+        .isEqualTo("id,service:jmx:rmi:///jndi/rmi://localhost:9991/jmxrmi");
   }
 
   /** @throws Exception */
@@ -46,6 +45,6 @@ class OpenCommandTest {
     session.disconnect();
     command.setSession(session);
     command.execute();
-    assertTrue(session.isConnected());
+    assertThat(session.isConnected()).isTrue();
   }
 }
