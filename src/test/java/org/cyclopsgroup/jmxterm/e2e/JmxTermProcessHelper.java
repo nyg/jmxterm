@@ -133,12 +133,14 @@ public class JmxTermProcessHelper implements AutoCloseable {
 
   private static Path findUberJar() throws IOException {
     Path targetDir = Path.of("target");
-    return Files.list(targetDir)
-        .filter(p -> p.getFileName().toString().matches("jmxterm-.*-uber\\.jar"))
-        .findFirst()
-        .orElseThrow(
-            () ->
-                new IOException(
-                    "Uber JAR not found in target/. Run 'mvn package' first."));
+    try (var files = Files.list(targetDir)) {
+      return files
+          .filter(p -> p.getFileName().toString().matches("jmxterm-.*-uber\\.jar"))
+          .findFirst()
+          .orElseThrow(
+              () ->
+                  new IOException(
+                      "Uber JAR not found in target/. Run 'mvn package' first."));
+    }
   }
 }

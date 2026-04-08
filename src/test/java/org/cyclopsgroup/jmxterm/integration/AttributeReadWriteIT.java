@@ -22,25 +22,26 @@ class AttributeReadWriteIT {
 
   @BeforeEach
   void setUp() throws Exception {
+    resetMBeanState();
     resultWriter = new StringWriter();
     messageWriter = new StringWriter();
     cc = new CommandCenter(new WriterCommandOutput(resultWriter, messageWriter), null);
   }
 
   @AfterEach
-  void tearDown() {
+  void tearDown() throws Exception {
     cc.close();
-    // Reset the shared MBean state so tests are independent
-    try {
-      jmxServer
-          .getMBeanServer()
-          .invoke(
-              new javax.management.ObjectName("test:type=TestMBean"),
-              "reset",
-              null,
-              null);
-    } catch (Exception ignored) {
-    }
+    resetMBeanState();
+  }
+
+  private void resetMBeanState() throws Exception {
+    jmxServer
+        .getMBeanServer()
+        .invoke(
+            new javax.management.ObjectName("test:type=TestMBean"),
+            "reset",
+            null,
+            null);
   }
 
   @Test

@@ -1,9 +1,10 @@
 package org.cyclopsgroup.jmxterm.integration;
 
-import java.net.ServerSocket;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.ExportException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
 import javax.management.ObjectName;
@@ -29,6 +30,8 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  */
 public class EmbeddedJmxServer implements BeforeAllCallback, AfterAllCallback {
 
+  private static final int MAX_PORT_RETRIES = 10;
+
   private MBeanServer mBeanServer;
   private JMXConnectorServer connectorServer;
   private Registry registry;
@@ -36,10 +39,8 @@ public class EmbeddedJmxServer implements BeforeAllCallback, AfterAllCallback {
 
   @Override
   public void beforeAll(ExtensionContext context) throws Exception {
-    // Find a free port
-    try (ServerSocket ss = new ServerSocket(0)) {
-      port = ss.getLocalPort();
-    }
+    // Create RMI registry with retry to avoid TOCTOU race on port selection
+    registry = createRegistryOnRandomPort();
 
     // Create a dedicated MBeanServer (not the platform one, to avoid side effects)
     mBeanServer = MBeanServerFactory.createMBeanServer("test-" + port);
@@ -49,15 +50,27 @@ public class EmbeddedJmxServer implements BeforeAllCallback, AfterAllCallback {
         new StandardMBean(new TestMBeanImpl(), TestMBean.class),
         new ObjectName("test:type=TestMBean"));
 
-    // Create RMI registry on the chosen port
-    registry = LocateRegistry.createRegistry(port);
-
     // Start JMX connector server
     JMXServiceURL url =
         new JMXServiceURL(
             "service:jmx:rmi:///jndi/rmi://localhost:" + port + "/jmxrmi");
     connectorServer = JMXConnectorServerFactory.newJMXConnectorServer(url, null, mBeanServer);
     connectorServer.start();
+  }
+
+  private Registry createRegistryOnRandomPort() throws Exception {
+    for (int attempt = 0; attempt < MAX_PORT_RETRIES; attempt++) {
+      int candidatePort = ThreadLocalRandom.current().nextInt(49152, 65536);
+      try {
+        Registry reg = LocateRegistry.createRegistry(candidatePort);
+        this.port = candidatePort;
+        return reg;
+      } catch (ExportException e) {
+        // Port already in use, retry with a different port
+      }
+    }
+    throw new IllegalStateException(
+        "Failed to create RMI registry after " + MAX_PORT_RETRIES + " attempts");
   }
 
   @Override
