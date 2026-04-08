@@ -2,8 +2,8 @@ FROM eclipse-temurin:25-jre-alpine@sha256:f10d6259d0798c1e12179b6bf3b63cea0d6843
 
 RUN apk upgrade --no-cache
 
-COPY target/jmxterm*-uber.jar /opt/jmxterm/jmxterm.jar
+COPY target/jmxsh*-uber.jar /opt/jmxsh/jmxsh.jar
 
-WORKDIR /opt/jmxterm
+WORKDIR /opt/jmxsh
 
-CMD ["java", "-jar", "jmxterm.jar"]
+CMD ["java", "-jar", "jmxsh.jar"]

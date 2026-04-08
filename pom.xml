@@ -3,13 +3,13 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.github.lemyst</groupId>
-  <artifactId>jmxterm</artifactId>
+  <groupId>sh.jmx</groupId>
+  <artifactId>jmxsh</artifactId>
   <version>1.1.0</version>
   <packaging>jar</packaging>
-  <name>JMXTerm</name>
-  <description>Command line based interactive JMX client</description>
-  <url>https://github.com/LeMyst/jmxterm</url>
+  <name>jmxsh</name>
+  <description>Interactive command-line JMX client</description>
+  <url>https://github.com/nyg/jmxsh</url>
   <inceptionYear>2008</inceptionYear>
 
   <licenses>
@@ -21,26 +21,15 @@
   </licenses>
 
   <scm>
-    <connection>scm:git:https://github.com/LeMyst/jmxterm.git</connection>
-    <developerConnection>scm:git:git@github.com:LeMyst/jmxterm.git</developerConnection>
-    <url>https://github.com/LeMyst/jmxterm</url>
+    <connection>scm:git:https://github.com/nyg/jmxsh.git</connection>
+    <developerConnection>scm:git:git@github.com:nyg/jmxsh.git</developerConnection>
+    <url>https://github.com/nyg/jmxsh</url>
   </scm>
 
   <issueManagement>
     <system>github</system>
-    <url>https://github.com/LeMyst/jmxterm/issues</url>
+    <url>https://github.com/nyg/jmxsh/issues</url>
   </issueManagement>
-
-  <distributionManagement>
-    <repository>
-      <id>github</id>
-      <name>GitHub Packages</name>
-      <url>https://maven.pkg.github.com/LeMyst/jmxterm</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </distributionManagement>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -69,7 +58,7 @@
     <rpm-maven-plugin.version>2.3.0</rpm-maven-plugin.version>
     <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
     <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
-    <maven-assembly-plugin.version>3.8.0</maven-assembly-plugin.version>
+    <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
     <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
     <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
@@ -256,25 +245,35 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>${maven-assembly-plugin.version}</version>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>${maven-shade-plugin.version}</version>
         <executions>
           <execution>
+            <phase>package</phase>
             <goals>
-              <goal>single</goal>
+              <goal>shade</goal>
             </goals>
-            <phase>prepare-package</phase>
             <configuration>
               <finalName>${dist.finalName}-uber</finalName>
-              <appendAssemblyId>false</appendAssemblyId>
-              <descriptorRefs>
-                <descriptorRef>jar-with-dependencies</descriptorRef>
-              </descriptorRefs>
-              <archive>
-                <manifest>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <mainClass>org.cyclopsgroup.jmxterm.boot.CliMain</mainClass>
-                </manifest>
-              </archive>
+                </transformer>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"/>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer"/>
+              </transformers>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                    <exclude>module-info.class</exclude>
+                  </excludes>
+                </filter>
+              </filters>
             </configuration>
           </execution>
         </executions>
@@ -324,11 +323,11 @@
           <defaultFilemode>444</defaultFilemode>
           <mappings>
             <mapping>
-              <directory>/usr/share/jmxterm</directory>
+              <directory>/usr/share/jmxsh</directory>
               <sources>
                 <source>
                   <location>target/${dist.finalName}-uber.jar</location>
-                  <destination>jmxterm-uber.jar</destination>
+                  <destination>jmxsh-uber.jar</destination>
                 </source>
               </sources>
             </mapping>
@@ -338,8 +337,8 @@
               <filemode>755</filemode>
               <sources>
                 <source>
-                  <location>src/main/script/jmxterm.sh</location>
-                  <destination>jmxterm</destination>
+                  <location>src/main/script/jmxsh.sh</location>
+                  <destination>jmxsh</destination>
                 </source>
               </sources>
             </mapping>
@@ -363,7 +362,7 @@
                 <data>
                   <type>file</type>
                     <src>target/${dist.finalName}-uber.jar</src>
-                  <dst>/usr/share/jmxterm/jmxterm-uber.jar</dst>
+                  <dst>/usr/share/jmxsh/jmxsh-uber.jar</dst>
                   <mapper>
                     <type>perm</type>
                     <filemode>644</filemode>
@@ -371,8 +370,8 @@
                 </data>
                 <data>
                   <type>file</type>
-                  <src>src/main/script/jmxterm.sh</src>
-                  <dst>/usr/bin/jmxterm</dst>
+                  <src>src/main/script/jmxsh.sh</src>
+                  <dst>/usr/bin/jmxsh</dst>
                   <mapper>
                     <type>perm</type>
                     <filemode>755</filemode>

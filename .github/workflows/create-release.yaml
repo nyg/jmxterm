@@ -1,29 +1,28 @@
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v*'
 
 name: Create Release
+
 permissions:
   contents: write
-  packages: write
+  packages: write       # for GHCR push
+  security-events: write # for Trivy SARIF uploads
 
 jobs:
   build:
+    name: Build & Scan
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: ['25']
-    
     steps:
-      - name: 📦 Checkout Code
+      - name: Checkout Code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: 🚀 Set up JDK ${{ matrix.java }}
+      - name: Set up JDK 25
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
         with:
-          java-version: ${{ matrix.java }}
-          distribution: 'temurin'
+          java-version: '25'
+          distribution: temurin
           cache: maven
 
       - name: Set release version (strip leading v)
@@ -31,72 +30,147 @@ jobs:
         env:
           GITHUB_REF_NAME: ${{ github.ref_name }}
 
-      - name: 🛠 Build with Maven for Java ${{ matrix.java }}
-        run: mvn -B package --file pom.xml -Ddist.finalName=jmxterm-${{ env.RELEASE_VERSION }}-java${{ matrix.java }}
+      - name: Build with Maven
+        run: mvn -B -q --no-transfer-progress package -Ddist.finalName=jmxsh-${{ env.RELEASE_VERSION }}
 
-      - name: Debug list target directory
-        run: ls -la target || true
+      - name: Run Trivy vulnerability scanner (filesystem)
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # master
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'sarif'
+          output: 'trivy-fs-results.sarif'
+          severity: 'CRITICAL'
 
-      - name: 📦 Upload artifact
+      - name: Upload Trivy (filesystem) results to Security tab
+        uses: github/codeql-action/upload-sarif@c10b8064de6f491fea524254123dbe5e09572f13 # v4
+        if: always()
+        with:
+          sarif_file: 'trivy-fs-results.sarif'
+          category: 'trivy-filesystem'
+
+      - name: Upload build artifacts
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
-          name: jmxterm-java${{ matrix.java }}
-          path: target/jmxterm-${{ env.RELEASE_VERSION }}-java${{ matrix.java }}*.jar
+          name: release-artifacts
+          path: |
+            target/jmxsh-${{ env.RELEASE_VERSION }}*.jar
+            target/*.deb
           retention-days: 1
 
-  publish:
-    runs-on: ubuntu-latest
+  docker:
+    name: Docker Image
     needs: build
-
+    runs-on: ubuntu-latest
     steps:
-      - name: 📦 Checkout Code
+      - name: Checkout Code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: 🚀 Set up JDK 25
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
-        with:
-          java-version: '25'
-          distribution: 'temurin'
-          cache: maven
-          server-id: github
-          server-username: GITHUB_ACTOR
-          server-password: GITHUB_TOKEN
-
-      # This publishes the "official" artifact to GitHub Packages - just Java 25 version
-      - name: 📦 Deploy to GitHub Packages
-        run: mvn -B deploy --file pom.xml -DskipTests
-        env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 📥 Download all artifacts
+      - name: Download build artifacts
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
+          name: release-artifacts
+          path: target/
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
+        with:
+          images: ghcr.io/nyg/jmxsh
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build local image (for scanning)
+        id: local
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
+        with:
+          context: .
+          load: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Trivy scan (image)
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # master
+        env:
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
+          TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
+        with:
+          image-ref: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          format: 'sarif'
+          output: 'trivy-image-results.sarif'
+
+      - name: Upload Trivy (image) results to Security tab
+        uses: github/codeql-action/upload-sarif@c10b8064de6f491fea524254123dbe5e09572f13 # v4
+        if: always()
+        with:
+          sarif_file: 'trivy-image-results.sarif'
+          category: 'trivy-docker-image'
+
+      - name: Build & push multi-arch image
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64/v8
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  publish:
+    name: Create GitHub Release
+    needs: [build, docker]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: release-artifacts
           path: release-artifacts
 
-      - name: Get latest release commit SHA
-        if: env.latest_nightly_commit == null
+      - name: Get latest release tag
+        id: prev_release
         run: |
           latest_release=$(curl -s https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)
-          echo "latest_release=${latest_release}" >> $GITHUB_ENV
+          if [ "$latest_release" != "null" ] && [ -n "$latest_release" ]; then
+            echo "tag=${latest_release}" >> $GITHUB_OUTPUT
+            echo "found=true" >> $GITHUB_OUTPUT
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Update CHANGELOG
+      - name: Generate changelog
+        if: steps.prev_release.outputs.found == 'true'
         id: changelog
         uses: requarks/changelog-action@6d71e098526ee17bae963f058d34cd763378337f # v1
         with:
           token: ${{ github.token }}
           fromTag: ${{ github.ref_name }}
-          toTag: ${{ env.latest_release }}
+          toTag: ${{ steps.prev_release.outputs.tag }}
           includeInvalidCommits: true
 
-      - name: 🚀 Create Release
-        id: create_release
+      - name: Create Release
         uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
             release-artifacts/**/*.jar
-            target/*.deb
+            release-artifacts/**/*.deb
           name: Release ${{ github.ref_name }}
-          body: ${{ steps.changelog.outputs.changes }}
+          body: ${{ steps.changelog.outputs.changes || 'Initial release.' }}
