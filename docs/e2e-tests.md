@@ -2,7 +2,7 @@
 
 ## Overview
 
-E2E tests verify that the **fully packaged jmxterm uber JAR** works correctly as a standalone application. Unlike integration tests (which call `CommandCenter` directly in-process), E2E tests launch jmxterm as a **separate OS process**, pipe commands to its stdin, and verify its stdout output and exit codes.
+E2E tests verify that the **fully packaged jmxsh uber JAR** works correctly as a standalone application. Unlike integration tests (which call `CommandCenter` directly in-process), E2E tests launch jmxsh as a **separate OS process**, pipe commands to its stdin, and verify its stdout output and exit codes.
 
 This tests the real user experience: CLI argument parsing, non-interactive mode, file I/O, auto-connect, and process exit behavior — none of which can be tested in-process.
 
@@ -29,7 +29,7 @@ mvn verify -Dit.test=ExitCodeE2EIT#testSuccessfulExecution
 
 E2E tests depend on the uber JAR existing in `target/`, which is built during the `package` phase — Failsafe's `integration-test` phase runs after `package`, so the JAR is always available.
 
-E2E tests run on every PR via CI, across JDK 17, 21, and 25.
+E2E tests run on every PR via CI, on JDK 25.
 
 ## Architecture
 
@@ -37,7 +37,7 @@ E2E tests involve **two separate JVM processes** communicating over JMX:
 
 ```
 ┌─────────────────────┐         JMX/RMI          ┌──────────────────────┐
-│   jmxterm process    │ ◄──────────────────────► │  target JVM process  │
+│   jmxsh process      │ ◄──────────────────────► │  target JVM process  │
 │                      │    localhost:<port>       │                      │
 │  (uber JAR, -n mode) │                          │  (TestTargetApp)     │
 │  stdin ← test sends  │                          │  MBean: test:type=   │
@@ -102,11 +102,11 @@ Key methods:
 - `getPid()` — the OS process ID
 - `close()` — forcibly destroys the process
 
-### JmxTermProcessHelper — launching jmxterm
+### JmxTermProcessHelper — launching jmxsh
 
-`JmxTermProcessHelper` manages a jmxterm subprocess:
+`JmxTermProcessHelper` manages a jmxsh subprocess:
 
-1. Finds the uber JAR in `target/` (matches `jmxterm-*-uber.jar`)
+1. Finds the uber JAR in `target/` (matches `jmxsh-*-uber.jar`)
 2. Launches: `java -jar <uber.jar> -n [extra args]`
    - `-n` enables non-interactive mode (reads plain stdin, no JLine)
 3. Provides methods to send commands and read output
@@ -131,7 +131,7 @@ Key methods:
 
 ### ScriptExecutionE2EIT (4 tests)
 
-Tests full command workflows by piping commands to the jmxterm process.
+Tests full command workflows by piping commands to the jmxsh process.
 
 | Test | What it verifies |
 |------|-----------------|
@@ -142,13 +142,13 @@ Tests full command workflows by piping commands to the jmxterm process.
 
 ### CliArgumentsE2EIT (4 tests)
 
-Tests CLI flags that control jmxterm's startup behavior.
+Tests CLI flags that control jmxsh's startup behavior.
 
 | Test | What it verifies |
 |------|-----------------|
 | `testAutoConnect` | `-l localhost:<port>` auto-connects on startup; `domains` works immediately |
 | `testSilentMode` | `-v silent` suppresses all `#`-prefixed messages but still shows result values |
-| `testExitOnFailure` | `-e` causes jmxterm to exit with non-zero code on first command failure |
+| `testExitOnFailure` | `-e` causes jmxsh to exit with non-zero code on first command failure |
 | `testHelpFlag` | `-h` prints usage information and exits with code 0 |
 
 ### ExitCodeE2EIT (3 tests)
@@ -173,14 +173,14 @@ Both `TargetJvmProcess` and the test infrastructure use **random free ports** (`
 
 Every process is forcibly destroyed in `@AfterAll` or in `close()` methods. `JmxTermProcessHelper` implements `AutoCloseable` so it can be used in try-with-resources blocks.
 
-The target JVM stays alive for all tests in a class (started in `@BeforeAll`, stopped in `@AfterAll`), while each test creates its own fresh jmxterm process to ensure clean state.
+The target JVM stays alive for all tests in a class (started in `@BeforeAll`, stopped in `@AfterAll`), while each test creates its own fresh jmxsh process to ensure clean state.
 
 ## Differences from integration tests
 
 | Aspect | Integration tests | E2E tests |
 |--------|------------------|-----------|
 | JMX server | Embedded in test JVM | Separate subprocess |
-| jmxterm | `CommandCenter` called directly | Uber JAR launched as process |
+| jmxsh | `CommandCenter` called directly | Uber JAR launched as process |
 | Communication | In-process method calls | stdin/stdout pipes + JMX/RMI |
 | What's tested | Command logic, JMX protocol | CLI args, packaging, exit codes |
 | Speed | Fast (~50ms per test) | Slower (~200ms per test, process startup) |

@@ -1,12 +1,12 @@
 # Architecture
 
-This document describes the internal architecture of jmxterm, focusing on the components involved in
+This document describes the internal architecture of jmxsh, focusing on the components involved in
 the command execution flow.
 
 ## Command Execution Flow
 
 The diagram below shows the sequence of interactions when a user runs the `open`, `bean`, `run`, and
-`close` commands in a typical jmxterm session.
+`close` commands in a typical jmxsh session.
 
 ```mermaid
 sequenceDiagram
@@ -95,7 +95,7 @@ The central orchestrator (`org.cyclopsgroup.jmxterm.cc.CommandCenter`). Responsi
 
 A factory interface (`org.cyclopsgroup.jmxterm.CommandFactory`) implemented by
 `PredefinedCommandFactory`. Loads command name → class mappings from a properties file
-(`META-INF/cyclopsgroup/jmxterm.properties`) and creates a fresh command instance for each
+(`META-INF/cyclopsgroup/jmxsh.properties`) and creates a fresh command instance for each
 execution. Supports aliases (e.g. `quit` → `exit`, `bye`).
 
 ### Command

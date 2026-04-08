@@ -27,9 +27,9 @@ public class AboutCommand extends Command {
     // output predefined about properties
     Configuration props =
         ConfigurationUtils.loadFromOverlappingResources(
-            "META-INF/cyclopsgroup/jmxterm.properties", getClass().getClassLoader());
+            "META-INF/cyclopsgroup/jmxsh.properties", getClass().getClassLoader());
     ValueOutputFormat format = new ValueOutputFormat(2, showDescription, true);
-    Configuration subset = props.subset("jmxterm.about");
+    Configuration subset = props.subset("jmxsh.about");
     for (Iterator<String> iterator = subset.getKeys(); iterator.hasNext(); ) {
       String key = iterator.next();
       format.printExpression(session.output, key, subset.getProperty(key), null);
