@@ -3,13 +3,13 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>io.github.lemyst</groupId>
-  <artifactId>jmxterm</artifactId>
+  <groupId>sh.jmx</groupId>
+  <artifactId>jmxsh</artifactId>
   <version>1.1.0</version>
   <packaging>jar</packaging>
-  <name>JMXTerm</name>
-  <description>Command line based interactive JMX client</description>
-  <url>https://github.com/LeMyst/jmxterm</url>
+  <name>jmxsh</name>
+  <description>Interactive command-line JMX client</description>
+  <url>https://github.com/nyg/jmxsh</url>
   <inceptionYear>2008</inceptionYear>
 
   <licenses>
@@ -21,26 +21,15 @@
   </licenses>
 
   <scm>
-    <connection>scm:git:https://github.com/LeMyst/jmxterm.git</connection>
-    <developerConnection>scm:git:git@github.com:LeMyst/jmxterm.git</developerConnection>
-    <url>https://github.com/LeMyst/jmxterm</url>
+    <connection>scm:git:https://github.com/nyg/jmxsh.git</connection>
+    <developerConnection>scm:git:git@github.com:nyg/jmxsh.git</developerConnection>
+    <url>https://github.com/nyg/jmxsh</url>
   </scm>
 
   <issueManagement>
     <system>github</system>
-    <url>https://github.com/LeMyst/jmxterm/issues</url>
+    <url>https://github.com/nyg/jmxsh/issues</url>
   </issueManagement>
-
-  <distributionManagement>
-    <repository>
-      <id>github</id>
-      <name>GitHub Packages</name>
-      <url>https://maven.pkg.github.com/LeMyst/jmxterm</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </distributionManagement>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -330,11 +319,11 @@
           <defaultFilemode>444</defaultFilemode>
           <mappings>
             <mapping>
-              <directory>/usr/share/jmxterm</directory>
+              <directory>/usr/share/jmxsh</directory>
               <sources>
                 <source>
                   <location>target/${dist.finalName}-uber.jar</location>
-                  <destination>jmxterm-uber.jar</destination>
+                  <destination>jmxsh-uber.jar</destination>
                 </source>
               </sources>
             </mapping>
@@ -344,8 +333,8 @@
               <filemode>755</filemode>
               <sources>
                 <source>
-                  <location>src/main/script/jmxterm.sh</location>
-                  <destination>jmxterm</destination>
+                  <location>src/main/script/jmxsh.sh</location>
+                  <destination>jmxsh</destination>
                 </source>
               </sources>
             </mapping>
@@ -369,7 +358,7 @@
                 <data>
                   <type>file</type>
                     <src>target/${dist.finalName}-uber.jar</src>
-                  <dst>/usr/share/jmxterm/jmxterm-uber.jar</dst>
+                  <dst>/usr/share/jmxsh/jmxsh-uber.jar</dst>
                   <mapper>
                     <type>perm</type>
                     <filemode>644</filemode>
@@ -377,8 +366,8 @@
                 </data>
                 <data>
                   <type>file</type>
-                  <src>src/main/script/jmxterm.sh</src>
-                  <dst>/usr/bin/jmxterm</dst>
+                  <src>src/main/script/jmxsh.sh</src>
+                  <dst>/usr/bin/jmxsh</dst>
                   <mapper>
                     <type>perm</type>
                     <filemode>755</filemode>

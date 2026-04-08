@@ -1,9 +1,9 @@
 #!/bin/sh -e
 #
-# Invoke Jmxterm interactive command line from a SHELL
+# Invoke jmxsh interactive command line from a SHELL
 #
 
-uberjar="/usr/share/jmxterm/jmxterm-uber.jar"
+uberjar="/usr/share/jmxsh/jmxsh-uber.jar"
 
 if [ ! -e $uberjar ]
 then
@@ -24,7 +24,7 @@ if [ -z $java_cmd ]
 then
   echo "JAVA_HOME environment variable is not defined"
   echo "JAVA command isn't in PATH either"
-  echo "Without an executable Java, Jmxterm can not continue"
+  echo "Without an executable Java, jmxsh can not continue"
   exit 1
 fi
 

@@ -1,8 +1,8 @@
-# JMXTerm - Copilot Development Instructions
+# jmxsh - Copilot Development Instructions
 
 ## Project Overview
 
-JMXTerm is an interactive command-line JMX client. Users connect to JMX-enabled Java applications to browse MBeans, get/set attributes, and invoke operations.
+jmxsh is an interactive command-line JMX client. Users connect to JMX-enabled Java applications to browse MBeans, get/set attributes, and invoke operations.
 
 - **Java 25**, Maven build, no Maven wrapper (use system `mvn`)
 - **Entry point**: `org.cyclopsgroup.jmxterm.boot.CliMain`
@@ -17,7 +17,7 @@ mvn -B -q --no-transfer-progress verify
 # Compile only
 mvn -B -q --no-transfer-progress compile
 
-# Package (creates uber JAR at target/jmxterm-*-uber.jar)
+# Package (creates uber JAR at target/jmxsh-*-uber.jar)
 mvn -B -q --no-transfer-progress package
 
 # Run a single test class
@@ -27,7 +27,7 @@ mvn -B -q --no-transfer-progress test -Dtest=GetCommandTest
 mvn -B -q --no-transfer-progress test -Dtest=GetCommandTest#testExecute
 
 # Run the application
-java -jar target/jmxterm-*-uber.jar
+java -jar target/jmxsh-*-uber.jar
 ```
 
 Run `mvn clean` before `mvn compile` when switching branches to avoid stale class errors.
@@ -44,7 +44,7 @@ Surefire excludes `org.cyclopsgroup.jmxterm.jdk*` tests (platform-specific JVM a
 
 Commands extend the abstract `Command` class and implement `execute()`. They are **transient** — a new instance is created per execution.
 
-Commands are registered via the properties file `src/main/resources/META-INF/cyclopsgroup/jmxterm.properties`, which maps command names to implementation classes and defines aliases (e.g., `quit` → `exit`, `bye`). `HelpCommand` is added programmatically in `PredefinedCommandFactory`.
+Commands are registered via the properties file `src/main/resources/META-INF/cyclopsgroup/jmxsh.properties`, which maps command names to implementation classes and defines aliases (e.g., `quit` → `exit`, `bye`). `HelpCommand` is added programmatically in `PredefinedCommandFactory`.
 
 Arguments and options use annotations from `org.cyclopsgroup.jcli.annotation`:
 - `@Cli(name="...")` on the class
@@ -105,7 +105,7 @@ void execution() throws Exception {
 
 1. Create a class in `cmd/` extending `Command` with `@Cli(name="mycommand")`
 2. Implement `execute()`, define options/arguments via annotations
-3. Register in `src/main/resources/META-INF/cyclopsgroup/jmxterm.properties`
+3. Register in `src/main/resources/META-INF/cyclopsgroup/jmxsh.properties`
 4. Add a test in `src/test/java/.../cmd/` following the JMock pattern above
 
 ### Error Handling

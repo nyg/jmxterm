@@ -6,7 +6,6 @@ on:
 name: Create Release
 permissions:
   contents: write
-  packages: write
 
 jobs:
   build:
@@ -32,7 +31,7 @@ jobs:
           GITHUB_REF_NAME: ${{ github.ref_name }}
 
       - name: 🛠 Build with Maven for Java ${{ matrix.java }}
-        run: mvn -B package --file pom.xml -Ddist.finalName=jmxterm-${{ env.RELEASE_VERSION }}-java${{ matrix.java }}
+        run: mvn -B package --file pom.xml -Ddist.finalName=jmxsh-${{ env.RELEASE_VERSION }}-java${{ matrix.java }}
 
       - name: Debug list target directory
         run: ls -la target || true
@@ -40,8 +39,8 @@ jobs:
       - name: 📦 Upload artifact
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
-          name: jmxterm-java${{ matrix.java }}
-          path: target/jmxterm-${{ env.RELEASE_VERSION }}-java${{ matrix.java }}*.jar
+          name: jmxsh-java${{ matrix.java }}
+          path: target/jmxsh-${{ env.RELEASE_VERSION }}-java${{ matrix.java }}*.jar
           retention-days: 1
 
   publish:
@@ -51,23 +50,6 @@ jobs:
     steps:
       - name: 📦 Checkout Code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: 🚀 Set up JDK 25
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
-        with:
-          java-version: '25'
-          distribution: 'temurin'
-          cache: maven
-          server-id: github
-          server-username: GITHUB_ACTOR
-          server-password: GITHUB_TOKEN
-
-      # This publishes the "official" artifact to GitHub Packages - just Java 25 version
-      - name: 📦 Deploy to GitHub Packages
-        run: mvn -B deploy --file pom.xml -DskipTests
-        env:
-          GITHUB_ACTOR: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 📥 Download all artifacts
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8

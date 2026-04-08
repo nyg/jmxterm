@@ -53,19 +53,19 @@ Several plugins run during the package phase to produce the distribution artifac
 
 **Plugin:** `maven-jar-plugin`
 
-Produces the standard library JAR (`jmxterm-<version>.jar`) containing only the project's compiled
+Produces the standard library JAR (`jmxsh-<version>.jar`) containing only the project's compiled
 classes.
 
 #### 4b. Uber JAR
 
 **Plugin:** `maven-assembly-plugin`
 
-Produces a self-contained uber JAR (`jmxterm-<version>-uber.jar`) that bundles all runtime
+Produces a self-contained uber JAR (`jmxsh-<version>-uber.jar`) that bundles all runtime
 dependencies into a single executable file. The manifest sets
 `org.cyclopsgroup.jmxterm.boot.CliMain` as the main class, so it can be run directly:
 
 ```bash
-java -jar jmxterm-<version>-uber.jar
+java -jar jmxsh-<version>-uber.jar
 ```
 
 #### 4c. Debian Package
@@ -73,7 +73,7 @@ java -jar jmxterm-<version>-uber.jar
 **Plugin:** `jdeb`
 
 Produces a `.deb` package for Debian/Ubuntu systems. Installs the uber JAR to
-`/usr/share/jmxterm/jmxterm-uber.jar` and a launch script to `/usr/bin/jmxterm`.
+`/usr/share/jmxsh/jmxsh-uber.jar` and a launch script to `/usr/bin/jmxsh`.
 
 #### 4d. RPM Package
 
@@ -86,7 +86,7 @@ the DEB package.
 
 **Plugin:** `maven-source-plugin`
 
-Attaches a source JAR (`jmxterm-<version>-sources.jar`) for distribution alongside the binary.
+Attaches a source JAR (`jmxsh-<version>-sources.jar`) for distribution alongside the binary.
 
 ### 5. Verify (integration + E2E tests)
 
@@ -108,17 +108,17 @@ local projects can reference them as dependencies.
 
 | Artifact | Location | Description |
 |---|---|---|
-| `jmxterm-<v>.jar` | `target/` | Library JAR (classes only) |
-| `jmxterm-<v>-uber.jar` | `target/` | Executable uber JAR (all deps bundled) |
-| `jmxterm-<v>.deb` | `target/` | Debian package |
-| `jmxterm-<v>.rpm` | `target/rpm/` | RPM package |
-| `jmxterm-<v>-sources.jar` | `target/` | Source code JAR |
+| `jmxsh-<v>.jar` | `target/` | Library JAR (classes only) |
+| `jmxsh-<v>-uber.jar` | `target/` | Executable uber JAR (all deps bundled) |
+| `jmxsh-<v>.deb` | `target/` | Debian package |
+| `jmxsh-<v>.rpm` | `target/rpm/` | RPM package |
+| `jmxsh-<v>-sources.jar` | `target/` | Source code JAR |
 
 ## CI/CD
 
 The GitHub Actions workflow (`maven.yaml`) runs the full build on every push and pull request:
 
-1. **Test** — `mvn verify` across JDK 17, 21, and 25
-2. **Package & Scan** — `mvn package` on JDK 17, then Trivy vulnerability scanning
+1. **Test** — `mvn verify` on JDK 25
+2. **Package & Scan** — `mvn package` on JDK 25, then Trivy vulnerability scanning
 3. **Docker** — builds a multi-architecture Docker image (`linux/amd64`, `linux/arm64`) and pushes
    to `ghcr.io`

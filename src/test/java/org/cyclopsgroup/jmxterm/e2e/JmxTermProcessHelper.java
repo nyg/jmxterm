@@ -135,7 +135,7 @@ public class JmxTermProcessHelper implements AutoCloseable {
     Path targetDir = Path.of("target");
     try (var files = Files.list(targetDir)) {
       return files
-          .filter(p -> p.getFileName().toString().matches("jmxterm-.*-uber\\.jar"))
+          .filter(p -> p.getFileName().toString().matches("jmxsh-.*-uber\\.jar"))
           .findFirst()
           .orElseThrow(
               () ->

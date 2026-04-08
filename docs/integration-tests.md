@@ -2,7 +2,7 @@
 
 ## Overview
 
-Integration tests verify that jmxterm commands work correctly against a **real JMX server**. Unlike the unit tests (which mock `MBeanServerConnection`), these tests start an actual JMX connector server inside the test JVM and execute commands over a real JMX/RMI connection.
+Integration tests verify that jmxsh commands work correctly against a **real JMX server**. Unlike the unit tests (which mock `MBeanServerConnection`), these tests start an actual JMX connector server inside the test JVM and execute commands over a real JMX/RMI connection.
 
 This means the tests exercise the full command lifecycle: argument parsing → command dispatch → JMX protocol call → result formatting → output.
 
@@ -27,7 +27,7 @@ mvn verify -Dit.test=AttributeReadWriteIT
 mvn verify -Dit.test=ConnectionLifecycleIT#testOpenConnection
 ```
 
-Integration tests run on every PR via the existing CI workflow (`maven.yaml`), across JDK 17, 21, and 25.
+Integration tests run on every PR via the existing CI workflow (`maven.yaml`), on JDK 25.
 
 ## Architecture
 
@@ -124,7 +124,7 @@ Tests the JMX connection lifecycle managed by the `open` and `close` commands.
 
 ### DomainBeanNavigationIT (6 tests)
 
-Tests browsing and selecting JMX domains and beans — the core navigation model of jmxterm.
+Tests browsing and selecting JMX domains and beans — the core navigation model of jmxsh.
 
 | Test | What it verifies |
 |------|-----------------|
