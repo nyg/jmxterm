@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.cc;
 
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.IOException;
 
@@ -21,11 +20,11 @@ class PredefinedCommandFactoryTest {
   @Test
   void construction() throws Exception {
     PredefinedCommandFactory f = new PredefinedCommandFactory();
-    assertTrue(f.getCommandTypes().containsKey("help"));
-    assertTrue(f.getCommandTypes().containsKey("open"));
-    assertTrue(f.getCommandTypes().containsKey("close"));
-    assertTrue(f.getCommandTypes().containsKey("quit"));
-    assertTrue(f.getCommandTypes().containsKey("beans"));
-    assertInstanceOf(HelpCommand.class, f.createCommand("help"));
+    assertThat(f.getCommandTypes().containsKey("help")).isTrue();
+    assertThat(f.getCommandTypes().containsKey("open")).isTrue();
+    assertThat(f.getCommandTypes().containsKey("close")).isTrue();
+    assertThat(f.getCommandTypes().containsKey("quit")).isTrue();
+    assertThat(f.getCommandTypes().containsKey("beans")).isTrue();
+    assertThat(f.createCommand("help")).isInstanceOf(HelpCommand.class);
   }
 }

@@ -24,7 +24,7 @@ class PredefinedCommandFactory implements CommandFactory {
    * @throws IOException Thrown when Jar is corrupted
    */
   PredefinedCommandFactory() throws IOException {
-    this("META-INF/cyclopsgroup/jmxterm.properties");
+    this("META-INF/cyclopsgroup/jmxsh.properties");
   }
 
   /**
@@ -42,7 +42,7 @@ class PredefinedCommandFactory implements CommandFactory {
       throw new FileNotFoundException(
           "Couldn't load configuration from " + configPath + ", classpath has problem");
     }
-    props = props.subset("jmxterm.commands");
+    props = props.subset("jmxsh.commands");
     if (props == null) {
       throw new IOException("Expected configuration doesn't appear in " + configPath);
     }

@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.integration;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.StringWriter;
 import org.cyclopsgroup.jmxterm.cc.CommandCenter;
@@ -34,55 +33,55 @@ class ConnectionLifecycleIT {
 
   @Test
   void testOpenConnection() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertTrue(cc.execute("close"));
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("close")).isTrue();
   }
 
   @Test
   void testOpenDisplaysConnectionInfo() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
     resultWriter.getBuffer().setLength(0);
-    assertTrue(cc.execute("open"));
+    assertThat(cc.execute("open")).isTrue();
     String result = resultWriter.toString();
-    assertTrue(
-        result.contains(jmxServer.getServiceUrl()),
-        "Expected service URL in output, got: " + result);
+    assertThat(result)
+        .as("Expected service URL in output, got: " + result)
+        .contains(jmxServer.getServiceUrl());
   }
 
   @Test
   void testCloseAndReconnect() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertTrue(cc.execute("close"));
-    assertTrue(
-        cc.execute("open " + jmxServer.getConnectionUrl()),
-        "Reconnection after close should succeed");
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("close")).isTrue();
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl()))
+        .as("Reconnection after close should succeed")
+        .isTrue();
     // Verify the connection works by running a command
-    assertTrue(cc.execute("domains"));
+    assertThat(cc.execute("domains")).isTrue();
   }
 
   @Test
   void testOpenWhenAlreadyConnected() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertFalse(
-        cc.execute("open " + jmxServer.getConnectionUrl()),
-        "Opening a second connection without closing should fail");
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl()))
+        .as("Opening a second connection without closing should fail")
+        .isFalse();
   }
 
   @Test
   void testCloseWithoutOpen() {
-    assertTrue(
-        cc.execute("close"),
-        "Closing without an open connection should succeed (no-op disconnect)");
+    assertThat(cc.execute("close"))
+        .as("Closing without an open connection should succeed (no-op disconnect)")
+        .isTrue();
   }
 
   @Test
   void testOpenWithFullServiceUrl() {
-    assertTrue(cc.execute("open " + jmxServer.getServiceUrl()));
+    assertThat(cc.execute("open " + jmxServer.getServiceUrl())).isTrue();
     resultWriter.getBuffer().setLength(0);
-    assertTrue(cc.execute("open"));
+    assertThat(cc.execute("open")).isTrue();
     String result = resultWriter.toString();
-    assertTrue(
-        result.contains(jmxServer.getServiceUrl()),
-        "Expected service URL in output, got: " + result);
+    assertThat(result)
+        .as("Expected service URL in output, got: " + result)
+        .contains(jmxServer.getServiceUrl());
   }
 }

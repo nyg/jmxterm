@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm.jdk9;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 
@@ -18,6 +18,6 @@ class Jdk9JavaProcessManagerTest {
   void construction() {
     Jdk9JavaProcessManager jpm = new Jdk9JavaProcessManager();
     List<JavaProcess> ps = jpm.list();
-    assertFalse(ps.isEmpty());
+    assertThat(ps).isNotEmpty();
   }
 }

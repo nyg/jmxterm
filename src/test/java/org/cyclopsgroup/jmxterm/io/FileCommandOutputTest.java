@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm.io;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,8 +53,8 @@ class FileCommandOutputTest {
     output.printMessage("say hello");
     output.close();
 
-    assertEquals(
-        "helloworld", Files.readString(testFile.toPath(), StandardCharsets.UTF_8).trim());
+    assertThat(Files.readString(testFile.toPath(), StandardCharsets.UTF_8).trim())
+        .isEqualTo("helloworld");
   }
 
   /**
@@ -74,9 +74,8 @@ class FileCommandOutputTest {
     output2.printMessage("say hello2");
     output2.close();
 
-    assertEquals(
-        "helloworld" + System.lineSeparator() + "helloworld2",
-        Files.readString(testFile.toPath(), StandardCharsets.UTF_8).trim());
+    assertThat(Files.readString(testFile.toPath(), StandardCharsets.UTF_8).trim())
+        .isEqualTo("helloworld" + System.lineSeparator() + "helloworld2");
   }
 
   private static String randomAlphabetic(int length) {

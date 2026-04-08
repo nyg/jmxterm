@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.integration;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.StringWriter;
 import org.cyclopsgroup.jmxterm.cc.CommandCenter;
@@ -34,44 +33,46 @@ class ErrorHandlingIT {
 
   @Test
   void testGetWithoutConnection() {
-    assertFalse(
-        cc.execute("get Name"),
-        "Expected failure when getting attribute without a connection");
+    assertThat(cc.execute("get Name"))
+        .as("Expected failure when getting attribute without a connection")
+        .isFalse();
   }
 
   @Test
   void testGetWithoutBean() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertFalse(
-        cc.execute("get Name"), "Expected failure when getting attribute without selecting a bean");
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("get Name"))
+        .as("Expected failure when getting attribute without selecting a bean")
+        .isFalse();
   }
 
   @Test
   void testInvalidBeanName() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertFalse(
-        cc.execute("bean invalid:name:format:::"),
-        "Expected failure for malformed bean name");
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("bean invalid:name:format:::"))
+        .as("Expected failure for malformed bean name")
+        .isFalse();
   }
 
   @Test
   void testConnectToBadPort() {
-    assertFalse(
-        cc.execute("open localhost:1"),
-        "Expected failure when connecting to an invalid port");
+    assertThat(cc.execute("open localhost:1"))
+        .as("Expected failure when connecting to an invalid port")
+        .isFalse();
   }
 
   @Test
   void testDomainWithoutConnection() {
-    assertFalse(
-        cc.execute("domains"), "Expected failure when listing domains without a connection");
+    assertThat(cc.execute("domains"))
+        .as("Expected failure when listing domains without a connection")
+        .isFalse();
   }
 
   @Test
   void testSetReadOnlyAttribute() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertFalse(
-        cc.execute("set -b test:type=TestMBean Count 5"),
-        "Expected failure when setting read-only attribute Count");
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("set -b test:type=TestMBean Count 5"))
+        .as("Expected failure when setting read-only attribute Count")
+        .isFalse();
   }
 }

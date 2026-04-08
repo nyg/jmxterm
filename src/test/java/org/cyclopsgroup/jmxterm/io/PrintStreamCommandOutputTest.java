@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm.io;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -24,7 +24,7 @@ class PrintStreamCommandOutputTest {
     output.println("hello world");
     output.printMessage("yeeha");
 
-    assertEquals("hello world", new String(w1.toByteArray()).trim());
-    assertEquals("yeeha", new String(w2.toByteArray()).trim());
+    assertThat(new String(w1.toByteArray()).trim()).isEqualTo("hello world");
+    assertThat(new String(w2.toByteArray()).trim()).isEqualTo("yeeha");
   }
 }

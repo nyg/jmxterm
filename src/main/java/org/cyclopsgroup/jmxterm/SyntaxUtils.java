@@ -3,11 +3,13 @@ package org.cyclopsgroup.jmxterm;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.management.remote.JMXServiceURL;
 
-import org.cyclopsgroup.jmxterm.utils.TypeConverter;
 import org.cyclopsgroup.jmxterm.utils.ValueFormat;
 
 /**
@@ -23,6 +25,16 @@ public final class SyntaxUtils {
   public static final PrintStream NULL_PRINT_STREAM = new PrintStream(OutputStream.nullOutputStream(), true);
 
   private static final Pattern PATTERN_HOST_PORT = Pattern.compile("^(\\w|\\.|\\-)+\\:\\d+$");
+
+  private static final Map<String, Class<?>> PRIMITIVE_TYPES = Map.ofEntries(
+      Map.entry("boolean", boolean.class),
+      Map.entry("byte", byte.class),
+      Map.entry("char", char.class),
+      Map.entry("short", short.class),
+      Map.entry("int", int.class),
+      Map.entry("long", long.class),
+      Map.entry("float", float.class),
+      Map.entry("double", double.class));
 
   /**
    * @param url String expression of MBean server URL or abbreviation like localhost:9991
@@ -75,19 +87,14 @@ public final class SyntaxUtils {
     if (expression == null || NULL.equalsIgnoreCase(expression)) {
       return null;
     }
-    Class<?> c;
-    try {
-      c = TypeConverter.resolveClass(type);
-    } catch (ClassNotFoundException e) {
-      throw new IllegalArgumentException("Type " + type + " isn't valid", e);
-    }
+    Class<?> c = resolveClass(type);
     if (c == String.class) {
       return expression;
     }
     if (expression.isEmpty()) {
       return null;
     }
-    return TypeConverter.convert(expression, c);
+    return convert(expression, c);
   }
 
   /**
@@ -106,6 +113,56 @@ public final class SyntaxUtils {
       }
     }
     return true;
+  }
+
+  private static Class<?> resolveClass(String type) {
+    Class<?> primitive = PRIMITIVE_TYPES.get(type);
+    if (primitive != null) {
+      return primitive;
+    }
+    try {
+      return Class.forName(type);
+    } catch (ClassNotFoundException e) {
+      throw new IllegalArgumentException("Type " + type + " isn't valid", e);
+    }
+  }
+
+  private static Object convert(String expression, Class<?> targetType) {
+    if (targetType == boolean.class || targetType == Boolean.class) {
+      return Boolean.parseBoolean(expression);
+    }
+    if (targetType == byte.class || targetType == Byte.class) {
+      return Byte.parseByte(expression);
+    }
+    if (targetType == char.class || targetType == Character.class) {
+      if (expression.length() != 1) {
+        throw new IllegalArgumentException("Cannot convert \"" + expression + "\" to char");
+      }
+      return expression.charAt(0);
+    }
+    if (targetType == short.class || targetType == Short.class) {
+      return Short.parseShort(expression);
+    }
+    if (targetType == int.class || targetType == Integer.class) {
+      return Integer.parseInt(expression);
+    }
+    if (targetType == long.class || targetType == Long.class) {
+      return Long.parseLong(expression);
+    }
+    if (targetType == float.class || targetType == Float.class) {
+      return Float.parseFloat(expression);
+    }
+    if (targetType == double.class || targetType == Double.class) {
+      return Double.parseDouble(expression);
+    }
+    if (targetType == BigInteger.class) {
+      return new BigInteger(expression);
+    }
+    if (targetType == BigDecimal.class) {
+      return new BigDecimal(expression);
+    }
+    throw new IllegalArgumentException(
+        "Cannot convert \"" + expression + "\" to type " + targetType.getName());
   }
 
   private SyntaxUtils() {}

@@ -1,6 +1,7 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -8,8 +9,6 @@ import javax.management.JMException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import org.cyclopsgroup.jmxterm.MockSession;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -22,24 +21,18 @@ class BeanCommandTest {
 
   private final StringWriter output = new StringWriter();
 
-  private void setBeanAndVerify(String beanName, String domainName, final String expectedBean)
+  private void setBeanAndVerify(String beanName, String domainName, String expectedBean)
       throws IOException, JMException {
-    Mockery context = new Mockery();
-    final MBeanServerConnection con = context.mock(MBeanServerConnection.class);
+    MBeanServerConnection con = mock(MBeanServerConnection.class);
     command.setBean(beanName);
     MockSession s = new MockSession(output, con);
     if (domainName != null) {
       s.setDomain(domainName);
     }
-    context.checking(
-        new Expectations() {
-          {
-            atLeast(1).of(con).getMBeanInfo(new ObjectName(expectedBean));
-          }
-        });
     command.setSession(s);
     command.execute();
-    assertEquals(expectedBean, s.getBean());
+    assertThat(s.getBean()).isEqualTo(expectedBean);
+    verify(con, atLeastOnce()).getMBeanInfo(new ObjectName(expectedBean));
   }
 
   /**
@@ -52,7 +45,7 @@ class BeanCommandTest {
   void executeWithGettingNull() throws Exception {
     command.setSession(new MockSession(output, null));
     command.execute();
-    assertEquals("null", output.toString().trim());
+    assertThat(output.toString().trim()).isEqualTo("null");
   }
 
   /**
@@ -67,7 +60,7 @@ class BeanCommandTest {
     s.setBean("something");
     command.setSession(s);
     command.execute();
-    assertEquals("something", output.toString().trim());
+    assertThat(output.toString().trim()).isEqualTo("something");
   }
 
   /**
@@ -80,8 +73,7 @@ class BeanCommandTest {
   void executeWithInvalidBean() throws Exception {
     command.setBean("blablabla");
     command.setSession(new MockSession(output, null));
-    assertThrows(IllegalArgumentException.class, () ->
-      command.execute());
+    assertThatThrownBy(() -> command.execute()).isInstanceOf(IllegalArgumentException.class);
   }
 
   /**
@@ -97,7 +89,7 @@ class BeanCommandTest {
     s.setBean("something");
     command.setSession(s);
     command.execute();
-    assertNull(s.getBean());
+    assertThat(s.getBean()).isNull();
   }
 
   /**

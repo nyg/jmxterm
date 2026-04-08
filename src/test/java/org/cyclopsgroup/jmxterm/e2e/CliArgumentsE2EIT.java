@@ -1,9 +1,6 @@
 package org.cyclopsgroup.jmxterm.e2e;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.Duration;
 import org.junit.jupiter.api.AfterAll;
@@ -35,9 +32,9 @@ class CliArgumentsE2EIT {
         new JmxTermProcessHelper("-l", "localhost:" + targetJvm.getJmxPort())) {
       jmxterm.sendCommandAndClose("domains", "quit");
       String output = jmxterm.readAllOutput(TIMEOUT);
-      assertTrue(
-          output.contains("JMImplementation"),
-          "Expected 'JMImplementation' domain in output: " + output);
+      assertThat(output)
+          .as("Expected 'JMImplementation' domain in output: " + output)
+          .contains("JMImplementation");
     }
   }
 
@@ -52,12 +49,12 @@ class CliArgumentsE2EIT {
       String output = jmxterm.readAllOutput(TIMEOUT);
       // In silent mode, informational messages prefixed with "#" should not appear
       for (String line : output.split("\\R")) {
-        assertFalse(
-            line.startsWith("#"),
-            "Silent mode should not produce '#' prefixed lines, but found: " + line);
+        assertThat(line)
+            .as("Silent mode should not produce '#' prefixed lines, but found: " + line)
+            .doesNotStartWith("#");
       }
       // The attribute value should still be present
-      assertTrue(output.contains("default"), "Expected 'default' value in output: " + output);
+      assertThat(output).as("Expected 'default' value in output: " + output).contains("default");
     }
   }
 
@@ -68,7 +65,7 @@ class CliArgumentsE2EIT {
       jmxterm.sendCommandAndClose("get Name");
       String output = jmxterm.readAllOutput(TIMEOUT);
       int exitCode = jmxterm.getExitCode();
-      assertNotEquals(0, exitCode, "Expected non-zero exit code for failed command, output: " + output);
+      assertThat(exitCode).as("Expected non-zero exit code for failed command, output: " + output).isNotEqualTo(0);
     }
   }
 
@@ -77,10 +74,13 @@ class CliArgumentsE2EIT {
     try (JmxTermProcessHelper jmxterm = new JmxTermProcessHelper("-h")) {
       String output = jmxterm.readAllOutput(TIMEOUT);
       int exitCode = jmxterm.getExitCode();
-      assertTrue(
-          output.contains("usage") || output.contains("Usage") || output.contains("jmxterm"),
-          "Expected usage information in output: " + output);
-      assertEquals(0, exitCode, "Help flag should result in exit code 0");
+      assertThat(output)
+          .as("Expected usage information in output: " + output)
+          .satisfiesAnyOf(
+              o -> assertThat(o).contains("usage"),
+              o -> assertThat(o).contains("Usage"),
+              o -> assertThat(o).contains("jmxterm"));
+      assertThat(exitCode).as("Help flag should result in exit code 0").isEqualTo(0);
     }
   }
 }

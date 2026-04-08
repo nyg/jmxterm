@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.integration;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.*;
 
 import java.io.StringWriter;
 import org.cyclopsgroup.jmxterm.cc.CommandCenter;
@@ -46,66 +45,66 @@ class OperationInvocationIT {
 
   @Test
   void testRunEchoOperation() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertTrue(cc.execute("bean test:type=TestMBean"));
-    assertTrue(cc.execute("run echo hello"));
-    assertTrue(
-        resultWriter.toString().contains("echo:hello"),
-        "Expected 'echo:hello' in output, got: " + resultWriter);
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("bean test:type=TestMBean")).isTrue();
+    assertThat(cc.execute("run echo hello")).isTrue();
+    assertThat(resultWriter.toString())
+        .as("Expected 'echo:hello' in output, got: " + resultWriter)
+        .contains("echo:hello");
   }
 
   @Test
   void testRunAddOperation() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertTrue(cc.execute("bean test:type=TestMBean"));
-    assertTrue(cc.execute("run add 3 5"));
-    assertTrue(
-        resultWriter.toString().contains("8"),
-        "Expected '8' in output, got: " + resultWriter);
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("bean test:type=TestMBean")).isTrue();
+    assertThat(cc.execute("run add 3 5")).isTrue();
+    assertThat(resultWriter.toString())
+        .as("Expected '8' in output, got: " + resultWriter)
+        .contains("8");
   }
 
   @Test
   void testRunResetOperation() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertTrue(cc.execute("bean test:type=TestMBean"));
-    assertTrue(cc.execute("set Name changed"));
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("bean test:type=TestMBean")).isTrue();
+    assertThat(cc.execute("set Name changed")).isTrue();
     resultWriter.getBuffer().setLength(0);
-    assertTrue(cc.execute("get Name"));
-    assertTrue(
-        resultWriter.toString().contains("changed"),
-        "Expected 'changed' after set, got: " + resultWriter);
+    assertThat(cc.execute("get Name")).isTrue();
+    assertThat(resultWriter.toString())
+        .as("Expected 'changed' after set, got: " + resultWriter)
+        .contains("changed");
 
     resultWriter.getBuffer().setLength(0);
-    assertTrue(cc.execute("run reset"));
+    assertThat(cc.execute("run reset")).isTrue();
     resultWriter.getBuffer().setLength(0);
-    assertTrue(cc.execute("get Name"));
-    assertTrue(
-        resultWriter.toString().contains("default"),
-        "Expected 'default' after reset, got: " + resultWriter);
+    assertThat(cc.execute("get Name")).isTrue();
+    assertThat(resultWriter.toString())
+        .as("Expected 'default' after reset, got: " + resultWriter)
+        .contains("default");
   }
 
   @Test
   void testRunWithBeanOption() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertTrue(cc.execute("run -b test:type=TestMBean echo world"));
-    assertTrue(
-        resultWriter.toString().contains("echo:world"),
-        "Expected 'echo:world' in output, got: " + resultWriter);
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("run -b test:type=TestMBean echo world")).isTrue();
+    assertThat(resultWriter.toString())
+        .as("Expected 'echo:world' in output, got: " + resultWriter)
+        .contains("echo:world");
   }
 
   @Test
   void testRunNonExistentOperation() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertTrue(cc.execute("bean test:type=TestMBean"));
-    assertFalse(cc.execute("run nonExistent"));
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("bean test:type=TestMBean")).isTrue();
+    assertThat(cc.execute("run nonExistent")).isFalse();
   }
 
   @Test
   void testRunWithWrongParamCount() {
-    assertTrue(cc.execute("open " + jmxServer.getConnectionUrl()));
-    assertTrue(cc.execute("bean test:type=TestMBean"));
-    assertFalse(
-        cc.execute("run echo too many params"),
-        "Expected failure when invoking echo with wrong number of parameters");
+    assertThat(cc.execute("open " + jmxServer.getConnectionUrl())).isTrue();
+    assertThat(cc.execute("bean test:type=TestMBean")).isTrue();
+    assertThat(cc.execute("run echo too many params"))
+        .as("Expected failure when invoking echo with wrong number of parameters")
+        .isFalse();
   }
 }
