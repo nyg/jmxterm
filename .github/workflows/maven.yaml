@@ -1,11 +1,11 @@
-# This workflow builds and tests the project across multiple JDKs (17, 21, 25),
-# while producing release artifacts (and Docker image) only once (on JDK 17)
+# This workflow builds and tests the project on JDK 25,
+# while producing release artifacts (and Docker image) once
 # to avoid duplicate artifacts and repeated security scanning.
 #
 # Matrix test job:
-#   - Runs 'mvn -B verify' on JDK 17, 21, 25
+#   - Runs 'mvn -B verify' on JDK 25
 # Build job:
-#   - Runs full package & security scanning on JDK 17 only
+#   - Runs full package & security scanning on JDK 25 only
 # Docker job:
 #   - Builds and (on non-PR events) pushes multi-arch image based on the packaged artifacts
 
@@ -29,7 +29,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [17, 21, 25]
+        java: [25]
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
@@ -44,7 +44,7 @@ jobs:
         run: mvn -B -q --no-transfer-progress verify
 
   build:
-    name: Package & Scan (JDK 17)
+    name: Package & Scan (JDK 25)
     permissions:
       contents: write  # for artifact upload
       security-events: write  # for trivy upload
@@ -53,10 +53,10 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
 
-      - name: Set up JDK 17
+      - name: Set up JDK 25
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
         with:
-          java-version: '17'
+          java-version: '25'
           distribution: 'temurin'
           cache: maven
 
