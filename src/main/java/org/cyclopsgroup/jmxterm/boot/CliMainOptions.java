@@ -168,7 +168,7 @@ public class CliMainOptions {
   @Option(
       name = "l",
       longName = "url",
-      description = "Location of MBean service. It can be <host>:<port> or full service URL.")
+      description = "Location of MBean service. It can be <host>:<port>, jmxmp://<host>:<port>, or full service URL.")
   public final void setUrl(String url) {
     Objects.requireNonNull(url, "URL can't be NULL");
     this.url = url;

@@ -42,7 +42,6 @@ Several dependencies are unused or barely used and can be replaced with JDK stan
 
 ## Build / POM
 
-- ~~🟠 **Switch uber JAR from `maven-assembly-plugin` to `maven-shade-plugin`**~~ ✅ Done — The shade plugin handles `META-INF/services` merging via resource transformers and supports class relocation.
 - 🟠 **Add `maven-enforcer-plugin` rules** — The plugin is in `pluginManagement` but has no active rules. Add: `requireMavenVersion` (≥ 3.8), `requireJavaVersion` (≥ 25), `banDuplicatePomDependencyVersions`, `dependencyConvergence`.
 - 🟡 **Add static analysis plugin** — No static analysis is currently configured. Consider SpotBugs (`spotbugs-maven-plugin`), Checkstyle (`maven-checkstyle-plugin`), or ErrorProne for compile-time bug detection.
 - 🟡 **Add `.editorconfig`** — Not present. Ensures consistent indentation, charset, and line endings across IDEs and editors.
@@ -69,7 +68,6 @@ Several dependencies are unused or barely used and can be replaced with JDK stan
 
 ## Testing
 
-- ~~🟡 **Evaluate migrating JMock → Mockito**~~ ✅ Done — Migrated to Mockito + AssertJ. All test classes now use `mock()`, `when()`, `verify()` and `assertThat()`.
 - 🟡 **Add test coverage reporting (JaCoCo)** — No coverage tool is configured. Add `jacoco-maven-plugin` to generate reports and optionally enforce minimum coverage thresholds.
 - 🟢 **Address existing TODO in `WatchCommand`** — Line 28: `TODO Consider the use case for CSV file backend generation`. Decide whether to implement or remove the comment.
 

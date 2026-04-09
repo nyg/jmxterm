@@ -24,8 +24,11 @@ import org.cyclopsgroup.jmxterm.SyntaxUtils;
     note =
         """
         Without argument this command display current connection. \
-        URL can be a <PID>, <hostname>:<port> or full qualified JMX service URL. For example
+        URL can be a <PID>, <hostname>:<port> or full qualified JMX service URL. \
+        For JMXMP connections, use jmxmp://<hostname>:<port>. For example
          open localhost:9991,
+         open jmxmp://localhost:9991,
+         open service:jmx:jmxmp://localhost:9991,
          open jmx:service:...""")
 public class OpenCommand extends Command {
   private String password;
@@ -86,7 +89,7 @@ public class OpenCommand extends Command {
   }
 
   /** @param url URL of MBean service to open */
-  @Argument(displayName = "url", description = "URL, <host>:<port>, or a PID to connect to")
+  @Argument(displayName = "url", description = "URL, <host>:<port>, jmxmp://<host>:<port>, or a PID to connect to")
   public final void setUrl(String url) {
     this.url = url;
   }

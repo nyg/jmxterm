@@ -55,7 +55,8 @@ $> quit
 
 | Command | Description |
 |---|---|
-| `open <host:port>` | Connect to a remote JMX endpoint |
+| `open <host:port>` | Connect to a remote JMX endpoint (RMI) |
+| `open jmxmp://<host:port>` | Connect to a remote JMX endpoint (JMXMP) |
 | `open <pid>` | Attach to a local JVM by process ID |
 | `domains` | List all MBean domains |
 | `beans` | List all MBeans (optionally filter by domain with `-d`) |
@@ -67,6 +68,17 @@ $> quit
 | `close` | Disconnect from the JMX endpoint |
 | `jvms` | List local Java processes |
 | `help` | Show all available commands |
+
+### JMXMP Connections
+
+To connect using the JMXMP protocol instead of the default RMI:
+
+```
+$> open jmxmp://localhost:9999
+#Connection to jmxmp://localhost:9999 is opened
+```
+
+Full service URLs are also supported: `open service:jmx:jmxmp://localhost:9999`
 
 ### Non-Interactive Mode
 
@@ -107,6 +119,7 @@ jmxsh
 
 - **Interactive REPL** with tab completion and command history (JLine)
 - **Remote & local connections** — connect via host:port, JMX URL, or local PID
+- **JMXMP protocol support** — connect via `jmxmp://host:port` in addition to the default RMI protocol
 - **Full MBean support** — browse domains, read/write attributes, invoke operations
 - **Command chaining** — run multiple commands in one line with `&&`
 - **Script mode** — automate JMX operations via files or piped input
