@@ -32,15 +32,15 @@ Deletes the `target/` directory and all previously built artifacts.
 
 **Plugin:** `maven-compiler-plugin`
 
-Compiles all Java sources under `src/main/java` using Java 17 language level. The `--release 17`
-flag ensures the compiled bytecode is compatible with Java 17 and later.
+Compiles all Java sources under `src/main/java` using Java 25 language level. The `--release 25`
+flag ensures the compiled bytecode is compatible with Java 25 and later.
 
 ### 3. Test (unit tests)
 
 **Plugin:** `maven-surefire-plugin`
 
-Runs unit tests under `src/test/java`. These tests use JUnit 5 and JMock 2 to verify individual
-command behavior against mocked `MBeanServerConnection` instances.
+Runs unit tests under `src/test/java`. These tests use JUnit (Jupiter), Mockito, and AssertJ to
+verify individual command behavior against mocked `MBeanServerConnection` instances.
 
 > Tests in the `org.cyclopsgroup.jmxterm.jdk*` package are excluded because they depend on
 > platform-specific JVM attach APIs.
@@ -58,10 +58,11 @@ classes.
 
 #### 4b. Uber JAR
 
-**Plugin:** `maven-assembly-plugin`
+**Plugin:** `maven-shade-plugin`
 
 Produces a self-contained uber JAR (`jmxsh-<version>-uber.jar`) that bundles all runtime
-dependencies into a single executable file. The manifest sets
+dependencies into a single executable file. The shade plugin handles `META-INF/services` merging
+and license aggregation via resource transformers. The manifest sets
 `org.cyclopsgroup.jmxterm.boot.CliMain` as the main class, so it can be run directly:
 
 ```bash
@@ -116,10 +117,10 @@ local projects can reference them as dependencies.
 
 ## CI/CD
 
-The CI workflow (`maven.yaml`) runs `mvn verify` (compile + unit + integration + E2E tests) on
+The CI workflow (`java-ci.yaml`) runs `mvn verify` (compile + unit + integration + E2E tests) on
 every push and pull request targeting `master`.
 
-The release workflow (`create-release.yaml`) runs on tag pushes (`v*.*.*`) and handles:
+The release workflow (`create-release.yaml`) runs on tag pushes (`v*`) and handles:
 
 1. **Build & Scan** — `mvn package` on JDK 25, then Trivy vulnerability scanning (filesystem)
 2. **Docker** — builds and scans a multi-architecture Docker image (`linux/amd64`, `linux/arm64`),

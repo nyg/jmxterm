@@ -2,6 +2,8 @@
 
 > Interactive command-line JMX client for monitoring and managing Java applications.
 
+**Website: [jmx.sh](https://jmx.sh)**
+
 jmxsh lets you connect to any JMX-enabled JVM, browse MBeans, read and write attributes, and
 invoke operations — all from the comfort of your terminal. Think of it as a Swiss Army knife for JMX.
 
@@ -113,10 +115,10 @@ jmxsh
 
 ## Documentation
 
-- [Architecture](docs/architecture.md)
-- [Build Process](docs/build-process.md)
-- [Integration Tests](docs/integration-tests.md)
-- [E2E Tests](docs/e2e-tests.md)
+- [Architecture](docs/dev/architecture.md)
+- [Build Process](docs/dev/build-process.md)
+- [Integration Tests](docs/dev/integration-tests.md)
+- [E2E Tests](docs/dev/e2e-tests.md)
 
 ## License
 

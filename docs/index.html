@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>jmxsh — Interactive JMX Client for the Terminal</title>
+  <meta name="description" content="jmxsh is an interactive command-line JMX client for monitoring and managing Java applications. Connect, browse MBeans, read/write attributes, and invoke operations.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="container">
+      <h1>jmx<span class="accent">.sh</span></h1>
+      <p class="tagline">Interactive command-line JMX client for monitoring and managing Java applications.</p>
+      <div class="hero-actions">
+        <a href="https://github.com/nyg/jmxsh/releases" class="btn btn-primary">Download</a>
+        <a href="https://github.com/nyg/jmxsh" class="btn btn-secondary">GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Quick Start -->
+  <section class="section" id="quickstart">
+    <div class="container">
+      <h2>Quick Start</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>JAR</h3>
+          <p>Download the uber JAR and run it directly:</p>
+          <pre><code>java -jar jmxsh-uber.jar</code></pre>
+        </div>
+        <div class="card">
+          <h3>Docker</h3>
+          <p>Pull the image and run interactively:</p>
+          <pre><code>docker run -it ghcr.io/nyg/jmxsh</code></pre>
+        </div>
+        <div class="card">
+          <h3>Debian/Ubuntu</h3>
+          <p>Install from the .deb package:</p>
+          <pre><code>sudo dpkg -i jmxsh-&lt;version&gt;.deb
+jmxsh</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Usage -->
+  <section class="section section-alt" id="usage">
+    <div class="container">
+      <h2>Interactive Mode</h2>
+      <p class="section-subtitle">Connect to any JMX-enabled JVM and explore MBeans interactively with tab completion and command history.</p>
+      <div class="terminal">
+        <div class="terminal-header">
+          <span class="terminal-dot red"></span>
+          <span class="terminal-dot yellow"></span>
+          <span class="terminal-dot green"></span>
+          <span class="terminal-title">jmxsh</span>
+        </div>
+        <div class="terminal-body">
+<pre><span class="prompt">$</span> java -jar jmxsh-uber.jar
+Welcome to JMX terminal. Type "help" for available commands.
+<span class="prompt">$&gt;</span> open localhost:9999
+<span class="comment">#Connection to localhost:9999 is opened</span>
+<span class="prompt">$&gt;</span> domains
+<span class="comment">#following domains are available</span>
+JMImplementation
+java.lang
+com.example
+<span class="prompt">$&gt;</span> bean com.example:type=AppStats
+<span class="comment">#bean is set to com.example:type=AppStats</span>
+<span class="prompt">$&gt;</span> get RequestCount
+<span class="comment">#mbean = com.example:type=AppStats:</span>
+RequestCount = 42;
+<span class="prompt">$&gt;</span> run resetStats
+<span class="comment">#calling operation resetStats of mbean com.example:type=AppStats</span>
+<span class="comment">#operation returns:</span>
+null
+<span class="prompt">$&gt;</span> close
+<span class="prompt">$&gt;</span> quit</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Non-Interactive Usage -->
+  <section class="section" id="scripting">
+    <div class="container">
+      <h2>Non-Interactive Mode</h2>
+      <p class="section-subtitle">Automate JMX operations with scripts and pipes — perfect for monitoring, alerting, and CI/CD pipelines.</p>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Script File</h3>
+          <p>Run commands from a file:</p>
+          <pre><code>java -jar jmxsh-uber.jar \
+  -l localhost:9999 \
+  --input commands.txt</code></pre>
+        </div>
+        <div class="card">
+          <h3>Piped Input</h3>
+          <p>Pipe commands via stdin:</p>
+          <pre><code>echo "open localhost:9999 && beans" \
+  | java -jar jmxsh-uber.jar -n</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Commands -->
+  <section class="section section-alt" id="commands">
+    <div class="container">
+      <h2>Commands</h2>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Command</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>open &lt;host:port&gt;</code></td><td>Connect to a remote JMX endpoint</td></tr>
+            <tr><td><code>open &lt;pid&gt;</code></td><td>Attach to a local JVM by process ID</td></tr>
+            <tr><td><code>domains</code></td><td>List all MBean domains</td></tr>
+            <tr><td><code>beans</code></td><td>List all MBeans (filter by domain with <code>-d</code>)</td></tr>
+            <tr><td><code>bean &lt;name&gt;</code></td><td>Select an MBean for subsequent operations</td></tr>
+            <tr><td><code>info</code></td><td>Show attributes and operations of the selected MBean</td></tr>
+            <tr><td><code>get &lt;attr&gt;</code></td><td>Read an MBean attribute</td></tr>
+            <tr><td><code>set &lt;attr&gt; &lt;value&gt;</code></td><td>Write an MBean attribute</td></tr>
+            <tr><td><code>run &lt;op&gt; [args]</code></td><td>Invoke an MBean operation</td></tr>
+            <tr><td><code>close</code></td><td>Disconnect from the JMX endpoint</td></tr>
+            <tr><td><code>jvms</code></td><td>List local Java processes</td></tr>
+            <tr><td><code>help</code></td><td>Show all available commands</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section" id="features">
+    <div class="container">
+      <h2>Features</h2>
+      <div class="grid">
+        <div class="feature">
+          <div class="feature-icon">⌨️</div>
+          <h3>Interactive REPL</h3>
+          <p>Tab completion and command history powered by JLine.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔌</div>
+          <h3>Remote &amp; Local</h3>
+          <p>Connect via host:port, JMX URL, or local PID.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📦</div>
+          <h3>Full MBean Support</h3>
+          <p>Browse domains, read/write attributes, invoke operations.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">⛓️</div>
+          <h3>Command Chaining</h3>
+          <p>Run multiple commands in one line with <code>&amp;&amp;</code>.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📜</div>
+          <h3>Script Mode</h3>
+          <p>Automate JMX operations via files or piped input.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔊</div>
+          <h3>Verbose Control</h3>
+          <p>Silent, brief, or verbose output modes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>
+        jmxsh is an actively maintained fork of
+        <a href="https://github.com/jiaqi/jmxterm">jiaqi/jmxterm</a>.
+        Licensed under <a href="https://github.com/nyg/jmxsh/blob/master/LICENSE">Apache 2.0</a>.
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

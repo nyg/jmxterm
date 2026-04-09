@@ -12,7 +12,7 @@ and dependency graph. Items are organized by category. Each item is labeled with
 
 ## Java Language Modernization
 
-Target: **Java 25** (upcoming LTS, September 2025).
+Target: **Java 25** (current build target).
 
 - 🟠 **Replace `FileReader`/`FileWriter` with NIO APIs** — These don't specify a charset and are effectively deprecated. Use `Files.newBufferedReader(path, charset)` / `Files.newBufferedWriter(path, charset)`. Affected files: `FileCommandInput.java`, `FileCommandOutput.java`.
 - 🟡 **Replace `StringBuffer` with `StringBuilder`** — `StringBuffer` is synchronized and unnecessary here. Affected file: `WatchCommand.java:170`.
@@ -42,7 +42,7 @@ Several dependencies are unused or barely used and can be replaced with JDK stan
 
 ## Build / POM
 
-- 🟠 **Switch uber JAR from `maven-assembly-plugin` to `maven-shade-plugin`** — The assembly plugin's `jar-with-dependencies` unpacks all JARs naively, risking class/resource conflicts (e.g., duplicate `META-INF/services`). The shade plugin handles these via resource transformers and supports class relocation.
+- ~~🟠 **Switch uber JAR from `maven-assembly-plugin` to `maven-shade-plugin`**~~ ✅ Done — The shade plugin handles `META-INF/services` merging via resource transformers and supports class relocation.
 - 🟠 **Add `maven-enforcer-plugin` rules** — The plugin is in `pluginManagement` but has no active rules. Add: `requireMavenVersion` (≥ 3.8), `requireJavaVersion` (≥ 25), `banDuplicatePomDependencyVersions`, `dependencyConvergence`.
 - 🟡 **Add static analysis plugin** — No static analysis is currently configured. Consider SpotBugs (`spotbugs-maven-plugin`), Checkstyle (`maven-checkstyle-plugin`), or ErrorProne for compile-time bug detection.
 - 🟡 **Add `.editorconfig`** — Not present. Ensures consistent indentation, charset, and line endings across IDEs and editors.
@@ -69,7 +69,7 @@ Several dependencies are unused or barely used and can be replaced with JDK stan
 
 ## Testing
 
-- 🟡 **Evaluate migrating JMock → Mockito** — JMock 2 works but Mockito is the de facto Java mocking standard with a larger community, better IDE support, and richer assertion APIs. The test suite uses JMock's `Mockery` + `Expectations` DSL in ~15 test classes. Migration is straightforward but touches every test file.
+- ~~🟡 **Evaluate migrating JMock → Mockito**~~ ✅ Done — Migrated to Mockito + AssertJ. All test classes now use `mock()`, `when()`, `verify()` and `assertThat()`.
 - 🟡 **Add test coverage reporting (JaCoCo)** — No coverage tool is configured. Add `jacoco-maven-plugin` to generate reports and optionally enforce minimum coverage thresholds.
 - 🟢 **Address existing TODO in `WatchCommand`** — Line 28: `TODO Consider the use case for CSV file backend generation`. Decide whether to implement or remove the comment.
 

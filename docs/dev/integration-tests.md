@@ -27,13 +27,13 @@ mvn verify -Dit.test=AttributeReadWriteIT
 mvn verify -Dit.test=ConnectionLifecycleIT#testOpenConnection
 ```
 
-Integration tests run on every PR via the existing CI workflow (`maven.yaml`), on JDK 25.
+Integration tests run on every PR via the existing CI workflow (`java-ci.yaml`), on JDK 25.
 
 ## Architecture
 
 ### The embedded JMX server
 
-The key piece of infrastructure is `EmbeddedJmxServer`, a JUnit 5 extension that:
+The key piece of infrastructure is `EmbeddedJmxServer`, a JUnit extension that:
 
 1. Finds a free TCP port
 2. Creates a dedicated `MBeanServer` (isolated from the platform MBeanServer)
@@ -98,7 +98,7 @@ void testSomething() {
     cc.execute("open " + jmxServer.getConnectionUrl());
     cc.execute("bean test:type=TestMBean");
     cc.execute("get Name");
-    assertTrue(resultOutput.toString().contains("default"));
+    assertThat(resultOutput.toString()).contains("default");
 }
 ```
 
@@ -178,7 +178,7 @@ Tests that invalid usage produces clear failures rather than crashes.
 
 ### CommandChainingIT (5 tests)
 
-Tests jmxterm's command-line parsing features.
+Tests jmxsh's command-line parsing features.
 
 | Test | What it verifies |
 |------|-----------------|
