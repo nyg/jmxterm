@@ -1,7 +1,7 @@
 package org.cyclopsgroup.jmxterm.boot;
 
 import java.io.File;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jcli.annotation.Cli;
 import org.cyclopsgroup.jcli.annotation.Option;
 
@@ -127,8 +127,10 @@ public class CliMainOptions {
       description =
           "Input script file. There can only be one input file. \"stdin\" is the default value which means console input")
   public final void setInput(String file) {
-    Validate.notNull(file, "Input file can't be NULL");
-    Validate.isTrue(new File(file).isFile(), "File " + file + " doesn't exist");
+    Objects.requireNonNull(file, "Input file can't be NULL");
+    if (!new File(file).isFile()) {
+      throw new IllegalArgumentException("File " + file + " doesn't exist");
+    }
     this.input = file;
   }
 
@@ -148,7 +150,7 @@ public class CliMainOptions {
       longName = "output",
       description = "Output file, stdout or stderr. Default value is stdout")
   public final void setOutput(String outputFile) {
-    Validate.notNull(outputFile, "Output file can't be NULL");
+    Objects.requireNonNull(outputFile, "Output file can't be NULL");
     this.output = outputFile;
   }
 
@@ -158,7 +160,7 @@ public class CliMainOptions {
       longName = "password",
       description = "Password for user/password authentication")
   public final void setPassword(String password) {
-    Validate.notNull(password, "Password can't be NULL");
+    Objects.requireNonNull(password, "Password can't be NULL");
     this.password = password;
   }
 
@@ -168,14 +170,14 @@ public class CliMainOptions {
       longName = "url",
       description = "Location of MBean service. It can be <host>:<port> or full service URL.")
   public final void setUrl(String url) {
-    Validate.notNull(url, "URL can't be NULL");
+    Objects.requireNonNull(url, "URL can't be NULL");
     this.url = url;
   }
 
   /** @param user User name for user/password authentication */
   @Option(name = "u", longName = "user", description = "User name for user/password authentication")
   public final void setUser(String user) {
-    Validate.notNull(user, "User can't be NULL");
+    Objects.requireNonNull(user, "User can't be NULL");
     this.user = user;
   }
 

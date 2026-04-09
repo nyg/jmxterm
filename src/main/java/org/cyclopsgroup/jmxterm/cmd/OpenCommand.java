@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.management.remote.JMXConnector;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.cyclopsgroup.jcli.annotation.Argument;
 import org.cyclopsgroup.jcli.annotation.Cli;
 import org.cyclopsgroup.jcli.annotation.Option;
@@ -67,7 +66,7 @@ public class OpenCommand extends Command {
           SyntaxUtils.getUrl(url, session.getProcessManager()), env.isEmpty() ? null : env);
       session.output.printMessage("Connection to " + url + " is opened");
     } catch (IOException e) {
-      if (NumberUtils.isDigits(url)) {
+      if (SyntaxUtils.isDigits(url)) {
         session.output.printMessage(
             "Couldn't connect to PID "
                 + url

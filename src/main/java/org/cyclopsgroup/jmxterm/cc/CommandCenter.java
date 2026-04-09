@@ -12,9 +12,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.management.JMException;
 import javax.management.remote.JMXServiceURL;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.caff.token.EscapingValueTokenizer;
 import org.cyclopsgroup.caff.token.ValueTokenizer;
 import org.cyclopsgroup.jcli.ArgumentProcessor;
@@ -68,8 +66,8 @@ public class CommandCenter {
    * @param commandFactory Given command factory
    */
   public CommandCenter(CommandOutput output, CommandInput input, CommandFactory commandFactory) {
-    Validate.notNull(output, "Output can't be NULL");
-    Validate.notNull(commandFactory, "Command factory can't be NULL");
+    Objects.requireNonNull(output, "Output can't be NULL");
+    Objects.requireNonNull(commandFactory, "Command factory can't be NULL");
     processManager = JPMFactory.createProcessManager();
     this.session = new SessionImpl(output, input, processManager);
     this.commandFactory = commandFactory;
@@ -86,12 +84,12 @@ public class CommandCenter {
    * @throws IOException Thrown when connection can't be established
    */
   public void connect(JMXServiceURL url, Map<String, Object> env) throws IOException {
-    Validate.notNull(url, "URL can't be NULL");
+    Objects.requireNonNull(url, "URL can't be NULL");
     session.connect(url, env);
   }
 
   private void doExecute(String command) throws JMException {
-    command = StringUtils.trimToNull(command);
+    command = (command == null || command.isBlank()) ? null : command.trim();
     // Ignore empty line
     if (command == null) {
       return;
@@ -108,7 +106,7 @@ public class CommandCenter {
             .replace("\\#", "#"); // fix escaped to non-escaped comment charaters
     // If command includes multiple segments, call them one by one using recursive call
     if (command.indexOf(COMMAND_DELIMITER) != -1) {
-      String[] commands = StringUtils.split(command, COMMAND_DELIMITER);
+      String[] commands = command.split(COMMAND_DELIMITER);
       for (String c : commands) {
         execute(c);
       }
@@ -123,7 +121,7 @@ public class CommandCenter {
             args.add(event.getToken()));
     String commandName = args.remove(0);
     // Leave the rest of arguments for command
-    String[] commandArgs = args.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
+    String[] commandArgs = args.toArray(new String[0]);
     // Call command with parsed command name and arguments
     try {
       doExecute(commandName, commandArgs);

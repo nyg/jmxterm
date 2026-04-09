@@ -4,7 +4,7 @@ import java.io.IOError;
 import java.io.IOException;
 import java.util.Map;
 import javax.management.remote.JMXServiceURL;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jmxterm.io.CommandInput;
 import org.cyclopsgroup.jmxterm.io.CommandOutput;
 import org.cyclopsgroup.jmxterm.io.UnimplementedCommandInput;
@@ -43,8 +43,8 @@ public abstract class Session implements VerboseCommandOutputConfig {
    * @param processManager Process manager
    */
   protected Session(CommandOutput output, CommandInput input, JavaProcessManager processManager) {
-    Validate.notNull(output, "Output can't be NULL");
-    Validate.notNull(processManager, "Process manager can't be NULL");
+    Objects.requireNonNull(output, "Output can't be NULL");
+    Objects.requireNonNull(processManager, "Process manager can't be NULL");
     this.output = new VerboseCommandOutput(output, this);
     this.input = input == null ? new UnimplementedCommandInput() : input;
     this.processManager = processManager;
@@ -133,13 +133,13 @@ public abstract class Session implements VerboseCommandOutputConfig {
    * @param domain Domain to select
    */
   public final void setDomain(String domain) {
-    Validate.notNull(domain, "domain can't be NULL");
+    Objects.requireNonNull(domain, "domain can't be NULL");
     this.domain = domain;
   }
 
   /** @param verboseLevel Level of verbose */
   public final void setVerboseLevel(VerboseLevel verboseLevel) {
-    Validate.notNull(verboseLevel, "Verbose level can't be NULL");
+    Objects.requireNonNull(verboseLevel, "Verbose level can't be NULL");
     this.verboseLevel = verboseLevel;
   }
 

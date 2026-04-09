@@ -4,7 +4,7 @@ import java.io.IOException;
 import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jmxterm.Connection;
 
 /**
@@ -22,8 +22,8 @@ class ConnectionImpl implements Connection {
    * @param url JMX service URL object
    */
   ConnectionImpl(JMXConnector connector, JMXServiceURL url) {
-    Validate.notNull(connector, "JMX connector can't be NULL");
-    Validate.notNull(url, "JMX service URL can't be NULL");
+    Objects.requireNonNull(connector, "JMX connector can't be NULL");
+    Objects.requireNonNull(url, "JMX service URL can't be NULL");
     this.connector = connector;
     this.url = url;
   }

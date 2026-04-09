@@ -8,7 +8,7 @@ import javax.management.JMException;
 import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jcli.annotation.Argument;
 import org.cyclopsgroup.jcli.annotation.Cli;
 import org.cyclopsgroup.jcli.annotation.Option;
@@ -41,7 +41,7 @@ public class BeanCommand extends Command {
    */
   public static String getBeanName(String bean, String domain, Session session)
       throws JMException, IOException {
-    Validate.notNull(session, "Session can't be NULL");
+    Objects.requireNonNull(session, "Session can't be NULL");
     if (bean == null) {
       return session.getBean();
     }

@@ -3,8 +3,7 @@ package org.cyclopsgroup.jmxterm.cc;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 import org.cyclopsgroup.jcli.jline.CliCompletor;
 import org.cyclopsgroup.jmxterm.Command;
 import org.jline.reader.Candidate;
@@ -28,7 +27,7 @@ public class ConsoleCompletor implements Completer {
   private final List<Candidate> commandNames;
 
   public ConsoleCompletor(CommandCenter commandCenter) {
-    Validate.notNull(commandCenter, "Command center can't be NULL");
+    Objects.requireNonNull(commandCenter, "Command center can't be NULL");
     this.commandCenter = commandCenter;
     this.commandNames = commandCenter.getCommandNames().stream()
         .sorted()
@@ -40,7 +39,7 @@ public class ConsoleCompletor implements Completer {
   public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
     try {
       String buffer = line.line();
-      if (StringUtils.isEmpty(buffer) || buffer.indexOf(' ') == -1) {
+      if (buffer == null || buffer.isEmpty() || buffer.indexOf(' ') == -1) {
         completeCommandName(buffer, candidates);
       }
       int separatorPos = buffer.indexOf(' ');

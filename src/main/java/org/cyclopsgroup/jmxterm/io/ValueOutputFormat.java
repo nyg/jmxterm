@@ -6,8 +6,7 @@ import java.util.Map;
 
 import javax.management.openmbean.CompositeData;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
+
 
 /**
  * A utility to print out object values in particular format.
@@ -34,7 +33,9 @@ public class ValueOutputFormat {
    * @param showQuotationMarks True if quotation mark is printed
    */
   public ValueOutputFormat(int indentSize, boolean showDescription, boolean showQuotationMarks) {
-    Validate.isTrue(indentSize >= 0, "Invalid indent size value " + indentSize);
+    if (indentSize < 0) {
+      throw new IllegalArgumentException("Invalid indent size value " + indentSize);
+    }
     this.indentSize = indentSize;
     this.showDescription = showDescription;
     this.showQuotationMarks = showQuotationMarks;
@@ -63,7 +64,7 @@ public class ValueOutputFormat {
    */
   private void printExpression(
       CommandOutput output, Object name, Object value, String description, int indent) {
-    output.print(StringUtils.repeat(" ", indent));
+    output.print(" ".repeat(indent));
     printValue(output, name, indent);
     output.print(" = ");
     printValue(output, value, indent);
@@ -118,7 +119,7 @@ public class ValueOutputFormat {
       for (Map.Entry<?, ?> entry : ((Map<?, ?>) value).entrySet()) {
         printExpression(output, entry.getKey(), entry.getValue(), null, indent + indentSize);
       }
-      output.print(StringUtils.repeat(" ", indent) + " }");
+      output.print(" ".repeat(indent) + " }");
     } else if (CompositeData.class.isAssignableFrom(value.getClass())) {
       output.println("{ ");
       CompositeData data = (CompositeData) value;
@@ -131,7 +132,7 @@ public class ValueOutputFormat {
             data.getCompositeType().getDescription(key),
             indent + indentSize);
       }
-      output.print(StringUtils.repeat(" ", indent) + " }");
+      output.print(" ".repeat(indent) + " }");
     } else if (value instanceof String && showQuotationMarks) {
       output.print("\"" + value + "\"");
     } else {

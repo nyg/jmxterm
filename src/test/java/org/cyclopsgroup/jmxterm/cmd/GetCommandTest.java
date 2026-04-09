@@ -19,7 +19,7 @@ import javax.management.openmbean.CompositeType;
 import javax.management.openmbean.OpenDataException;
 import javax.management.openmbean.SimpleType;
 
-import org.apache.commons.lang3.RandomStringUtils;
+import java.util.concurrent.ThreadLocalRandom;
 import org.cyclopsgroup.jmxterm.MockSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +30,15 @@ import org.junit.jupiter.api.Test;
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
 class GetCommandTest {
+
+  private static String randomAlphabetic(int length) {
+    StringBuilder sb = new StringBuilder(length);
+    for (int i = 0; i < length; i++) {
+      sb.append((char) ('a' + ThreadLocalRandom.current().nextInt(26)));
+    }
+    return sb.toString();
+  }
+
   private GetCommand command;
 
   private StringWriter output;
@@ -56,7 +65,7 @@ class GetCommandTest {
     MBeanAttributeInfo attributeInfo = mock(MBeanAttributeInfo.class);
     try {
       when(con.getDomains())
-          .thenReturn(new String[] {domain, RandomStringUtils.secure().nextAlphabetic(5)});
+          .thenReturn(new String[] {domain, randomAlphabetic(5)});
       when(con.getMBeanInfo(new ObjectName(expectedBean))).thenReturn(beanInfo);
       when(beanInfo.getAttributes()).thenReturn(new MBeanAttributeInfo[] {attributeInfo});
       when(attributeInfo.getName()).thenReturn(attributePath[0]);

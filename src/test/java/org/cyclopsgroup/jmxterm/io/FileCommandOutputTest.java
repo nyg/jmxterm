@@ -4,11 +4,10 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.concurrent.ThreadLocalRandom;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,9 +25,9 @@ class FileCommandOutputTest {
   void setUpTestFile() {
     testFile =
         new File(
-            SystemUtils.JAVA_IO_TMPDIR
+            System.getProperty("java.io.tmpdir")
                 + "/test-"
-                + RandomStringUtils.secure().nextAlphabetic(20)
+                + randomAlphabetic(20)
                 + ".txt");
   }
 
@@ -39,7 +38,7 @@ class FileCommandOutputTest {
    */
   @AfterEach
   void tearDownTestFile() throws IOException {
-    FileUtils.forceDelete(testFile);
+    Files.deleteIfExists(testFile.toPath());
   }
 
   /**
@@ -54,7 +53,7 @@ class FileCommandOutputTest {
     output.printMessage("say hello");
     output.close();
 
-    assertThat(FileUtils.readFileToString(testFile, Charset.forName("UTF-8")).trim())
+    assertThat(Files.readString(testFile.toPath(), StandardCharsets.UTF_8).trim())
         .isEqualTo("helloworld");
   }
 
@@ -75,7 +74,15 @@ class FileCommandOutputTest {
     output2.printMessage("say hello2");
     output2.close();
 
-    assertThat(FileUtils.readFileToString(testFile, Charset.forName("UTF-8")).trim())
+    assertThat(Files.readString(testFile.toPath(), StandardCharsets.UTF_8).trim())
         .isEqualTo("helloworld" + System.lineSeparator() + "helloworld2");
+  }
+
+  private static String randomAlphabetic(int length) {
+    StringBuilder sb = new StringBuilder(length);
+    for (int i = 0; i < length; i++) {
+      sb.append((char) ('a' + ThreadLocalRandom.current().nextInt(26)));
+    }
+    return sb.toString();
   }
 }

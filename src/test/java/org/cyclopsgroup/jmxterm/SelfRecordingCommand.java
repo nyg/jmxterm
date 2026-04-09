@@ -1,7 +1,7 @@
 package org.cyclopsgroup.jmxterm;
 
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
+
 import org.cyclopsgroup.jcli.annotation.Argument;
 import org.cyclopsgroup.jcli.annotation.Cli;
 import org.cyclopsgroup.jcli.annotation.MultiValue;
@@ -29,7 +29,7 @@ public class SelfRecordingCommand extends Command {
 
   /** @return Arguments */
   public String getArgs() {
-    return StringUtils.join(arguments, ' ');
+    return String.join(" ", arguments);
   }
 
   /** @return Array of arguments */

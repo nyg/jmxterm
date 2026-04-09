@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
-import org.apache.commons.lang3.Validate;
+import java.util.Objects;
 
 /**
  * Implementation of CommandInput with given File
@@ -22,7 +22,7 @@ public class FileCommandInput extends CommandInput {
    * @throws FileNotFoundException Thrown when file doesn't exist
    */
   public FileCommandInput(File inputFile) throws FileNotFoundException {
-    Validate.notNull(inputFile, "Input can't be NULL");
+    Objects.requireNonNull(inputFile, "Input can't be NULL");
     this.in = new LineNumberReader(new FileReader(inputFile));
   }
 

@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Map;
 
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
 
-import org.apache.commons.io.output.NullWriter;
 import org.cyclopsgroup.jmxterm.Connection;
 import org.cyclopsgroup.jmxterm.SyntaxUtils;
 import org.cyclopsgroup.jmxterm.io.WriterCommandOutput;
@@ -33,7 +33,7 @@ class SessionImplTest {
     con = mock(JMXConnector.class);
     session =
         new SessionImpl(
-            new WriterCommandOutput(new NullWriter()),
+            new WriterCommandOutput(Writer.nullWriter()),
             null,
             new Jdk9JavaProcessManager()) {
           @Override

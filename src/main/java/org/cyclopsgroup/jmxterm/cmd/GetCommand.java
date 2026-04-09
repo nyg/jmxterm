@@ -2,7 +2,7 @@ package org.cyclopsgroup.jmxterm.cmd;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,8 +13,8 @@ import javax.management.ObjectName;
 import javax.management.RuntimeMBeanException;
 import javax.management.openmbean.CompositeDataSupport;
 
-import org.apache.commons.collections4.map.ListOrderedMap;
-import org.apache.commons.lang3.Validate;
+
+import java.util.Objects;
 import org.cyclopsgroup.jcli.annotation.Argument;
 import org.cyclopsgroup.jcli.annotation.Cli;
 import org.cyclopsgroup.jcli.annotation.MultiValue;
@@ -59,7 +59,7 @@ public class GetCommand extends Command {
     MBeanServerConnection con = session.getConnection().getServerConnection();
     MBeanAttributeInfo[] ais = con.getMBeanInfo(name).getAttributes();
     Map<String, MBeanAttributeInfo> attributeNames =
-        ListOrderedMap.listOrderedMap(new HashMap<String, MBeanAttributeInfo>());
+        new LinkedHashMap<>();
     if (attributes.contains("*")) {
       for (MBeanAttributeInfo ai : ais) {
         attributeNames.put(ai.getName(), ai);
@@ -160,7 +160,7 @@ public class GetCommand extends Command {
   @MultiValue(listType = ArrayList.class, minValues = 1)
   @Argument(displayName = "attr", description = "Name of attributes to select")
   public final void setAttributes(List<String> attributes) {
-    Validate.notNull(attributes, "Attributes can't be NULL");
+    Objects.requireNonNull(attributes, "Attributes can't be NULL");
     this.attributes = attributes;
   }
 
