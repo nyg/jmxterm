@@ -127,9 +127,19 @@ public final class SyntaxUtils {
     }
   }
 
+  private static boolean parseBooleanStrict(String expression) {
+    if ("true".equalsIgnoreCase(expression)) {
+      return true;
+    }
+    if ("false".equalsIgnoreCase(expression)) {
+      return false;
+    }
+    throw new IllegalArgumentException("Cannot convert \"" + expression + "\" to boolean");
+  }
+
   private static Object convert(String expression, Class<?> targetType) {
     if (targetType == boolean.class || targetType == Boolean.class) {
-      return Boolean.parseBoolean(expression);
+      return parseBooleanStrict(expression);
     }
     if (targetType == byte.class || targetType == Byte.class) {
       return Byte.parseByte(expression);
