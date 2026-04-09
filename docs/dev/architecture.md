@@ -126,6 +126,10 @@ An interface (`org.cyclopsgroup.jmxterm.Connection`) implemented by `ConnectionI
 `JMXConnector` and provides access to the `MBeanServerConnection`, the connection URL, and the
 connector ID. Created when `Session.connect()` is called and destroyed on `Session.disconnect()`.
 
+Both RMI (`service:jmx:rmi://...`) and JMXMP (`service:jmx:jmxmp://...`) protocols are supported.
+`JMXConnectorFactory` auto-discovers the appropriate connector provider via the Java service loader
+mechanism — the JMXMP provider is bundled in the uber JAR.
+
 ### MBeanServerConnection
 
 The standard JMX interface (`javax.management.MBeanServerConnection`) obtained from the

@@ -25,6 +25,7 @@ public final class SyntaxUtils {
   public static final PrintStream NULL_PRINT_STREAM = new PrintStream(OutputStream.nullOutputStream(), true);
 
   private static final Pattern PATTERN_HOST_PORT = Pattern.compile("^(\\w|\\.|\\-)+\\:\\d+$");
+  private static final Pattern PATTERN_JMXMP_URL = Pattern.compile("^jmxmp://(\\S+)$");
 
   private static final Map<String, Class<?>> PRIMITIVE_TYPES = Map.ofEntries(
       Map.entry("boolean", boolean.class),
@@ -59,6 +60,8 @@ public final class SyntaxUtils {
       }
       return new JMXServiceURL(p.toUrl());
 
+    } else if (PATTERN_JMXMP_URL.matcher(url).find()) {
+      return new JMXServiceURL("service:jmx:" + url);
     } else if (PATTERN_HOST_PORT.matcher(url).find()) {
       return new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + url + "/jmxrmi");
     } else {

@@ -55,6 +55,14 @@ Arguments and options use annotations from `org.cyclopsgroup.jcli.annotation`:
 
 `Session` (abstract class) holds the JMX connection state plus the currently selected domain and bean. `SessionImpl` in `cc/` is the concrete implementation. Session is **not thread-safe** — `CommandCenter` synchronizes all calls. Commands receive the session via `setSession()` before each `execute()` call.
 
+Both RMI and JMXMP protocols are supported. URL formats:
+- `host:port` — RMI shorthand (default), expands to `service:jmx:rmi:///jndi/rmi://host:port/jmxrmi`
+- `jmxmp://host:port` — JMXMP shorthand, expands to `service:jmx:jmxmp://host:port`
+- `service:jmx:...` — full JMX service URL (any protocol)
+- `<PID>` — attaches to a local JVM process
+
+`JMXConnectorFactory` auto-discovers the JMXMP provider at runtime via the Java service loader (`META-INF/services`).
+
 ### IO Abstraction
 
 `CommandInput` and `CommandOutput` are abstract base classes with implementations for interactive console (JLine), files, streams, and writers. `VerboseCommandOutput` is a decorator that filters output based on `VerboseLevel` (SILENT, BRIEF, VERBOSE).

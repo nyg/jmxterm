@@ -120,7 +120,8 @@ null
             </tr>
           </thead>
           <tbody>
-            <tr><td><code>open &lt;host:port&gt;</code></td><td>Connect to a remote JMX endpoint</td></tr>
+            <tr><td><code>open &lt;host:port&gt;</code></td><td>Connect to a remote JMX endpoint (RMI)</td></tr>
+            <tr><td><code>open jmxmp://&lt;host:port&gt;</code></td><td>Connect to a remote JMX endpoint (JMXMP)</td></tr>
             <tr><td><code>open &lt;pid&gt;</code></td><td>Attach to a local JVM by process ID</td></tr>
             <tr><td><code>domains</code></td><td>List all MBean domains</td></tr>
             <tr><td><code>beans</code></td><td>List all MBeans (filter by domain with <code>-d</code>)</td></tr>
@@ -151,7 +152,7 @@ null
         <div class="feature">
           <div class="feature-icon">🔌</div>
           <h3>Remote &amp; Local</h3>
-          <p>Connect via host:port, JMX URL, or local PID.</p>
+          <p>Connect via host:port (RMI), jmxmp:// (JMXMP), JMX URL, or local PID.</p>
         </div>
         <div class="feature">
           <div class="feature-icon">📦</div>

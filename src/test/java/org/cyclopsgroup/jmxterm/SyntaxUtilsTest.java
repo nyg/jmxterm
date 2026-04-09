@@ -30,6 +30,39 @@ class SyntaxUtilsTest {
         .isEqualTo("/jndi/rmi://xyz-host.cyclopsgroup.org:12345/jmxrmi");
   }
 
+  @Test
+  void getUrlWithJmxmpShorthand() throws Exception {
+    assertThat(SyntaxUtils.getUrl("jmxmp://localhost:9999", null))
+        .satisfies(
+            url -> {
+              assertThat(url.getProtocol()).isEqualTo("jmxmp");
+              assertThat(url.getHost()).isEqualTo("localhost");
+              assertThat(url.getPort()).isEqualTo(9999);
+            });
+  }
+
+  @Test
+  void getUrlWithJmxmpShorthandDottedHost() throws Exception {
+    assertThat(SyntaxUtils.getUrl("jmxmp://my-host.example.com:5555", null))
+        .satisfies(
+            url -> {
+              assertThat(url.getProtocol()).isEqualTo("jmxmp");
+              assertThat(url.getHost()).isEqualTo("my-host.example.com");
+              assertThat(url.getPort()).isEqualTo(5555);
+            });
+  }
+
+  @Test
+  void getUrlWithFullJmxmpServiceUrl() throws Exception {
+    assertThat(SyntaxUtils.getUrl("service:jmx:jmxmp://localhost:9999", null))
+        .satisfies(
+            url -> {
+              assertThat(url.getProtocol()).isEqualTo("jmxmp");
+              assertThat(url.getHost()).isEqualTo("localhost");
+              assertThat(url.getPort()).isEqualTo(9999);
+            });
+  }
+
   /** Verify string expression of type is correctly parsed */
   @Test
   void parseNormally() {
