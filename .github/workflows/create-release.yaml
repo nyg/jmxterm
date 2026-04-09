@@ -7,12 +7,10 @@ name: Create Release
 
 permissions:
   contents: write
-  packages: write       # for GHCR push
-  security-events: write # for Trivy SARIF uploads
 
 jobs:
   build:
-    name: Build & Scan
+    name: Build & Package
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -33,24 +31,72 @@ jobs:
       - name: Build with Maven
         run: mvn -B -q --no-transfer-progress package -Ddist.finalName=jmxsh-${{ env.RELEASE_VERSION }}
 
-      - name: Run Trivy vulnerability scanner (filesystem)
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # master
-        env:
-          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
-          TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
-        with:
-          scan-type: 'fs'
-          ignore-unfixed: true
-          format: 'sarif'
-          output: 'trivy-fs-results.sarif'
-          severity: 'CRITICAL'
+      - name: Build DEB package
+        run: |
+          pkg_dir="$(mktemp -d)"
 
-      - name: Upload Trivy (filesystem) results to Security tab
-        uses: github/codeql-action/upload-sarif@c10b8064de6f491fea524254123dbe5e09572f13 # v4
-        if: always()
-        with:
-          sarif_file: 'trivy-fs-results.sarif'
-          category: 'trivy-filesystem'
+          mkdir -p "$pkg_dir/DEBIAN"
+          cat > "$pkg_dir/DEBIAN/control" <<EOF
+          Package: jmxsh
+          Version: ${{ env.RELEASE_VERSION }}
+          Section: misc
+          Priority: optional
+          Architecture: all
+          Maintainer: nyg
+          Description: Interactive command-line JMX client
+          Distribution: development
+          EOF
+
+          mkdir -p "$pkg_dir/usr/share/jmxsh"
+          cp "target/jmxsh-${{ env.RELEASE_VERSION }}-uber.jar" "$pkg_dir/usr/share/jmxsh/jmxsh-uber.jar"
+
+          mkdir -p "$pkg_dir/usr/bin"
+          cat > "$pkg_dir/usr/bin/jmxsh" <<'LAUNCHER'
+          #!/bin/sh -e
+          exec java -jar /usr/share/jmxsh/jmxsh-uber.jar "$@"
+          LAUNCHER
+          chmod 755 "$pkg_dir/usr/bin/jmxsh"
+
+          dpkg-deb --build "$pkg_dir" "target/jmxsh-${{ env.RELEASE_VERSION }}.deb"
+
+      - name: Build RPM package
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq rpm > /dev/null
+
+          rpmbuild_dir="$(mktemp -d)"
+          mkdir -p "$rpmbuild_dir"/{SPECS,SOURCES,BUILD,RPMS,SRPMS}
+
+          cp "target/jmxsh-${{ env.RELEASE_VERSION }}-uber.jar" "$rpmbuild_dir/SOURCES/"
+
+          cat > "$rpmbuild_dir/SPECS/jmxsh.spec" <<'SPEC'
+          Name:           jmxsh
+          Version:        ${{ env.RELEASE_VERSION }}
+          Release:        1
+          Summary:        Interactive command-line JMX client
+          License:        Apache-2.0
+          Group:          Development/Languages/Java
+          BuildArch:      noarch
+
+          %description
+          Interactive command-line JMX client for monitoring and managing Java applications.
+
+          %install
+          install -d -m 755 %{buildroot}/usr/share/jmxsh
+          install -m 644 %{_sourcedir}/jmxsh-${{ env.RELEASE_VERSION }}-uber.jar %{buildroot}/usr/share/jmxsh/jmxsh-uber.jar
+          install -d -m 755 %{buildroot}/usr/bin
+          cat > %{buildroot}/usr/bin/jmxsh <<'LAUNCHER'
+          #!/bin/sh -e
+          exec java -jar /usr/share/jmxsh/jmxsh-uber.jar "$@"
+          LAUNCHER
+          chmod 755 %{buildroot}/usr/bin/jmxsh
+
+          %files
+          /usr/share/jmxsh/jmxsh-uber.jar
+          /usr/bin/jmxsh
+          SPEC
+
+          rpmbuild --define "_topdir $rpmbuild_dir" -bb "$rpmbuild_dir/SPECS/jmxsh.spec"
+          cp "$rpmbuild_dir"/RPMS/noarch/*.rpm target/
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
@@ -59,79 +105,12 @@ jobs:
           path: |
             target/jmxsh-${{ env.RELEASE_VERSION }}*.jar
             target/*.deb
+            target/*.rpm
           retention-days: 1
-
-  docker:
-    name: Docker Image
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
-        with:
-          name: release-artifacts
-          path: target/
-
-      - name: Docker metadata
-        id: meta
-        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
-        with:
-          images: ghcr.io/nyg/jmxsh
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build local image (for scanning)
-        id: local
-        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
-        with:
-          context: .
-          load: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
-      - name: Trivy scan (image)
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # master
-        env:
-          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db
-          TRIVY_JAVA_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-java-db
-        with:
-          image-ref: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
-          format: 'sarif'
-          output: 'trivy-image-results.sarif'
-
-      - name: Upload Trivy (image) results to Security tab
-        uses: github/codeql-action/upload-sarif@c10b8064de6f491fea524254123dbe5e09572f13 # v4
-        if: always()
-        with:
-          sarif_file: 'trivy-image-results.sarif'
-          category: 'trivy-docker-image'
-
-      - name: Build & push multi-arch image
-        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64/v8
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
 
   publish:
     name: Create GitHub Release
-    needs: [build, docker]
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -172,5 +151,6 @@ jobs:
           files: |
             release-artifacts/**/*.jar
             release-artifacts/**/*.deb
+            release-artifacts/**/*.rpm
           name: Release ${{ github.ref_name }}
           body: ${{ steps.changelog.outputs.changes || 'Initial release.' }}

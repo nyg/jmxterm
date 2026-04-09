@@ -20,12 +20,6 @@ Download the latest [uber JAR from Releases](https://github.com/nyg/jmxsh/releas
 java -jar jmxsh-uber.jar
 ```
 
-Or use Docker:
-
-```bash
-docker run -it ghcr.io/nyg/jmxsh
-```
-
 ## Usage
 
 ```
@@ -102,12 +96,6 @@ echo "open localhost:9999 && beans" | java -jar jmxsh-uber.jar -n
 java -jar jmxsh-uber.jar
 ```
 
-### Docker
-
-```bash
-docker run -it ghcr.io/nyg/jmxsh
-```
-
 ### Debian/Ubuntu
 
 ```bash
@@ -124,7 +112,7 @@ jmxsh
 - **Command chaining** — run multiple commands in one line with `&&`
 - **Script mode** — automate JMX operations via files or piped input
 - **Verbose control** — silent, brief, or verbose output modes
-- **Cross-platform** — runs anywhere Java runs (JAR, Docker, DEB, RPM)
+- **Cross-platform** — runs anywhere Java runs (JAR, DEB, RPM)
 
 ## Documentation
 
