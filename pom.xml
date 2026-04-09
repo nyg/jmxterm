@@ -5,7 +5,7 @@
 
   <groupId>sh.jmx</groupId>
   <artifactId>jmxsh</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>jmxsh</name>
   <description>Interactive command-line JMX client</description>
@@ -33,17 +33,14 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
     <dist.finalName>${project.artifactId}-${project.version}</dist.finalName>
+    <maven.compiler.release>25</maven.compiler.release>
 
     <!-- Third-party dependencies -->
     <slf4j.version>2.0.17</slf4j.version>
-
     <commons-configuration2.version>2.13.0</commons-configuration2.version>
     <jcli.version>1.0.2</jcli.version>
     <jline.version>4.0.9</jline.version>
-
-
     <jmxremote-optional.version>5.0</jmxremote-optional.version>
 
     <!-- Test dependencies -->
@@ -52,13 +49,13 @@
     <junit.version>6.0.3</junit.version>
 
     <!-- Plugins -->
-    <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
     <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
     <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
     <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
     <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>3.5.5</maven-failsafe-plugin.version>
   </properties>
 
   <dependencies>
@@ -73,7 +70,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-
     <dependency>
       <groupId>org.cyclopsgroup</groupId>
       <artifactId>jcli</artifactId>
@@ -133,49 +129,11 @@
       <name>Maven Central</name>
       <url>https://repo.maven.apache.org/maven2/</url>
     </repository>
-
   </repositories>
 
   <build>
     <finalName>${dist.finalName}</finalName>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>${lifecycle-mapping.version}</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-enforcer-plugin</artifactId>
-                    <versionRange>[1.0.0,)</versionRange>
-                    <goals>
-                      <goal>enforce</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore/>
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven-compiler-plugin.version}</version>
-        <configuration>
-          <release>25</release>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -203,12 +161,13 @@
         <version>${maven-shade-plugin.version}</version>
         <executions>
           <execution>
-            <phase>package</phase>
             <goals>
               <goal>shade</goal>
             </goals>
+            <phase>package</phase>
             <configuration>
               <finalName>${dist.finalName}-uber</finalName>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                   <mainClass>org.cyclopsgroup.jmxterm.boot.CliMain</mainClass>
@@ -245,7 +204,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>${maven-surefire-plugin.version}</version>
+        <version>${maven-failsafe-plugin.version}</version>
+        <configuration>
+          <includes>
+            <include>**/*IT.java</include>
+          </includes>
+        </configuration>
         <executions>
           <execution>
             <goals>
@@ -254,11 +218,6 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <includes>
-            <include>**/*IT.java</include>
-          </includes>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
