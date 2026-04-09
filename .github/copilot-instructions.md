@@ -78,7 +78,7 @@ Both RMI and JMXMP protocols are supported. URL formats:
 Follow **Conventional Commits**: `type(scope): description`
 
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
-Scopes: `cmd`, `io`, `build`, `deps`, `docker`, `ci`
+Scopes: `cmd`, `io`, `build`, `deps`, `ci`
 
 ### Testing
 

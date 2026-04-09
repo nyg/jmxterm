@@ -28,14 +28,6 @@ Target: **Java 25** (current build target).
 
 ## Dependency Cleanup
 
-Several dependencies are unused or barely used and can be replaced with JDK standard library equivalents.
-
-- 🔴 **Remove Guava** — Declared in pom.xml (`com.google.guava:guava:33.5.0-jre`) but has **zero imports** anywhere in the codebase. Pure dead weight (~3 MB in uber JAR).
-- 🟠 **Remove `commons-collections4`** — Only used for `ListOrderedMap` in 2 files (`GetCommand.java`, `ValueOutputFormatTest.java`). Replace with `LinkedHashMap`, which preserves insertion order since Java 7.
-- 🟠 **Remove `commons-io`** — Only used for `NullOutputStream` and `NullWriter` in 2 files (`SyntaxUtils.java`, `WriterCommandOutput.java`). Replace `NullOutputStream` with `OutputStream.nullOutputStream()` (Java 11+). Replace `NullWriter` with `Writer.nullWriter()` (Java 11+). Test-only `FileUtils` usage can use `java.nio.file.Files`.
-- 🟠 **Remove `commons-text`** — Only used for `StringEscapeUtils.unescapeJava()` in 1 file (`ValueFormat.java`). Replace with a small utility method.
-- 🟡 **Evaluate removing `commons-beanutils`** — Only used for `ConvertUtils.convert()` in 1 file (`SyntaxUtils.java`). Could be replaced with a custom type coercion method.
-- 🟡 **Reduce `commons-lang3` surface area** — Used in ~25 files, mainly for `Validate.notNull()` (→ `Objects.requireNonNull()`), `StringUtils.isEmpty()` (→ `String.isBlank()`), `ArrayUtils.isEmpty()`, `ExceptionUtils.getMessage()`. Full removal is a larger effort but reduces transitive dependency risk.
 - 🟡 **Evaluate migrating JCLI → Picocli** — JCLI (`org.cyclopsgroup:jcli:1.0.2`) is a low-activity library from ~2012. Picocli is actively maintained, has built-in completions, GraalVM support, and better documentation. The coupling is loose (annotations + `ArgumentProcessor`), making migration feasible but non-trivial.
 
 ---
@@ -53,16 +45,6 @@ Several dependencies are unused or barely used and can be replaced with JDK stan
 
 - 🟡 **Enable CodeQL scanning** — No SAST (static application security testing) is configured. Add a CodeQL workflow for Java to catch security issues in PRs.
 - 🟢 **Verify action versions stay current** — Dependabot covers this, but worth auditing periodically. The major versions (checkout, setup-java, upload/download-artifact) should all be on their latest major.
-
----
-
-## Dockerfile
-
-- 🟠 **Run as non-root user** — The image currently runs as root. Add a dedicated `jmxsh` user and switch to it with `USER`.
-- 🟡 **Add OCI labels** — Add `org.opencontainers.image.title`, `description`, `url`, `source`, `version`, `licenses` labels for registry metadata.
-- 🟡 **Add `HEALTHCHECK`** — Useful for orchestration (Docker Compose, Kubernetes). A simple `java -version` check suffices.
-- 🟢 **Consider multi-stage build** — Currently copies a pre-built JAR from `target/`. A multi-stage build would make the Dockerfile self-contained, though CI already handles the build step.
-- 🟢 **Align base image with release target** — Dockerfile uses `eclipse-temurin:25-jre-alpine`. Ensure this matches the project's Java target version after the upgrade.
 
 ---
 

@@ -52,10 +52,7 @@
     <junit.version>6.0.3</junit.version>
 
     <!-- Plugins -->
-    <jdeb.version>1.14</jdeb.version>
-    <rpm-maven-plugin.version>2.3.0</rpm-maven-plugin.version>
     <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
-    <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
     <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
     <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
     <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
@@ -262,82 +259,6 @@
             <include>**/*IT.java</include>
           </includes>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>rpm-maven-plugin</artifactId>
-        <version>${rpm-maven-plugin.version}</version>
-        <configuration>
-          <license>Apache Software License v2.0</license>
-          <distribution>CyclopsGroup.org</distribution>
-          <group>Development/Languages/Java</group>
-          <needarch>noarch</needarch>
-          <targetOS>linux</targetOS>
-          <packager>Jiaqi Guo</packager>
-          <defaultUsername>root</defaultUsername>
-          <defaultGroupname>root</defaultGroupname>
-          <defaultDirmode>555</defaultDirmode>
-          <defaultFilemode>444</defaultFilemode>
-          <mappings>
-            <mapping>
-              <directory>/usr/share/jmxsh</directory>
-              <sources>
-                <source>
-                  <location>target/${dist.finalName}-uber.jar</location>
-                  <destination>jmxsh-uber.jar</destination>
-                </source>
-              </sources>
-            </mapping>
-            <mapping>
-              <directory>/usr/bin</directory>
-              <directoryIncluded>false</directoryIncluded>
-              <filemode>755</filemode>
-              <sources>
-                <source>
-                  <location>src/main/script/jmxsh.sh</location>
-                  <destination>jmxsh</destination>
-                </source>
-              </sources>
-            </mapping>
-          </mappings>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.vafer</groupId>
-        <artifactId>jdeb</artifactId>
-        <version>${jdeb.version}</version>
-        <executions>
-          <execution>
-            <id>create-deb</id>
-            <goals>
-              <goal>jdeb</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <controlDir>src/main/deb</controlDir>
-              <dataSet>
-                <data>
-                  <type>file</type>
-                    <src>target/${dist.finalName}-uber.jar</src>
-                  <dst>/usr/share/jmxsh/jmxsh-uber.jar</dst>
-                  <mapper>
-                    <type>perm</type>
-                    <filemode>644</filemode>
-                  </mapper>
-                </data>
-                <data>
-                  <type>file</type>
-                  <src>src/main/script/jmxsh.sh</src>
-                  <dst>/usr/bin/jmxsh</dst>
-                  <mapper>
-                    <type>perm</type>
-                    <filemode>755</filemode>
-                  </mapper>
-                </data>
-              </dataSet>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

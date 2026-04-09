@@ -122,7 +122,6 @@ every push and pull request targeting `master`.
 
 The release workflow (`create-release.yaml`) runs on tag pushes (`v*`) and handles:
 
-1. **Build & Scan** — `mvn package` on JDK 25, then Trivy vulnerability scanning (filesystem)
-2. **Docker** — builds and scans a multi-architecture Docker image (`linux/amd64`, `linux/arm64`),
-   then pushes to `ghcr.io/nyg/jmxsh`
-3. **GitHub Release** — creates a release with JARs, DEB packages, and auto-generated changelog
+1. **Build** — `mvn package` on JDK 25
+2. **Package** — builds DEB and RPM packages from the uber JAR
+3. **GitHub Release** — creates a release with JARs, DEB, RPM packages, and auto-generated changelog
