@@ -116,7 +116,7 @@ try (JmxTermProcessHelper jmx = new JmxTermProcessHelper("-v", "silent")) {
     jmx.sendCommand("open localhost:" + target.getJmxPort());
     jmx.sendCommand("domains");
     String output = jmx.readAllOutput(Duration.ofSeconds(10));
-    assertTrue(output.contains("JMImplementation"));
+    assertThat(output).contains("JMImplementation");
 }
 ```
 

@@ -74,9 +74,9 @@ Scopes: `cmd`, `io`, `build`, `deps`, `docker`, `ci`
 
 ### Testing
 
-- **JUnit 5** (Jupiter) with `@Test`, `@BeforeEach` from `org.junit.jupiter.api`
-- **JMock 2** for mocking with `Mockery` + `Expectations` DSL
-- Use `ByteBuddyClassImposteriser.INSTANCE` when mocking concrete classes
+- **JUnit** (Jupiter) with `@Test`, `@BeforeEach` from `org.junit.jupiter.api`
+- **Mockito** for mocking (`mock()`, `when()`, `verify()`)
+- **AssertJ** for fluent assertions (`assertThat(...).isEqualTo(...)`)
 - Test helpers: `MockSession`, `MockConnection`, `SelfRecordingCommand` in the test root package
 
 Typical test pattern:
@@ -84,20 +84,17 @@ Typical test pattern:
 @BeforeEach
 void setUp() {
     command = new DomainsCommand();
-    context = new Mockery();
 }
 
 @Test
 void execution() throws Exception {
-    final MBeanServerConnection con = context.mock(MBeanServerConnection.class);
+    MBeanServerConnection con = mock(MBeanServerConnection.class);
     StringWriter output = new StringWriter();
-    context.checking(new Expectations() {{
-        oneOf(con).getDomains();
-        will(returnValue(new String[] {"a", "b"}));
-    }});
+    when(con.getDomains()).thenReturn(new String[] {"a", "b"});
     command.setSession(new MockSession(output, con));
     command.execute();
-    context.assertIsSatisfied();
+    verify(con).getDomains();
+    assertThat(output.toString().trim()).isEqualTo("a" + System.lineSeparator() + "b");
 }
 ```
 
@@ -106,7 +103,7 @@ void execution() throws Exception {
 1. Create a class in `cmd/` extending `Command` with `@Cli(name="mycommand")`
 2. Implement `execute()`, define options/arguments via annotations
 3. Register in `src/main/resources/META-INF/cyclopsgroup/jmxsh.properties`
-4. Add a test in `src/test/java/.../cmd/` following the JMock pattern above
+4. Add a test in `src/test/java/.../cmd/` following the Mockito pattern above
 
 ### Error Handling
 
