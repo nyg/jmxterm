@@ -108,7 +108,8 @@ public final class SyntaxUtils {
       return false;
     }
     for (int i = 0; i < s.length(); i++) {
-      if (!Character.isDigit(s.charAt(i))) {
+      char ch = s.charAt(i);
+      if (ch < '0' || ch > '9') {
         return false;
       }
     }
