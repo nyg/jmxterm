@@ -1,16 +1,15 @@
 # Changelog
 
 
-## 1.1.0 - 2026-04-10
+## [unreleased]
 
 ### ⛰️  Features
 
+- [`1be9b90`](https://github.com/nyg/jmxsh/commit/1be9b9063b38a98058be3988ae5c83d968caa5c7) *(ci)* Improve release version logic and JAR naming
 - [`00dfbec`](https://github.com/nyg/jmxsh/commit/00dfbec28ec05320457f8d0e2d27261ff47c3171) *(ci)* Simplify release workflow to single bump-type input ([#24](https://github.com/nyg/jmxsh/issues/24))
 - [`44af5a2`](https://github.com/nyg/jmxsh/commit/44af5a2752d7157f3189d95a03cf7e20ac29e16f) *(ci)* Add release automation workflow ([#18](https://github.com/nyg/jmxsh/issues/18))
 - [`0ac80cd`](https://github.com/nyg/jmxsh/commit/0ac80cd7fa0fb42d04568ab69c74f22ea556fced) *(cmd)* Add JMXMP protocol support ([#16](https://github.com/nyg/jmxsh/issues/16))
 - [`e17ca4e`](https://github.com/nyg/jmxsh/commit/e17ca4e82bfe118f5e3308d67abb358dd04eaec9) *(build)* Migrate to Java 25 only ([#9](https://github.com/nyg/jmxsh/issues/9))
-- [`da6085a`](https://github.com/nyg/jmxsh/commit/da6085a6b98fc9794a4fe45c28179ff5856dd745) *(ci)* Update create-release.yaml for multi-Java builds ([#173](https://github.com/nyg/jmxsh/issues/173))
-- [`cd0c1c7`](https://github.com/nyg/jmxsh/commit/cd0c1c769551c0bd2162c93ba4335410c64aaf87) Add comprehensive Copilot instructions for JMXTerm development ([#157](https://github.com/nyg/jmxsh/issues/157))
 
 ### 🐛 Bug Fixes
 
@@ -18,12 +17,10 @@
 - [`9718bf4`](https://github.com/nyg/jmxsh/commit/9718bf4bc866020926678ba75917660f705a6386) *(ci)* Install git-cliff binary before mvn release:prepare ([#25](https://github.com/nyg/jmxsh/issues/25))
 - [`57f389f`](https://github.com/nyg/jmxsh/commit/57f389f0c41946745f87b22d67cf3d218fdd7625) *(deps)* Update all stable non-major dependencies ([#23](https://github.com/nyg/jmxsh/issues/23))
 - [`d609283`](https://github.com/nyg/jmxsh/commit/d609283845d405a22e447259b7fd84fac2559f27) Restrict SyntaxUtils.isDigits to ASCII digits only ([#12](https://github.com/nyg/jmxsh/issues/12))
-- [`c8d7c4f`](https://github.com/nyg/jmxsh/commit/c8d7c4fee980eb6d199f81dc04300981d5b09284) Correct finalName property usage in Maven build configuration ([#177](https://github.com/nyg/jmxsh/issues/177))
-- [`a53702b`](https://github.com/nyg/jmxsh/commit/a53702b8f2ca3c78c6c275419afa8d519405dd70) Update conventional PR workflow configuration ([#170](https://github.com/nyg/jmxsh/issues/170))
-- [`f559b36`](https://github.com/nyg/jmxsh/commit/f559b369dbecc01936f47d81fd27801f6a1c60b9) Fixed java9+ support
 
 ### 📚 Documentation
 
+- [`952a274`](https://github.com/nyg/jmxsh/commit/952a274bec997338e63eca2fbeb54c41046f8240) Update website JAR examples
 - [`76d90d3`](https://github.com/nyg/jmxsh/commit/76d90d3f915e9a1cf355bc7b6df7bb094a6e7bc4) Update stale references and add jmx.sh landing page ([#15](https://github.com/nyg/jmxsh/issues/15))
 - [`ffa4406`](https://github.com/nyg/jmxsh/commit/ffa44069280009211c52e96143033b6e0dc86746) Add architecture documentation with Mermaid sequence diagram ([#6](https://github.com/nyg/jmxsh/issues/6))
 - [`57d9682`](https://github.com/nyg/jmxsh/commit/57d96829beca05057391307437b5ec68c61e7734) Add build process documentation ([#7](https://github.com/nyg/jmxsh/issues/7))
@@ -87,6 +84,26 @@
 - [`4688a8d`](https://github.com/nyg/jmxsh/commit/4688a8d5a25af9c711cd0e8f9b5ee25343c7523d) *(deps)* Bump actions/upload-artifact from 4 to 5 ([#180](https://github.com/nyg/jmxsh/issues/180))
 - [`a0d8af1`](https://github.com/nyg/jmxsh/commit/a0d8af189019e418caa84d048ed80b62a91ce20c) *(deps)* Bump actions/download-artifact from 5 to 6 ([#179](https://github.com/nyg/jmxsh/issues/179))
 - [`b4577d4`](https://github.com/nyg/jmxsh/commit/b4577d410bf3ccdd9316ff1eefa5baf0a2cefa18) *(deps)* Bump actions/download-artifact from 4 to 5 ([#178](https://github.com/nyg/jmxsh/issues/178))
+
+### Others
+
+- [`bfad3c6`](https://github.com/nyg/jmxsh/commit/bfad3c6f8f6076b4bef4bb91961c3bb0dea73f2e) Synchronize
+- [`b4151bf`](https://github.com/nyg/jmxsh/commit/b4151bf882bd946c0087fdca4a08457d723e5e8b) Add Python files to .gitignore
+
+## [1.1.0](https://github.com/nyg/jmxsh/compare/v1.0.11..v1.1.0) - 2025-10-19
+
+### ⛰️  Features
+
+- [`da6085a`](https://github.com/nyg/jmxsh/commit/da6085a6b98fc9794a4fe45c28179ff5856dd745) *(ci)* Update create-release.yaml for multi-Java builds ([#173](https://github.com/nyg/jmxsh/issues/173))
+- [`cd0c1c7`](https://github.com/nyg/jmxsh/commit/cd0c1c769551c0bd2162c93ba4335410c64aaf87) Add comprehensive Copilot instructions for JMXTerm development ([#157](https://github.com/nyg/jmxsh/issues/157))
+
+### 🐛 Bug Fixes
+
+- [`c8d7c4f`](https://github.com/nyg/jmxsh/commit/c8d7c4fee980eb6d199f81dc04300981d5b09284) Correct finalName property usage in Maven build configuration ([#177](https://github.com/nyg/jmxsh/issues/177))
+- [`a53702b`](https://github.com/nyg/jmxsh/commit/a53702b8f2ca3c78c6c275419afa8d519405dd70) Update conventional PR workflow configuration ([#170](https://github.com/nyg/jmxsh/issues/170))
+
+### ⚙️ Miscellaneous
+
 - [`6a2ca55`](https://github.com/nyg/jmxsh/commit/6a2ca559c50cedf1f428bbeb9c619810ef55326e) Bump version to 1.1.0 in pom.xml ([#175](https://github.com/nyg/jmxsh/issues/175))
 - [`4dcdcf1`](https://github.com/nyg/jmxsh/commit/4dcdcf19ed94b115d26b79cb4ba01f1c43ee3476) *(ci)* Update Maven build and artifact upload in workflow ([#176](https://github.com/nyg/jmxsh/issues/176))
 - [`ca25d94`](https://github.com/nyg/jmxsh/commit/ca25d94265dbabbc88f01ece8116fa0241431c70) *(deps)* Migrate to JUnit 6 ([#172](https://github.com/nyg/jmxsh/issues/172))
@@ -100,10 +117,34 @@
 - [`b021af6`](https://github.com/nyg/jmxsh/commit/b021af61f4a6d438023d2e14b8e30b4589443437) *(deps)* Bump docker/login-action from 3.5.0 to 3.6.0 ([#161](https://github.com/nyg/jmxsh/issues/161))
 - [`313c289`](https://github.com/nyg/jmxsh/commit/313c2890406aaa63250cd8b3e478b9bf6289676e) *(deps)* Bump org.apache.commons:commons-lang3 from 3.18.0 to 3.19.0 ([#160](https://github.com/nyg/jmxsh/issues/160))
 - [`58efa4d`](https://github.com/nyg/jmxsh/commit/58efa4db92eb24c49ccc1a82204141d3c247fdfb) *(deps)* Bump org.apache.maven.plugins:maven-compiler-plugin from 3.14.0 to 3.14.1 ([#159](https://github.com/nyg/jmxsh/issues/159))
+
+### Others
+
+- [`902b6fc`](https://github.com/nyg/jmxsh/commit/902b6fc00a1b85b5542840e57f072813cb46a62f) Remove code for JDK 5 and 6 ([#156](https://github.com/nyg/jmxsh/issues/156))
+- [`d90061e`](https://github.com/nyg/jmxsh/commit/d90061ee8eca686778177aa8036264b4ca9ef8a5) Bump version to 1.0.12-SNAPSHOT in pom.xml ([#155](https://github.com/nyg/jmxsh/issues/155))
+
+## [1.0.11](https://github.com/nyg/jmxsh/compare/v1.0.10..v1.0.11) - 2025-09-26
+
+### ⚙️ Miscellaneous
+
 - [`55d3144`](https://github.com/nyg/jmxsh/commit/55d31443cd3ac7c04bef6c0aa91d396f44a8a8e5) *(deps)* Bump com.google.guava:guava from 33.4.8-jre to 33.5.0-jre ([#151](https://github.com/nyg/jmxsh/issues/151))
 - [`5e8cd5a`](https://github.com/nyg/jmxsh/commit/5e8cd5a6fcf4ae50a5810df2a65f9a51ed914a15) *(deps)* Bump org.apache.maven.plugins:maven-javadoc-plugin ([#150](https://github.com/nyg/jmxsh/issues/150))
 - [`360826a`](https://github.com/nyg/jmxsh/commit/360826ab0ad4c81bae333a7997834ec785ef997a) *(deps)* Bump org.jline:jline from 3.30.5 to 3.30.6 ([#148](https://github.com/nyg/jmxsh/issues/148))
 - [`f9bce21`](https://github.com/nyg/jmxsh/commit/f9bce21832c492980a59990e9194b9b669d1eb9e) *(deps)* Bump org.apache.maven.plugins:maven-surefire-plugin ([#147](https://github.com/nyg/jmxsh/issues/147))
+
+### Others
+
+- [`c13d9c0`](https://github.com/nyg/jmxsh/commit/c13d9c0a74dce18699f838233ea30ac11ee4d272) Update groupId and version to io.github.lemyst/1.0.11 ([#154](https://github.com/nyg/jmxsh/issues/154))
+- [`444e0bf`](https://github.com/nyg/jmxsh/commit/444e0bfbafe92f5acb5369c03d109f8bc55891a1) Upgrade Alpine packages in Dockerfile ([#153](https://github.com/nyg/jmxsh/issues/153))
+- [`4faba76`](https://github.com/nyg/jmxsh/commit/4faba761cbba6e5ab585b0dea15e5a4f9318034f) Clean POM file ([#149](https://github.com/nyg/jmxsh/issues/149))
+- [`a04e5cc`](https://github.com/nyg/jmxsh/commit/a04e5cccda3fc81d5ee45cb2bd95b5a05fc6921b) Refine workflow permissions and conditional steps
+- [`a8b4104`](https://github.com/nyg/jmxsh/commit/a8b41046de96d570498854dc34966a84067c07f4) Modify permissions in Maven CI workflow ([#152](https://github.com/nyg/jmxsh/issues/152))
+- [`1c112fa`](https://github.com/nyg/jmxsh/commit/1c112fa27f5685a9d64c1122cdb65052d30a6c55) Add instructions for using GitHub Maven repository
+
+## [1.0.10](https://github.com/nyg/jmxsh/compare/v1.0.9-lemyst..v1.0.10) - 2025-09-08
+
+### ⚙️ Miscellaneous
+
 - [`21c463e`](https://github.com/nyg/jmxsh/commit/21c463e21c76962682505662c64fb3ee7e756b31) *(deps)* Bump actions/setup-java from 4 to 5 ([#144](https://github.com/nyg/jmxsh/issues/144))
 - [`cd27242`](https://github.com/nyg/jmxsh/commit/cd272425e37899ff83c57afa994dd0d4d40537a2) Fix Docker build platforms to include arm64/v8 ([#142](https://github.com/nyg/jmxsh/issues/142))
 - [`e506735`](https://github.com/nyg/jmxsh/commit/e506735e3e3ecfe2e74d61516b649d4f14f96c5a) Fix eclipse-temurin version in Dockerfile ([#141](https://github.com/nyg/jmxsh/issues/141))
@@ -140,6 +181,22 @@
 - [`7394d94`](https://github.com/nyg/jmxsh/commit/7394d949f9bdfeb685177549802fd3295ce06886) *(deps)* Bump com.google.guava:guava from 33.4.6-jre to 33.4.8-jre ([#108](https://github.com/nyg/jmxsh/issues/108))
 - [`01a2fd5`](https://github.com/nyg/jmxsh/commit/01a2fd53b88d1a696235c8a26fd86f03b99b892d) *(deps)* Bump org.apache.commons:commons-text from 1.13.0 to 1.13.1 ([#107](https://github.com/nyg/jmxsh/issues/107))
 - [`1dbe426`](https://github.com/nyg/jmxsh/commit/1dbe4266b6b09b30a0841bf471eb3fccb2ffcd40) *(deps)* Bump commons-io:commons-io from 2.18.0 to 2.19.0 ([#106](https://github.com/nyg/jmxsh/issues/106))
+
+### Others
+
+- [`5194cba`](https://github.com/nyg/jmxsh/commit/5194cba0cdbdcaf099e757dcdbfe7ac17950283f) Bump version to 1.0.10-lemyst in pom.xml
+- [`ab7a898`](https://github.com/nyg/jmxsh/commit/ab7a898350ec2388e7dedb85cf2287d7639bd679) Implement Maven GitHub Packages publishing for automated release distribution ([#145](https://github.com/nyg/jmxsh/issues/145))
+- [`f2b517b`](https://github.com/nyg/jmxsh/commit/f2b517b8151ff08d16343d6213f2f0cd37818d83) Revert "Add permissions for security events and id-token"
+- [`9cd2d5c`](https://github.com/nyg/jmxsh/commit/9cd2d5c259fd3a227f5e98dfd92223eba711bade) Properly cast vm object ([#146](https://github.com/nyg/jmxsh/issues/146))
+- [`7f9e6be`](https://github.com/nyg/jmxsh/commit/7f9e6bedd86225755c4ab51a10fe1bbf35f3214d) Add permissions for security events and id-token
+- [`0014578`](https://github.com/nyg/jmxsh/commit/00145783969dba5f23aa10487759d450af414d86) Improve maven tests workflow ([#137](https://github.com/nyg/jmxsh/issues/137))
+- [`b957d1d`](https://github.com/nyg/jmxsh/commit/b957d1d88952363aab636f9eba8f104b126d1c8e) Potential fix for code scanning alert no. 35: Workflow does not contain permissions ([#118](https://github.com/nyg/jmxsh/issues/118))
+- [`66ce2cc`](https://github.com/nyg/jmxsh/commit/66ce2cc18fc6f49688fb953d1dd51e34d2993673) Fix release workflow ([#105](https://github.com/nyg/jmxsh/issues/105))
+
+## [1.0.9-lemyst](https://github.com/nyg/jmxsh/compare/v1.0.8-lemyst..v1.0.9-lemyst) - 2025-05-27
+
+### ⚙️ Miscellaneous
+
 - [`e50f32a`](https://github.com/nyg/jmxsh/commit/e50f32a7585fb67cb2e14685039511c829ad7c8c) *(deps)* Bump eclipse-temurin ([#102](https://github.com/nyg/jmxsh/issues/102))
 - [`9e7370b`](https://github.com/nyg/jmxsh/commit/9e7370b8548c7e446a54b55c1686332611d8d9b8) *(deps)* Bump org.apache.maven.plugins:maven-surefire-plugin ([#101](https://github.com/nyg/jmxsh/issues/101))
 - [`c54c43a`](https://github.com/nyg/jmxsh/commit/c54c43a1af42273adbe907287094825c19b2773d) *(deps)* Bump com.google.guava:guava from 33.4.5-jre to 33.4.6-jre ([#100](https://github.com/nyg/jmxsh/issues/100))
@@ -183,6 +240,21 @@
 - [`ba295a7`](https://github.com/nyg/jmxsh/commit/ba295a70638520d878e9db818237b85894aaa544) *(deps)* Bump docker/build-push-action from 6.7.0 to 6.8.0
 - [`806bbb6`](https://github.com/nyg/jmxsh/commit/806bbb6747db39d6326a01c91e8d3d7d9765d1f5) *(deps)* Bump com.google.guava:guava from 33.3.0-jre to 33.3.1-jre
 - [`10b63c0`](https://github.com/nyg/jmxsh/commit/10b63c0ce3aa74aec10c6c4a1d0b3f8d407892ef) *(deps)* Bump org.jline:jline from 3.26.3 to 3.27.0
+
+### Others
+
+- [`6b717d6`](https://github.com/nyg/jmxsh/commit/6b717d64f246b5d10d197af14248fa7c81fb3ef6) Prepare v1.0.9 ([#104](https://github.com/nyg/jmxsh/issues/104))
+- [`32d8249`](https://github.com/nyg/jmxsh/commit/32d8249230b8a31ceba06725132df86fe36d2f5a) Improve workflows ([#103](https://github.com/nyg/jmxsh/issues/103))
+- [`673912a`](https://github.com/nyg/jmxsh/commit/673912a15f3daa0dafa4bc3f5d06e26711cb43dc) Fix nightly build
+- [`80969f5`](https://github.com/nyg/jmxsh/commit/80969f5b29c5275cdcb1cd4c1b51d784bf4b2114) Change dependabot frequency ([#91](https://github.com/nyg/jmxsh/issues/91))
+- [`0f41f33`](https://github.com/nyg/jmxsh/commit/0f41f3329d674f9415793970d36ad67c50fed229) Create nightly-build.yml ([#90](https://github.com/nyg/jmxsh/issues/90))
+- [`ab78842`](https://github.com/nyg/jmxsh/commit/ab78842bbb91bc4b48938da0a4581ce81501566c) Dependabot automerge ([#83](https://github.com/nyg/jmxsh/issues/83))
+- [`00c8614`](https://github.com/nyg/jmxsh/commit/00c861428d1f2fc5d08e459a5eec31b75edd7823) Change trivy image repository to AWS ECR
+
+## [1.0.8-lemyst](https://github.com/nyg/jmxsh/compare/v1.0.7-lemyst..v1.0.8-lemyst) - 2025-05-27
+
+### ⚙️ Miscellaneous
+
 - [`6714e87`](https://github.com/nyg/jmxsh/commit/6714e874f7cb4ef17a139128fb42d1364bea8e74) *(deps)* Bump eclipse-temurin
 - [`53d8288`](https://github.com/nyg/jmxsh/commit/53d828840311e2077c15a9151ec5be6993845ba8) *(deps)* Bump commons-io:commons-io from 2.16.1 to 2.17.0
 - [`d2b1e9c`](https://github.com/nyg/jmxsh/commit/d2b1e9c7deb67c24c6b42facb7ee2e9bf1793e6b) *(deps)* Bump org.apache.commons:commons-lang3 from 3.16.0 to 3.17.0
@@ -194,6 +266,15 @@
 - [`8c9be05`](https://github.com/nyg/jmxsh/commit/8c9be05e56eb39f99dc38cccf58182f4b74f47a8) *(deps)* Bump docker/build-push-action from 6.6.1 to 6.7.0
 - [`fc477cf`](https://github.com/nyg/jmxsh/commit/fc477cf667ff4b4bf0f82d0301120f814dd63d3c) *(deps)* Bump slf4j.version from 2.0.15 to 2.0.16
 - [`8d879f0`](https://github.com/nyg/jmxsh/commit/8d879f0d77f2763274204feb6342ab5bc8991c06) *(deps)* Bump slf4j.version from 2.0.14 to 2.0.15
+
+### Others
+
+- [`f6cc0a0`](https://github.com/nyg/jmxsh/commit/f6cc0a03af151d3eca245b539c1b7ef6bb71f672) Bump to 1.0.8-lemyst
+
+## [1.0.7-lemyst](https://github.com/nyg/jmxsh/compare/v1.0.6-lemyst..v1.0.7-lemyst) - 2025-05-27
+
+### ⚙️ Miscellaneous
+
 - [`16a31d6`](https://github.com/nyg/jmxsh/commit/16a31d60eb82a3fa8ad1d9458bfb5a2aebe9d0ac) *(deps)* Bump docker/build-push-action from 6.6.0 to 6.6.1
 - [`8eabfbe`](https://github.com/nyg/jmxsh/commit/8eabfbebbfa1bf312c1d8427e6a0f0cdef48dbb9) *(deps)* Bump slf4j.version from 2.0.13 to 2.0.14
 - [`7597787`](https://github.com/nyg/jmxsh/commit/7597787241abbb75230e2f98bf328c52bba4ed4a) *(deps)* Bump org.apache.commons:commons-lang3 from 3.15.0 to 3.16.0
@@ -216,6 +297,17 @@
 - [`0a06161`](https://github.com/nyg/jmxsh/commit/0a0616131d5722d6ab1a697a67e10fb8ac0b9283) *(deps)* Bump docker/build-push-action from 6.1.0 to 6.2.0
 - [`3bc16b5`](https://github.com/nyg/jmxsh/commit/3bc16b5301147f4e4db9b39fc66a39281c4c5c03) *(deps)* Bump org.apache.maven.plugins:maven-jar-plugin
 - [`cdd31d1`](https://github.com/nyg/jmxsh/commit/cdd31d10f0fa7d79902ba3f625bb1ee04648d2bf) *(deps)* Bump docker/build-push-action from 6.0.1 to 6.1.0
+
+### Others
+
+- [`23265f4`](https://github.com/nyg/jmxsh/commit/23265f47fb27d24247d839c2c9fb476dc8c49b5f) Bump to 1.0.7-lemyst
+- [`4d9ff5b`](https://github.com/nyg/jmxsh/commit/4d9ff5be5d0fa18b58453a90257b8b900cb40898) Add JRE message
+- [`8f1ef5a`](https://github.com/nyg/jmxsh/commit/8f1ef5a5eb556faad5e7d2256da3b9a8b551d162) Update create-release.yaml
+
+## [1.0.6-lemyst](https://github.com/nyg/jmxsh/compare/v1.0.5-lemyst..v1.0.6-lemyst) - 2025-05-27
+
+### ⚙️ Miscellaneous
+
 - [`c7d7075`](https://github.com/nyg/jmxsh/commit/c7d707543e71bafab54575efce3150c786eb1127) *(deps)* Bump eclipse-temurin
 - [`3b2c83a`](https://github.com/nyg/jmxsh/commit/3b2c83a4ac45eae515cc9a35d029defcbb1014d0) *(deps)* Bump docker/build-push-action from 6.0.0 to 6.0.1
 - [`d4b02f6`](https://github.com/nyg/jmxsh/commit/d4b02f64de3746e21dfeb69593a8f81a37d47262) *(deps)* Bump org.apache.maven.plugins:maven-source-plugin
@@ -223,6 +315,21 @@
 - [`c665827`](https://github.com/nyg/jmxsh/commit/c66582734b97cff202c706e0a240313b96009bbb) *(deps)* Bump org.apache.commons:commons-text from 1.10.0 to 1.12.0
 - [`20a3e95`](https://github.com/nyg/jmxsh/commit/20a3e95910e50f1fe5f50e220f289862b8fcf8f9) *(deps)* Bump org.apache.commons:commons-lang3 from 3.8.1 to 3.14.0
 - [`6b1897c`](https://github.com/nyg/jmxsh/commit/6b1897c5c4d44a3c35942732fbe865248436e986) *(deps)* Bump slf4j.version from 1.7.25 to 2.0.13
+
+### Others
+
+- [`bd44dc4`](https://github.com/nyg/jmxsh/commit/bd44dc4d5a202d36b4b914c4a6040f363a484ed6) Prepare for v1.0.6
+- [`2a66ec6`](https://github.com/nyg/jmxsh/commit/2a66ec681db9d565c7ca29a92637a99cecbbd67e) Add changelog to release
+- [`664fac4`](https://github.com/nyg/jmxsh/commit/664fac4b3b12845b824a9acbf8996fa0fa2e81db) Delete Vagrantfile
+- [`66a22d2`](https://github.com/nyg/jmxsh/commit/66a22d28297621766086e959dad03022cd0103d1) Remove linux/arm/v7
+- [`8494d02`](https://github.com/nyg/jmxsh/commit/8494d02fd353f633669872cfc1d3445cab93f0bf) Update Dockerfile
+- [`df77a88`](https://github.com/nyg/jmxsh/commit/df77a88ef52b494b6f6248aa05bfdba9aecfc8cf) Update workflows
+- [`e4881c7`](https://github.com/nyg/jmxsh/commit/e4881c71870d42f72c2a518ab6188b884dbc5c25) Add release workflow
+
+## [1.0.5-lemyst](https://github.com/nyg/jmxsh/compare/v1.0.5..v1.0.5-lemyst) - 2025-05-27
+
+### ⚙️ Miscellaneous
+
 - [`0ad941e`](https://github.com/nyg/jmxsh/commit/0ad941e2c00068fecf7da0f8fd32d0e01b69fa42) *(deps)* Bump commons-io:commons-io from 2.7 to 2.16.1
 - [`0be1306`](https://github.com/nyg/jmxsh/commit/0be1306902ece52b637fe1f2fdd3067f81c156ec) *(deps)* Bump junit:junit from 4.13.1 to 4.13.2
 - [`e01abf4`](https://github.com/nyg/jmxsh/commit/e01abf4cab49cec90089a23b66f04c44028c3f4a) *(deps)* Bump org.apache.maven.plugins:maven-javadoc-plugin
@@ -233,41 +340,6 @@
 
 ### Others
 
-- [`b4151bf`](https://github.com/nyg/jmxsh/commit/b4151bf882bd946c0087fdca4a08457d723e5e8b) Add Python files to .gitignore
-- [`902b6fc`](https://github.com/nyg/jmxsh/commit/902b6fc00a1b85b5542840e57f072813cb46a62f) Remove code for JDK 5 and 6 ([#156](https://github.com/nyg/jmxsh/issues/156))
-- [`d90061e`](https://github.com/nyg/jmxsh/commit/d90061ee8eca686778177aa8036264b4ca9ef8a5) Bump version to 1.0.12-SNAPSHOT in pom.xml ([#155](https://github.com/nyg/jmxsh/issues/155))
-- [`c13d9c0`](https://github.com/nyg/jmxsh/commit/c13d9c0a74dce18699f838233ea30ac11ee4d272) Update groupId and version to io.github.lemyst/1.0.11 ([#154](https://github.com/nyg/jmxsh/issues/154))
-- [`444e0bf`](https://github.com/nyg/jmxsh/commit/444e0bfbafe92f5acb5369c03d109f8bc55891a1) Upgrade Alpine packages in Dockerfile ([#153](https://github.com/nyg/jmxsh/issues/153))
-- [`4faba76`](https://github.com/nyg/jmxsh/commit/4faba761cbba6e5ab585b0dea15e5a4f9318034f) Clean POM file ([#149](https://github.com/nyg/jmxsh/issues/149))
-- [`a04e5cc`](https://github.com/nyg/jmxsh/commit/a04e5cccda3fc81d5ee45cb2bd95b5a05fc6921b) Refine workflow permissions and conditional steps
-- [`a8b4104`](https://github.com/nyg/jmxsh/commit/a8b41046de96d570498854dc34966a84067c07f4) Modify permissions in Maven CI workflow ([#152](https://github.com/nyg/jmxsh/issues/152))
-- [`1c112fa`](https://github.com/nyg/jmxsh/commit/1c112fa27f5685a9d64c1122cdb65052d30a6c55) Add instructions for using GitHub Maven repository
-- [`5194cba`](https://github.com/nyg/jmxsh/commit/5194cba0cdbdcaf099e757dcdbfe7ac17950283f) Bump version to 1.0.10-lemyst in pom.xml
-- [`ab7a898`](https://github.com/nyg/jmxsh/commit/ab7a898350ec2388e7dedb85cf2287d7639bd679) Implement Maven GitHub Packages publishing for automated release distribution ([#145](https://github.com/nyg/jmxsh/issues/145))
-- [`f2b517b`](https://github.com/nyg/jmxsh/commit/f2b517b8151ff08d16343d6213f2f0cd37818d83) Revert "Add permissions for security events and id-token"
-- [`9cd2d5c`](https://github.com/nyg/jmxsh/commit/9cd2d5c259fd3a227f5e98dfd92223eba711bade) Properly cast vm object ([#146](https://github.com/nyg/jmxsh/issues/146))
-- [`7f9e6be`](https://github.com/nyg/jmxsh/commit/7f9e6bedd86225755c4ab51a10fe1bbf35f3214d) Add permissions for security events and id-token
-- [`0014578`](https://github.com/nyg/jmxsh/commit/00145783969dba5f23aa10487759d450af414d86) Improve maven tests workflow ([#137](https://github.com/nyg/jmxsh/issues/137))
-- [`b957d1d`](https://github.com/nyg/jmxsh/commit/b957d1d88952363aab636f9eba8f104b126d1c8e) Potential fix for code scanning alert no. 35: Workflow does not contain permissions ([#118](https://github.com/nyg/jmxsh/issues/118))
-- [`66ce2cc`](https://github.com/nyg/jmxsh/commit/66ce2cc18fc6f49688fb953d1dd51e34d2993673) Fix release workflow ([#105](https://github.com/nyg/jmxsh/issues/105))
-- [`6b717d6`](https://github.com/nyg/jmxsh/commit/6b717d64f246b5d10d197af14248fa7c81fb3ef6) Prepare v1.0.9 ([#104](https://github.com/nyg/jmxsh/issues/104))
-- [`32d8249`](https://github.com/nyg/jmxsh/commit/32d8249230b8a31ceba06725132df86fe36d2f5a) Improve workflows ([#103](https://github.com/nyg/jmxsh/issues/103))
-- [`673912a`](https://github.com/nyg/jmxsh/commit/673912a15f3daa0dafa4bc3f5d06e26711cb43dc) Fix nightly build
-- [`80969f5`](https://github.com/nyg/jmxsh/commit/80969f5b29c5275cdcb1cd4c1b51d784bf4b2114) Change dependabot frequency ([#91](https://github.com/nyg/jmxsh/issues/91))
-- [`0f41f33`](https://github.com/nyg/jmxsh/commit/0f41f3329d674f9415793970d36ad67c50fed229) Create nightly-build.yml ([#90](https://github.com/nyg/jmxsh/issues/90))
-- [`ab78842`](https://github.com/nyg/jmxsh/commit/ab78842bbb91bc4b48938da0a4581ce81501566c) Dependabot automerge ([#83](https://github.com/nyg/jmxsh/issues/83))
-- [`00c8614`](https://github.com/nyg/jmxsh/commit/00c861428d1f2fc5d08e459a5eec31b75edd7823) Change trivy image repository to AWS ECR
-- [`f6cc0a0`](https://github.com/nyg/jmxsh/commit/f6cc0a03af151d3eca245b539c1b7ef6bb71f672) Bump to 1.0.8-lemyst
-- [`23265f4`](https://github.com/nyg/jmxsh/commit/23265f47fb27d24247d839c2c9fb476dc8c49b5f) Bump to 1.0.7-lemyst
-- [`4d9ff5b`](https://github.com/nyg/jmxsh/commit/4d9ff5be5d0fa18b58453a90257b8b900cb40898) Add JRE message
-- [`8f1ef5a`](https://github.com/nyg/jmxsh/commit/8f1ef5a5eb556faad5e7d2256da3b9a8b551d162) Update create-release.yaml
-- [`bd44dc4`](https://github.com/nyg/jmxsh/commit/bd44dc4d5a202d36b4b914c4a6040f363a484ed6) Prepare for v1.0.6
-- [`2a66ec6`](https://github.com/nyg/jmxsh/commit/2a66ec681db9d565c7ca29a92637a99cecbbd67e) Add changelog to release
-- [`664fac4`](https://github.com/nyg/jmxsh/commit/664fac4b3b12845b824a9acbf8996fa0fa2e81db) Delete Vagrantfile
-- [`66a22d2`](https://github.com/nyg/jmxsh/commit/66a22d28297621766086e959dad03022cd0103d1) Remove linux/arm/v7
-- [`8494d02`](https://github.com/nyg/jmxsh/commit/8494d02fd353f633669872cfc1d3445cab93f0bf) Update Dockerfile
-- [`df77a88`](https://github.com/nyg/jmxsh/commit/df77a88ef52b494b6f6248aa05bfdba9aecfc8cf) Update workflows
-- [`e4881c7`](https://github.com/nyg/jmxsh/commit/e4881c71870d42f72c2a518ab6188b884dbc5c25) Add release workflow
 - [`825cb5a`](https://github.com/nyg/jmxsh/commit/825cb5a2b4f038373438f7e53f900d9dda47966f) Improve pom.xml
 - [`0abdb8b`](https://github.com/nyg/jmxsh/commit/0abdb8b1c37dd140549b681794a45a416d77f892) Disable for dependabot
 - [`25757b6`](https://github.com/nyg/jmxsh/commit/25757b60ea6fdc8a23e285788217ccccb74da30a) Try to fix dependabot error
@@ -277,13 +349,28 @@
 - [`7da3128`](https://github.com/nyg/jmxsh/commit/7da31285b00e3fac8a52998066b1d789b59407df) Create maven github workflows
 - [`d51fbde`](https://github.com/nyg/jmxsh/commit/d51fbdeaa9b5322052b929b76d3c4784c2ec736d) Avoid usage of jdk.jconsole module in Java 9+ ([#113](https://github.com/nyg/jmxsh/issues/113))
 - [`13d3706`](https://github.com/nyg/jmxsh/commit/13d3706a0d4a6dd88da799bca91c4cf102d480a4) Replace jmock-legacy by jmock-imposters ([#112](https://github.com/nyg/jmxsh/issues/112))
+
+## [1.0.5](https://github.com/nyg/jmxsh/compare/v1.0.4..v1.0.5) - 2025-04-26
+
+### Others
+
 - [`351e9bc`](https://github.com/nyg/jmxsh/commit/351e9bc6bf8bd3700600619824c4ebe05b5ea7ef) Release 1.0.5 passes SonatypeIQ security scan ([#121](https://github.com/nyg/jmxsh/issues/121))
 - [`9d9cc7c`](https://github.com/nyg/jmxsh/commit/9d9cc7c29ee00b87e7f6e43acbcf7c5cfb0ee2ab) Bump commons-io:commons-io from 2.7 to 2.14.0 ([#122](https://github.com/nyg/jmxsh/issues/122))
 - [`2b6939a`](https://github.com/nyg/jmxsh/commit/2b6939a9a4b5896473b72e2d493f0cc3bfaa2d14) Bump org.apache.commons:commons-configuration2 from 2.8.0 to 2.10.1 ([#114](https://github.com/nyg/jmxsh/issues/114))
 - [`506795b`](https://github.com/nyg/jmxsh/commit/506795bbf0ff09e4bd7e2a578b8bfcbe82d3e2b0) Fix for mvn site command ([#110](https://github.com/nyg/jmxsh/issues/110))
+
+## [1.0.4](https://github.com/nyg/jmxsh/compare/v1.0.3..v1.0.4) - 2022-10-27
+
+### Others
+
 - [`855e1c9`](https://github.com/nyg/jmxsh/commit/855e1c9cb9d1a3b1435ba34188169bb55019cae6) Update for 1.0.4 release ([#107](https://github.com/nyg/jmxsh/issues/107))
 - [`778eb8f`](https://github.com/nyg/jmxsh/commit/778eb8f5ddbfb596ef3c90b2873d30a37c16e3ce) Address https://nvd.nist.gov/vuln/detail/CVE-2022-42889 by upgrading org.apache.commons:commons-text to version 1.10.0 (from 1.9) ([#105](https://github.com/nyg/jmxsh/issues/105))
 - [`95cd540`](https://github.com/nyg/jmxsh/commit/95cd5400255bb94f8198ebe8ae9da26623444524) Change version back to snapshot
+
+## [1.0.3](https://github.com/nyg/jmxsh/compare/v1.0.2..v1.0.3) - 2022-08-06
+
+### Others
+
 - [`62504b9`](https://github.com/nyg/jmxsh/commit/62504b90fac047485743107b48180833b423743d) Set version to 1.0.3 to perform a release
 - [`efaf279`](https://github.com/nyg/jmxsh/commit/efaf2792d9d2d009753b5ee0f8b6b9d570157279) Tighen javadoc checks
 - [`0f82c98`](https://github.com/nyg/jmxsh/commit/0f82c984e5abe62c8249b14c73a27075a8655813) Upgrade org.apache.commons:commons-configuration2 to version 2.8.0 to address https://www.cve.org/CVERecord?id=CVE-2022-33980 ([#103](https://github.com/nyg/jmxsh/issues/103))
@@ -296,6 +383,11 @@
 - [`f359f97`](https://github.com/nyg/jmxsh/commit/f359f973c2c1f3eb35bdb7d4a0bc7528c8b822b6) Add back working directory param
 - [`f8afb15`](https://github.com/nyg/jmxsh/commit/f8afb157970a8c52565ac1586d5d71e48b0715ef) Deploy snapshot only for master build ([#89](https://github.com/nyg/jmxsh/issues/89))
 - [`61606c2`](https://github.com/nyg/jmxsh/commit/61606c212d2c0d262a581a944e4df127866e2926) Restore the head version to snapshot
+
+## [1.0.2](https://github.com/nyg/jmxsh/compare/v1.0.1..v1.0.2) - 2020-09-04
+
+### Others
+
 - [`5c13c7b`](https://github.com/nyg/jmxsh/commit/5c13c7be6124e9d50026b202b2bc5a5fa622659f) Prepare for 1.0.2 release
 - [`d58fac1`](https://github.com/nyg/jmxsh/commit/d58fac180bfc0f126cc7d6fed3105e0c141c4ccb) Order the dependencies
 - [`7cb8f02`](https://github.com/nyg/jmxsh/commit/7cb8f023cb8cce3a17338e938bf766c7114d1b22) Upgrade beanutils to 1.9.4
@@ -316,6 +408,15 @@
 - [`5194466`](https://github.com/nyg/jmxsh/commit/5194466e23c94a505cb51f11ca7de8c5187d48ed) Try fixing travis build error
 - [`e2ee8f9`](https://github.com/nyg/jmxsh/commit/e2ee8f91cf288fcd52b45c8d695de14ac8708224) Add circleci configuration file
 - [`9a9a0a1`](https://github.com/nyg/jmxsh/commit/9a9a0a1203e3a4054556bbc24844247303ec4f0e) Disconnect jmx when terminating jmxterm
+
+## [1.0.1](https://github.com/nyg/jmxsh/compare/v1.0.0..v1.0.1) - 2019-05-01
+
+### 🐛 Bug Fixes
+
+- [`f559b36`](https://github.com/nyg/jmxsh/commit/f559b369dbecc01936f47d81fd27801f6a1c60b9) Fixed java9+ support
+
+### Others
+
 - [`0c3e699`](https://github.com/nyg/jmxsh/commit/0c3e6990eb60d990ad33fd6fdc634f039c8d1daf) Setting version to 1.0.1 for the next release
 - [`5211459`](https://github.com/nyg/jmxsh/commit/52114598b9c1dbfe8a56942f06ac38da2f48366f) Make slf4j-simple runtime dependency
 - [`ab457c4`](https://github.com/nyg/jmxsh/commit/ab457c43802b81dd0bef9a5d7bccf58543c11fb2) Issue 61 - Add in slf4j-simple to remove SLF4j logging warnings
@@ -358,6 +459,11 @@
 - [`b38ce43`](https://github.com/nyg/jmxsh/commit/b38ce43e43cc5a8048eb31e8f56939a812068796) Updated dependency versions
 - [`8bd352f`](https://github.com/nyg/jmxsh/commit/8bd352fd52c3ea5621ae784f0f0a0e8b10c2a3a0) Removed redundant group id
 - [`47955b4`](https://github.com/nyg/jmxsh/commit/47955b4fae9339a92f30b339a0bc6ea0d50e88b0) Excluded IDEA metadata from SCM
+
+## 1.0.0 - 2017-07-28
+
+### Others
+
 - [`67f6ff4`](https://github.com/nyg/jmxsh/commit/67f6ff4adc7d3199fbc7848503b385282ceed67a) Get ready for 1.0.0 release
 - [`385df87`](https://github.com/nyg/jmxsh/commit/385df87f5d58eb54dd2c2e6eb29cf27626b31d39) Merge pull request [#39](https://github.com/nyg/jmxsh/issues/39) from wesamhaboush/master
 - [`379ba64`](https://github.com/nyg/jmxsh/commit/379ba643a43125f5523e370814f0579522696971) Add comment char escape capability
