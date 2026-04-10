@@ -66,7 +66,7 @@ jobs:
 
       - name: Check tag does not already exist
         run: |
-          if git rev-parse "v${{ env.RELEASE_VERSION }}" >/dev/null 2>&1; then
+          if git show-ref --tags --verify --quiet "refs/tags/v${{ env.RELEASE_VERSION }}"; then
             echo "::error::Tag v${{ env.RELEASE_VERSION }} already exists"
             exit 1
           fi
