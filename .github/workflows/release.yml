@@ -41,6 +41,15 @@ jobs:
           distribution: temurin
           cache: maven
 
+      - name: Install git-cliff
+        run: |
+          gh release download --repo orhun/git-cliff --pattern 'git-cliff-*-x86_64-unknown-linux-gnu.tar.gz'
+          tar xzf git-cliff-*-x86_64-unknown-linux-gnu.tar.gz --strip-components=1 --wildcards '*/git-cliff'
+          sudo mv git-cliff /usr/local/bin/
+          git cliff --version
+        env:
+          GH_TOKEN: ${{ github.token }}
+
       - name: Compute versions
         run: |
           current=$(mvn -q -DforceStdout help:evaluate -Dexpression=project.version)
