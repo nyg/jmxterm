@@ -28,8 +28,8 @@
       <div class="grid">
         <div class="card">
           <h3>JAR</h3>
-          <p>Download the uber JAR and run it directly:</p>
-          <pre><code>java -jar jmxsh-uber.jar</code></pre>
+          <p>Download the release JAR and run it directly:</p>
+          <pre><code>java -jar jmxsh-&lt;version&gt;.jar</code></pre>
         </div>
         <div class="card">
           <h3>Debian/Ubuntu</h3>
@@ -54,7 +54,7 @@ jmxsh</code></pre>
           <span class="terminal-title">jmxsh</span>
         </div>
         <div class="terminal-body">
-<pre><span class="prompt">$</span> java -jar jmxsh-uber.jar
+<pre><span class="prompt">$</span> java -jar jmxsh-&lt;version&gt;.jar
 Welcome to jmx.sh, type "help" for available commands.
 <span class="prompt">$&gt;</span> open localhost:9999
 <span class="comment">#Connection to localhost:9999 is opened</span>
@@ -88,7 +88,7 @@ null
         <div class="card">
           <h3>Script File</h3>
           <p>Run commands from a file:</p>
-          <pre><code>java -jar jmxsh-uber.jar \
+          <pre><code>java -jar jmxsh-&lt;version&gt;.jar \
   -l localhost:9999 \
   --input commands.txt</code></pre>
         </div>
@@ -96,7 +96,7 @@ null
           <h3>Piped Input</h3>
           <p>Pipe commands via stdin:</p>
           <pre><code>echo "open localhost:9999 && beans" \
-  | java -jar jmxsh-uber.jar -n</code></pre>
+  | java -jar jmxsh-&lt;version&gt;.jar -n</code></pre>
         </div>
       </div>
     </div>
