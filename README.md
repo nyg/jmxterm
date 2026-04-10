@@ -14,16 +14,16 @@ invoke operations — all from the comfort of your terminal. Think of it as a Sw
 
 ## Quick Start
 
-Download the latest [uber JAR from Releases](https://github.com/nyg/jmxsh/releases) and run:
+Download the latest [JAR from Releases](https://github.com/nyg/jmxsh/releases) and run:
 
 ```bash
-java -jar jmxsh-uber.jar
+java -jar jmxsh-<version>.jar
 ```
 
 ## Usage
 
 ```
-$ java -jar jmxsh-uber.jar
+$ java -jar jmxsh-<version>.jar
 Welcome to jmx.sh, type "help" for available commands.
 $> open localhost:9999
 #Connection to localhost:9999 is opened
@@ -79,13 +79,13 @@ Full service URLs are also supported: `open service:jmx:jmxmp://localhost:9999`
 Run commands from a script file:
 
 ```bash
-java -jar jmxsh-uber.jar -l localhost:9999 --input commands.txt
+java -jar jmxsh-<version>.jar -l localhost:9999 --input commands.txt
 ```
 
 Or pipe commands via stdin:
 
 ```bash
-echo "open localhost:9999 && beans" | java -jar jmxsh-uber.jar -n
+echo "open localhost:9999 && beans" | java -jar jmxsh-<version>.jar -n
 ```
 
 ## Installation
@@ -93,7 +93,7 @@ echo "open localhost:9999 && beans" | java -jar jmxsh-uber.jar -n
 ### JAR (all platforms)
 
 ```bash
-java -jar jmxsh-uber.jar
+java -jar jmxsh-<version>.jar
 ```
 
 ### Debian/Ubuntu
