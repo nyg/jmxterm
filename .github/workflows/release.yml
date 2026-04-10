@@ -62,17 +62,21 @@ jobs:
           major=${BASH_REMATCH[1]}
           minor=${BASH_REMATCH[2]}
           patch=${BASH_REMATCH[3]}
-          release="${major}.${minor}.${patch}"
 
           case "${{ inputs.bump }}" in
-            patch) next="${major}.${minor}.$((patch + 1))-SNAPSHOT" ;;
-            minor) next="${major}.$((minor + 1)).0-SNAPSHOT" ;;
-            major) next="$((major + 1)).0.0-SNAPSHOT" ;;
+            patch) release="${major}.${minor}.$((patch + 1))" ;;
+            minor) release="${major}.$((minor + 1)).0" ;;
+            major) release="$((major + 1)).0.0" ;;
             *)
               echo "::error::Unsupported version bump type: ${{ inputs.bump }}"
               exit 1
               ;;
           esac
+
+          # Next development version is always release + patch
+          if [[ "$release" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            next="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$((BASH_REMATCH[3] + 1))-SNAPSHOT"
+          fi
 
           echo "RELEASE_VERSION=$release" >> "$GITHUB_ENV"
           echo "DEVELOPMENT_VERSION=$next" >> "$GITHUB_ENV"
@@ -102,6 +106,9 @@ jobs:
 
       - name: Build artifacts
         run: mvn -B -q --no-transfer-progress clean package
+
+      - name: Rename uber JAR
+        run: cp "target/jmxsh-${{ env.RELEASE_VERSION }}-uber.jar" "target/jmxsh-${{ env.RELEASE_VERSION }}.jar"
 
       - name: Build DEB package
         run: |
@@ -184,7 +191,7 @@ jobs:
       - name: Create GitHub release
         run: >
           gh release create v${{ env.RELEASE_VERSION }}
-          target/jmxsh-${{ env.RELEASE_VERSION }}*.jar
+          target/jmxsh-${{ env.RELEASE_VERSION }}.jar
           target/jmxsh-${{ env.RELEASE_VERSION }}.deb
           target/jmxsh-*.rpm
           -F git-cliff/CHANGELOG.md
