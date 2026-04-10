@@ -47,7 +47,7 @@ jobs:
           cache: maven
 
       - name: Install git-cliff
-        uses: kenji-miyake/setup-git-cliff@e227e69cd63e3c35782fdbcfa076a521ad6e19e0 # v2
+        uses: kenji-miyake/setup-git-cliff@2778609c643a39a2576c4bae2e493b855eb4aee8 # v2
         with:
           version: 'latest'
 
