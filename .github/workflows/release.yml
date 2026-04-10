@@ -137,7 +137,7 @@ jobs:
           cp "$rpmbuild_dir"/RPMS/noarch/*.rpm target/
 
       - name: Generate release notes
-        uses: orhun/git-cliff-action@14bb67121ebe0842c42bbd3afbc3b1891d6ac554 # v4
+        uses: orhun/git-cliff-action@c93ef52f3d0ddcdcc9bd5447d98d458a11cd4f72 # v4
         with:
           args: --latest --strip all
 
