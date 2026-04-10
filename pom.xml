@@ -24,6 +24,7 @@
     <connection>scm:git:https://github.com/nyg/jmxsh.git</connection>
     <developerConnection>scm:git:git@github.com:nyg/jmxsh.git</developerConnection>
     <url>https://github.com/nyg/jmxsh</url>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
@@ -56,6 +57,8 @@
     <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
     <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.5.5</maven-failsafe-plugin.version>
+    <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
+    <exec-maven-plugin.version>3.6.3</exec-maven-plugin.version>
   </properties>
 
   <dependencies>
@@ -231,6 +234,27 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>${exec-maven-plugin.version}</version>
+        <configuration>
+          <executable>./scripts/generate-changelog.sh</executable>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>${maven-release-plugin.version}</version>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <preparationGoals>clean verify exec:exec</preparationGoals>
+          <!-- @formatter:off -->
+          <scmCommentPrefix>chore(release): </scmCommentPrefix>
+          <!-- @formatter:on -->
+          <tagNameFormat>v@{version}</tagNameFormat>
+        </configuration>
       </plugin>
     </plugins>
   </build>
