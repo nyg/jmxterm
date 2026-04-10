@@ -24,7 +24,7 @@ java -jar jmxsh-uber.jar
 
 ```
 $ java -jar jmxsh-uber.jar
-Welcome to JMX terminal. Type "help" for available commands.
+Welcome to jmx.sh, type "help" for available commands.
 $> open localhost:9999
 #Connection to localhost:9999 is opened
 $> domains
@@ -124,4 +124,3 @@ jmxsh
 ## License
 
 Apache License 2.0 — see [LICENSE](LICENSE) for details.
-

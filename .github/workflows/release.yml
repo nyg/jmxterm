@@ -1,0 +1,160 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: 'Release version (e.g. 1.1.0)'
+        required: true
+      developmentVersion:
+        description: 'Next development version (e.g. 1.2.0-SNAPSHOT, leave blank to auto-increment)'
+        required: false
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate branch
+        if: github.ref_name != 'master'
+        run: |
+          echo "::error::Releases must be created from the master branch (current: ${{ github.ref_name }})"
+          exit 1
+
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          fetch-depth: 0
+
+      - name: Check tag does not already exist
+        run: |
+          if git rev-parse "v${{ inputs.releaseVersion }}" >/dev/null 2>&1; then
+            echo "::error::Tag v${{ inputs.releaseVersion }} already exists"
+            exit 1
+          fi
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5
+        with:
+          java-version: '25'
+          distribution: temurin
+          cache: maven
+
+      - name: Install git-cliff
+        uses: kenji-miyake/setup-git-cliff@e227e69cd63e3c35782fdbcfa076a521ad6e19e0 # v2
+        with:
+          version: 'latest'
+
+      - name: Configure Git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Prepare release
+        run: >
+          mvn -B release:prepare
+          -DreleaseVersion=${{ inputs.releaseVersion }}
+          ${{ inputs.developmentVersion && format('-DdevelopmentVersion={0}', inputs.developmentVersion) || '' }}
+          -DpushChanges=false
+
+      - name: Checkout release tag
+        run: git checkout v${{ inputs.releaseVersion }}
+
+      - name: Build artifacts
+        run: mvn -B -q --no-transfer-progress clean package
+
+      - name: Build DEB package
+        run: |
+          pkg_dir="$(mktemp -d)"
+
+          mkdir -p "$pkg_dir/DEBIAN"
+          cat > "$pkg_dir/DEBIAN/control" <<EOF
+          Package: jmxsh
+          Version: ${{ inputs.releaseVersion }}
+          Section: misc
+          Priority: optional
+          Architecture: all
+          Maintainer: nyg
+          Description: Interactive command-line JMX client
+          Distribution: development
+          EOF
+
+          mkdir -p "$pkg_dir/usr/share/jmxsh"
+          cp "target/jmxsh-${{ inputs.releaseVersion }}-uber.jar" "$pkg_dir/usr/share/jmxsh/jmxsh-uber.jar"
+
+          mkdir -p "$pkg_dir/usr/bin"
+          cat > "$pkg_dir/usr/bin/jmxsh" <<'LAUNCHER'
+          #!/bin/sh -e
+          exec java -jar /usr/share/jmxsh/jmxsh-uber.jar "$@"
+          LAUNCHER
+          chmod 755 "$pkg_dir/usr/bin/jmxsh"
+
+          dpkg-deb --build "$pkg_dir" "target/jmxsh-${{ inputs.releaseVersion }}.deb"
+
+      - name: Build RPM package
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq rpm > /dev/null
+
+          rpmbuild_dir="$(mktemp -d)"
+          mkdir -p "$rpmbuild_dir"/{SPECS,SOURCES,BUILD,RPMS,SRPMS}
+
+          cp "target/jmxsh-${{ inputs.releaseVersion }}-uber.jar" "$rpmbuild_dir/SOURCES/"
+
+          cat > "$rpmbuild_dir/SPECS/jmxsh.spec" <<'SPEC'
+          Name:           jmxsh
+          Version:        ${{ inputs.releaseVersion }}
+          Release:        1
+          Summary:        Interactive command-line JMX client
+          License:        Apache-2.0
+          Group:          Development/Languages/Java
+          BuildArch:      noarch
+
+          %description
+          Interactive command-line JMX client for monitoring and managing Java applications.
+
+          %install
+          install -d -m 755 %{buildroot}/usr/share/jmxsh
+          install -m 644 %{_sourcedir}/jmxsh-${{ inputs.releaseVersion }}-uber.jar %{buildroot}/usr/share/jmxsh/jmxsh-uber.jar
+          install -d -m 755 %{buildroot}/usr/bin
+          cat > %{buildroot}/usr/bin/jmxsh <<'LAUNCHER'
+          #!/bin/sh -e
+          exec java -jar /usr/share/jmxsh/jmxsh-uber.jar "$@"
+          LAUNCHER
+          chmod 755 %{buildroot}/usr/bin/jmxsh
+
+          %files
+          /usr/share/jmxsh/jmxsh-uber.jar
+          /usr/bin/jmxsh
+          SPEC
+
+          rpmbuild --define "_topdir $rpmbuild_dir" -bb "$rpmbuild_dir/SPECS/jmxsh.spec"
+          cp "$rpmbuild_dir"/RPMS/noarch/*.rpm target/
+
+      - name: Generate release notes
+        uses: orhun/git-cliff-action@14bb67121ebe0842c42bbd3afbc3b1891d6ac554 # v4
+        with:
+          args: --latest --strip all
+
+      - name: Push release commits and tag
+        run: |
+          git checkout master
+          git push origin master
+          git push origin v${{ inputs.releaseVersion }}
+
+      - name: Create GitHub release
+        run: >
+          gh release create v${{ inputs.releaseVersion }}
+          target/jmxsh-${{ inputs.releaseVersion }}*.jar
+          target/jmxsh-${{ inputs.releaseVersion }}.deb
+          target/jmxsh-*.rpm
+          -F git-cliff/CHANGELOG.md
+          --title "Release v${{ inputs.releaseVersion }}"
+          --verify-tag
+        env:
+          GH_TOKEN: ${{ github.token }}

@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm.io;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ class FileCommandInputTest {
    */
   @Test
   void read() throws Exception {
-    File testFile = new File("src/test/testscript.jmx");
+    File testFile = new File("src/test/resources/testscript.jmx");
     try(FileCommandInput input = new FileCommandInput(testFile)) {
       assertThat(input.readLine()).isEqualTo("beans");
       assertThat(input.readLine()).isEqualTo("exit");

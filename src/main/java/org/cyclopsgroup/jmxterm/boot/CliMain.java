@@ -137,7 +137,7 @@ public class CliMain {
           commandCenter.setVerboseLevel(verboseLevel);
         }
         if (verboseLevel != VerboseLevel.SILENT) {
-          output.printMessage("Welcome to JMX terminal. Type \"help\" for available commands.");
+          output.printMessage("Welcome to jmx.sh, type \"help\" for available commands.");
         }
         String line;
         int exitCode = 0;
