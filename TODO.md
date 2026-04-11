@@ -13,11 +13,6 @@ and dependency graph. Items are organized by category. Each item is labeled with
 - 🟢 **Evaluate `Optional` for nullable return types** — Many methods return null to signal absence; `Optional` would make intent clearer at API boundaries.
 - 🟢 **Explore Java 25 features** — Structured concurrency, scoped values, string templates (if stabilized), unnamed patterns, and other features that may simplify existing code.
 
-## Dependency Cleanup
-
-- ✅ ~~**Evaluate migrating JCLI → Picocli**~~ — Evaluation complete. See [`docs/dev/jcli-picocli-evaluation.md`](docs/dev/jcli-picocli-evaluation.md). Recommendation: **migrate**. UX improvements (colored help, better errors, tab completion) outweigh the ~3% jar size increase and one-time migration effort.
-- ✅ ~~**Implement JCLI → Picocli migration**~~ — Migration complete. All ~24 command classes, `CommandCenter` argument processing, and tab completion migrated from JCLI/caff to Picocli. See implementation details in the evaluation document.
-
 ## Build / POM
 
 - 🟠 **Add `maven-enforcer-plugin` rules** — The plugin is in `pluginManagement` but has no active rules. Add: `requireMavenVersion` (≥ 3.8), `requireJavaVersion` (≥ 25), `banDuplicatePomDependencyVersions`, `dependencyConvergence`.
