@@ -5,9 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.management.remote.JMXConnector;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
-import org.cyclopsgroup.jcli.annotation.Argument;
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.Option;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Connection;
 import org.cyclopsgroup.jmxterm.Session;
@@ -18,10 +17,10 @@ import org.cyclopsgroup.jmxterm.SyntaxUtils;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(
+@picocli.CommandLine.Command(
     name = "open",
     description = "Open JMX session or display current connection",
-    note =
+    footer =
         """
         Without argument this command display current connection. \
         URL can be a <PID>, <hostname>:<port> or full qualified JMX service URL. \
@@ -81,21 +80,20 @@ public class OpenCommand extends Command {
 
   /** @param password Password for user authentication */
   @Option(
-      name = "p",
-      longName = "password",
+      names = {"-p", "--password"},
       description = "Password for user/password authentication")
   public final void setPassword(String password) {
     this.password = password;
   }
 
   /** @param url URL of MBean service to open */
-  @Argument(displayName = "url", description = "URL, <host>:<port>, jmxmp://<host>:<port>, or a PID to connect to")
+  @Parameters(paramLabel = "url", description = "URL, <host>:<port>, jmxmp://<host>:<port>, or a PID to connect to", arity = "0..1")
   public final void setUrl(String url) {
     this.url = url;
   }
 
   /** @param user User name for user authentication */
-  @Option(name = "u", longName = "user", description = "User name for user/password authentication")
+  @Option(names = {"-u", "--user"}, description = "User name for user/password authentication")
   public final void setUser(String user) {
     this.user = user;
   }
@@ -105,8 +103,7 @@ public class OpenCommand extends Command {
    *     (com.sun.management.jmxremote.registry.ssl=true)
    */
   @Option(
-      name = "s",
-      longName = "sslrmiregistry",
+      names = {"-s", "--sslrmiregistry"},
       description = "Whether the server's RMI registry is protected with SSL/TLS")
   public final void setSecureRmiRegistry(final boolean isSecureRmiRegistry) {
     this.isSecureRmiRegistry = isSecureRmiRegistry;

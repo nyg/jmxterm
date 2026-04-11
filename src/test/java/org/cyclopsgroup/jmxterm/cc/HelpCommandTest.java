@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -45,6 +46,8 @@ class HelpCommandTest {
 
     doReturn(SelfRecordingCommand.class).when(cc).getCommandType("a");
     doReturn(SelfRecordingCommand.class).when(cc).getCommandType("b");
+    doReturn(new SelfRecordingCommand(new ArrayList<>())).when(cc).createCommand("a");
+    doReturn(new SelfRecordingCommand(new ArrayList<>())).when(cc).createCommand("b");
     command.setSession(new MockSession(output, null));
     command.execute();
     verify(cc).getCommandType("a");
@@ -63,6 +66,8 @@ class HelpCommandTest {
     when(cc.getCommandNames()).thenReturn(new HashSet<String>(Arrays.asList("a", "b")));
     doReturn(SelfRecordingCommand.class).when(cc).getCommandType("a");
     doReturn(SelfRecordingCommand.class).when(cc).getCommandType("b");
+    doReturn(new SelfRecordingCommand(new ArrayList<>())).when(cc).createCommand("a");
+    doReturn(new SelfRecordingCommand(new ArrayList<>())).when(cc).createCommand("b");
     command.setSession(new MockSession(output, null));
     command.execute();
     assertThat(output.toString().trim())

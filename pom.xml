@@ -40,7 +40,8 @@
     <!-- Third-party dependencies -->
     <slf4j.version>2.0.17</slf4j.version>
     <commons-configuration2.version>2.14.0</commons-configuration2.version>
-    <jcli.version>1.0.2</jcli.version>
+    <picocli.version>4.7.7</picocli.version>
+    <caff.version>0.4.2</caff.version>
     <jline.version>4.0.12</jline.version>
     <jmxremote-optional.version>5.0</jmxremote-optional.version>
 
@@ -74,9 +75,14 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli</artifactId>
+      <version>${picocli.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.cyclopsgroup</groupId>
-      <artifactId>jcli</artifactId>
-      <version>${jcli.version}</version>
+      <artifactId>caff</artifactId>
+      <version>${caff.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jline</groupId>

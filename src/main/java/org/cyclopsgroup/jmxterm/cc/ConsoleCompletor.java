@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Objects;
-import org.cyclopsgroup.jcli.jline.CliCompletor;
 import org.cyclopsgroup.jmxterm.Command;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.ParsedLine;
-import org.jline.reader.impl.completer.ArgumentCompleter;
+import picocli.CommandLine;
+import picocli.CommandLine.Model.OptionSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,28 +38,51 @@ public class ConsoleCompletor implements Completer {
   @Override
   public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
     try {
-      String buffer = line.line();
-      if (buffer == null || buffer.isEmpty() || buffer.indexOf(' ') == -1) {
-        completeCommandName(buffer, candidates);
+      List<String> words = line.words();
+      int wordIndex = line.wordIndex();
+
+      if (wordIndex == 0) {
+        completeCommandName(line.word(), candidates);
+        return;
       }
-      int separatorPos = buffer.indexOf(' ');
-      String commandName = buffer.substring(0, separatorPos);
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Command name is [{}]", commandName);
-      }
-      String commandArguments = buffer.substring(separatorPos + 1);
-      commandArguments.replaceFirst("^\\s*", "");
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("Analyzing command arguments [{}]", commandArguments);
-      }
+
+      String commandName = words.getFirst();
       Command cmd = commandCenter.commandFactory.createCommand(commandName);
       cmd.setSession(commandCenter.session);
-      CliCompletor commandCompletor = new CliCompletor(cmd, commandCenter.argTokenizer);
-      int position = line.cursor();
-      commandCompletor.complete(
-          reader,
-          new ArgumentCompleter.ArgumentLine(commandArguments, position - separatorPos),
-          candidates);
+      CommandLine cl = new CommandLine(cmd);
+      CommandLine.Model.CommandSpec spec = cl.getCommandSpec();
+
+      String currentWord = line.word();
+      String previousWord = wordIndex > 1 ? words.get(wordIndex - 1) : "";
+
+      // Complete option names
+      if (currentWord.startsWith("-")) {
+        for (OptionSpec option : spec.options()) {
+          for (String name : option.names()) {
+            if (name.startsWith(currentWord)) {
+              candidates.add(new Candidate(name));
+            }
+          }
+        }
+        return;
+      }
+
+      // Complete option values (previous word was a non-boolean option)
+      if (previousWord.startsWith("-")) {
+        OptionSpec matchedOption = findOption(spec, previousWord);
+        if (matchedOption != null && !matchedOption.type().equals(boolean.class) && !matchedOption.type().equals(Boolean.class)) {
+          String shortName = extractShortName(matchedOption);
+          if (shortName != null) {
+            List<String> suggestions = cmd.suggestOption(shortName, null);
+            addFilteredSuggestions(suggestions, currentWord, candidates);
+          }
+          return;
+        }
+      }
+
+      // Complete positional arguments
+      List<String> suggestions = cmd.suggestArgument(null);
+      addFilteredSuggestions(suggestions, currentWord, candidates);
     } catch (RuntimeException e) {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Couldn't complete input", e);
@@ -67,21 +90,49 @@ public class ConsoleCompletor implements Completer {
     }
   }
 
-  private void completeCommandName(String buf, List<Candidate> candidates) {
-    if (buf == null) {
-      // Nothing is there
-      candidates.addAll(commandNames);
-    } else if (buf.indexOf(' ') == -1) {
-      // Partial one word
-      List<Candidate> matchedNames = new ArrayList<>();
-      for (Candidate commandName : commandNames) {
-        if (commandName.value().startsWith(buf)) {
-          matchedNames.add(commandName);
+  private OptionSpec findOption(CommandLine.Model.CommandSpec spec, String name) {
+    for (OptionSpec option : spec.options()) {
+      for (String optName : option.names()) {
+        if (optName.equals(name)) {
+          return option;
         }
       }
-      candidates.addAll(matchedNames);
+    }
+    return null;
+  }
+
+  private String extractShortName(OptionSpec option) {
+    for (String name : option.names()) {
+      if (name.startsWith("-") && !name.startsWith("--") && name.length() == 2) {
+        return name.substring(1);
+      }
+    }
+    // Fall back to first name without dashes
+    String first = option.names()[0];
+    return first.replaceFirst("^-+", "");
+  }
+
+  private void addFilteredSuggestions(List<String> suggestions, String prefix,
+      List<Candidate> candidates) {
+    if (suggestions == null) {
+      return;
+    }
+    for (String suggestion : suggestions) {
+      if (prefix == null || prefix.isEmpty() || suggestion.startsWith(prefix)) {
+        candidates.add(new Candidate(suggestion));
+      }
+    }
+  }
+
+  private void completeCommandName(String buf, List<Candidate> candidates) {
+    if (buf == null || buf.isEmpty()) {
+      candidates.addAll(commandNames);
     } else {
-      throw new IllegalStateException("Invalid state");
+      for (Candidate commandName : commandNames) {
+        if (commandName.value().startsWith(buf)) {
+          candidates.add(commandName);
+        }
+      }
     }
   }
 }

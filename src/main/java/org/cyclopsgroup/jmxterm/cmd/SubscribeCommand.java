@@ -10,8 +10,7 @@ import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.Option;
+import picocli.CommandLine.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 
@@ -22,10 +21,10 @@ import org.cyclopsgroup.jmxterm.Session;
  * timestamp=xxx,class=xxx,source=xxx,type=xxx,message=xxx To remove the subscription call the
  * unsubscribe in the terminal.
  */
-@Cli(
+@picocli.CommandLine.Command(
     name = "subscribe",
     description = "Subscribe to the notifications of a bean",
-    note = "Syntax is \n subscribe <bean>")
+    footer = "Syntax is \n subscribe <bean>")
 public class SubscribeCommand extends Command {
   private static Map<ObjectName, NotificationListener> listeners =
       new ConcurrentHashMap<>();
@@ -78,13 +77,13 @@ public class SubscribeCommand extends Command {
   }
 
   /** @param bean Bean under which the operation is */
-  @Option(name = "b", longName = "bean", description = "MBean to invoke")
+  @Option(names = {"-b", "--bean"}, description = "MBean to invoke")
   public final void setBean(String bean) {
     this.bean = bean;
   }
 
   /** @param domain Domain under which is bean is */
-  @Option(name = "d", longName = "domain", description = "Domain of MBean to invoke")
+  @Option(names = {"-d", "--domain"}, description = "Domain of MBean to invoke")
   public final void setDomain(String domain) {
     this.domain = domain;
   }

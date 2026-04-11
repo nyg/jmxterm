@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
 import java.io.IOException;
-import org.cyclopsgroup.jcli.annotation.Cli;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 
@@ -10,7 +9,7 @@ import org.cyclopsgroup.jmxterm.Session;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(name = "quit", description = "Terminate console and exit")
+@picocli.CommandLine.Command(name = "quit", description = "Terminate console and exit")
 public class QuitCommand extends Command {
   @Override
   public void execute() throws IOException {

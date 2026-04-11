@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.cyclopsgroup.jcli.annotation.Cli;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 import org.cyclopsgroup.jmxterm.io.RuntimeIOException;
@@ -14,7 +13,7 @@ import org.cyclopsgroup.jmxterm.io.RuntimeIOException;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(name = "domains", description = "List all available domain names")
+@picocli.CommandLine.Command(name = "domains", description = "List all available domain names")
 public class DomainsCommand extends Command {
   /**
    * Gets list of domains for current JMX connection.

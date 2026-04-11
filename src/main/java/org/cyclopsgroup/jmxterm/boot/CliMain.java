@@ -10,8 +10,6 @@ import java.util.Map;
 import javax.management.remote.JMXConnector;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
 
-import org.cyclopsgroup.jcli.ArgumentProcessor;
-import org.cyclopsgroup.jcli.GnuParser;
 import org.cyclopsgroup.jmxterm.SyntaxUtils;
 import org.cyclopsgroup.jmxterm.cc.CommandCenter;
 import org.cyclopsgroup.jmxterm.cc.ConsoleCompletor;
@@ -23,6 +21,7 @@ import org.cyclopsgroup.jmxterm.io.InputStreamCommandInput;
 import org.cyclopsgroup.jmxterm.io.JlineCommandInput;
 import org.cyclopsgroup.jmxterm.io.PrintStreamCommandOutput;
 import org.cyclopsgroup.jmxterm.io.VerboseLevel;
+import picocli.CommandLine;
 import org.jline.reader.History;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -50,12 +49,17 @@ public class CliMain {
    * @throws Exception Allow any exceptions
    */
   int execute(String[] args) throws Exception {
-    ArgumentProcessor<CliMainOptions> ap =
-        ArgumentProcessor.newInstance(CliMainOptions.class, new GnuParser());
     CliMainOptions options = new CliMainOptions();
-    ap.process(args, options);
-    if (options.isHelp()) {
-      ap.printHelp(STDOUT_WRITER);
+    CommandLine cl = new CommandLine(options);
+    try {
+      cl.parseArgs(args);
+    } catch (CommandLine.ParameterException e) {
+      STDOUT_WRITER.println(e.getMessage());
+      cl.usage(STDOUT_WRITER);
+      return 1;
+    }
+    if (cl.isUsageHelpRequested()) {
+      cl.usage(STDOUT_WRITER);
       return 0;
     }
 

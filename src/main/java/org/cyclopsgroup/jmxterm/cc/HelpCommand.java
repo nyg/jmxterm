@@ -1,30 +1,26 @@
 package org.cyclopsgroup.jmxterm.cc;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import java.util.Objects;
-import org.cyclopsgroup.jcli.ArgumentProcessor;
-import org.cyclopsgroup.jcli.annotation.Argument;
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.MultiValue;
-import org.cyclopsgroup.jmxterm.Command;
-import org.cyclopsgroup.jmxterm.io.RuntimeIOException;
+import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Parameters;
 
 /**
  * Command that display a help message
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(
+@Command(
     name = "help",
     description = "Display available commands or usage of a command",
-    note =
+    footer =
         "Run \"help [command1] [command2] ...\" to display usage or certain command(s). Help without argument shows list of available commands")
-public class HelpCommand extends Command {
+public class HelpCommand extends org.cyclopsgroup.jmxterm.Command {
   private List<String> argNames = Collections.emptyList();
 
   private CommandCenter commandCenter;
@@ -36,29 +32,29 @@ public class HelpCommand extends Command {
       List<String> commandNames = commandCenter.getCommandNames().stream().sorted().toList();
       getSession().getOutput().printMessage("following commands are available to use:");
       for (String commandName : commandNames) {
-        Class<? extends Command> commandType = commandCenter.getCommandType(commandName);
-        org.cyclopsgroup.jcli.spi.Cli cli = ArgumentProcessor.forType(commandType).createParsingContext().cli();
-        getSession().getOutput().println("%-8s - %s".formatted(commandName, cli.getDescription()));
+        org.cyclopsgroup.jmxterm.Command cmd =
+            commandCenter.createCommand(commandName);
+        CommandLine cl = new CommandLine(cmd);
+        String[] desc = cl.getCommandSpec().usageMessage().description();
+        String description = desc.length > 0 ? String.join(" ", desc) : "";
+        getSession().getOutput().println("%-8s - %s".formatted(commandName, description));
       }
     } else {
       for (String argName : argNames) {
-        Class<? extends Command> commandType = commandCenter.getCommandType(argName);
+        Class<? extends org.cyclopsgroup.jmxterm.Command> commandType =
+            commandCenter.getCommandType(argName);
         if (commandType == null) {
           throw new IllegalArgumentException("Command " + argName + " is not found");
         }
-        ArgumentProcessor<? extends Command> ap = ArgumentProcessor.forType(commandType);
-        try {
-          ap.printHelp(new PrintWriter(System.out, true));
-        } catch (IOException e) {
-          throw new RuntimeIOException("Can't print help message", e);
-        }
+        org.cyclopsgroup.jmxterm.Command cmd =
+            commandCenter.createCommand(argName);
+        new CommandLine(cmd).usage(new PrintWriter(System.out, true));
       }
     }
   }
 
   /** @param argNames Array of arguments */
-  @MultiValue(listType = ArrayList.class)
-  @Argument
+  @Parameters(arity = "0..*")
   public final void setArgNames(List<String> argNames) {
     Objects.requireNonNull(argNames, "argNames can't be NULL");
     this.argNames = argNames;

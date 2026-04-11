@@ -112,15 +112,66 @@ Small net increase (~197 KB / 3%).
 the one-time migration effort. The UX improvements (colored help, better error messages, tab
 completion scripts) directly benefit users. The jar size increase is negligible.
 
-### Suggested Migration Strategy
+### Migration Strategy
 
-1. **Phase 1: Add picocli dependency alongside JCLI** — Migrate `CliMainOptions` first as a
-   proof of concept.
-2. **Phase 2: Migrate command annotations** — Convert commands one by one, starting with simple
-   ones (e.g., `QuitCommand`, `CloseCommand`) and progressing to complex ones (`RunCommand`,
-   `WatchCommand`).
-3. **Phase 3: Replace `ArgumentProcessor` in `CommandCenter`** — Switch the command execution
-   pipeline to picocli.
-4. **Phase 4: Rework tab completion** — Replace `ConsoleCompletor` with picocli's JLine
-   integration.
-5. **Phase 5: Remove JCLI and caff** — Clean up the old dependencies.
+The migration was implemented in a single pass. See details below.
+
+## Implementation
+
+The migration is complete. All JCLI annotations, parsing infrastructure, and tab-completion
+integration have been replaced with Picocli equivalents.
+
+### Dependency Changes
+
+| Action | Artifact | Version |
+|---|---|---|
+| Removed | `org.cyclopsgroup:jcli` | 1.0.2 |
+| Added | `info.picocli:picocli` | 4.7.7 |
+| Added (was transitive) | `org.cyclopsgroup:caff` | 0.4.2 |
+
+The `caff` dependency was promoted to a direct dependency because `EscapingValueTokenizer` is used
+in `CommandCenter` for jmxsh-specific tokenization (escaped characters, `#` comments, `&&`
+chaining). This tokenization layer is independent of argument parsing and must be preserved.
+
+### Annotation Mapping Applied
+
+| JCLI | Picocli |
+|---|---|
+| `@Cli(name, description, note)` | `@Command(name, description, footer)` |
+| `@Option(name="x", longName="y", description)` | `@Option(names={"-x","--y"}, description)` |
+| `@Option(displayName="n")` | `@Option(paramLabel="n")` |
+| `@Option(defaultValue="v")` | `@Option(defaultValue="v")` |
+| `@Argument(displayName, description)` | `@Parameters(paramLabel, description, arity)` |
+| `@MultiValue(listType=ArrayList.class, minValues=N)` + `@Argument` | `@Parameters(arity="N..*")` |
+| `ArgumentProcessor.forType(cls).process(args, obj)` | `new CommandLine(obj).parseArgs(args)` |
+
+### Files Changed
+
+| Component | Files | Notes |
+|---|---|---|
+| Dependencies | `pom.xml` | Swapped jcli → picocli + caff |
+| Base class | `Command.java` | Replaced `AutoCompletable` with custom `Completable` interface |
+| New interface | `Completable.java` | Replaces jcli's `AutoCompletable` |
+| Boot | `CliMainOptions.java`, `CliMain.java` | Migrated annotations and parsing |
+| Execution | `CommandCenter.java` | `ArgumentProcessor` → `CommandLine`, added `setUnmatchedOptionsArePositionalParams(true)` |
+| Help | `HelpCommand.java` | Full rewrite using picocli `CommandSpec` |
+| Completion | `ConsoleCompletor.java` | Full rewrite using picocli `CommandSpec` for option/argument completion |
+| Commands | 17 classes in `cmd/` | All annotations migrated |
+| Tests | `SelfRecordingCommand.java`, `HelpCommandTest.java` | Updated for picocli annotations |
+
+### Key Decisions
+
+1. **`@picocli.CommandLine.Command` (fully qualified)** — Used in all `cmd/` classes to avoid a
+   name clash between picocli's `@Command` annotation and the project's `Command` base class.
+
+2. **`setUnmatchedOptionsArePositionalParams(true)`** — Required because picocli, unlike JCLI,
+   rejects unknown tokens starting with `-`. This setting restores JCLI's lenient behavior where
+   values like `-3` are treated as positional arguments.
+
+3. **`arity="0..1"` for optional single-value parameters** — JCLI implicitly allowed 0 or 1
+   arguments for `String` setters. Picocli defaults `@Parameters` on `String` to arity `"1"`
+   (required). Explicit `arity="0..1"` was set on `BeanCommand.setBean()`,
+   `DomainCommand.setDomain()`, and `OpenCommand.setUrl()`.
+
+4. **`caff` retained as direct dependency** — `EscapingValueTokenizer` handles jmxsh-specific
+   tokenization that is orthogonal to argument parsing.

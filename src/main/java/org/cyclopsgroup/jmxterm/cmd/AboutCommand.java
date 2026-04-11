@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 import javax.management.JMException;
 import org.apache.commons.configuration2.Configuration;
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.Option;
+import picocli.CommandLine.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 import org.cyclopsgroup.jmxterm.io.ValueOutputFormat;
@@ -16,7 +15,7 @@ import org.cyclopsgroup.jmxterm.utils.ConfigurationUtils;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(name = "about", description = "Display about page")
+@picocli.CommandLine.Command(name = "about", description = "Display about page")
 public class AboutCommand extends Command {
   private boolean showDescription;
 
@@ -43,7 +42,7 @@ public class AboutCommand extends Command {
   }
 
   /** @param showDescription True to show detail description */
-  @Option(name = "s", longName = "show", description = "Show detail description")
+  @Option(names = {"-s", "--show"}, description = "Show detail description")
   public final void setShowDescription(boolean showDescription) {
     this.showDescription = showDescription;
   }

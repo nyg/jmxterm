@@ -2,18 +2,18 @@ package org.cyclopsgroup.jmxterm.boot;
 
 import java.io.File;
 import java.util.Objects;
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.Option;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 
 /**
  * Options for main class
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(
+@Command(
     name = "jmxterm",
     description = "Main executable of JMX terminal CLI tool",
-    note =
+    footer =
         "Without any option, this command opens an interactive command line based console. With a given input file, commands in file will be executed and process ends after file is processed")
 public class CliMainOptions {
   /** Constant <code>stderr</code> that identifies standard error output */
@@ -107,23 +107,21 @@ public class CliMainOptions {
 
   /** @param exitOnFailure True if terminal exits on any failure */
   @Option(
-      name = "e",
-      longName = "exitonfailure",
+      names = {"-e", "--exitonfailure"},
       description = "With this flag, terminal exits for any Exception")
   public final void setExitOnFailure(boolean exitOnFailure) {
     this.exitOnFailure = exitOnFailure;
   }
 
   /** @param help True to turn on <code>help</code> flag */
-  @Option(name = "h", longName = "help", description = "Show usage of this command line")
+  @Option(names = {"-h", "--help"}, usageHelp = true, description = "Show usage of this command line")
   public final void setHelp(boolean help) {
     this.help = help;
   }
 
   /** @param file Input script path or <code>stdin</code> as default value for console input */
   @Option(
-      name = "i",
-      longName = "input",
+      names = {"-i", "--input"},
       description =
           "Input script file. There can only be one input file. \"stdin\" is the default value which means console input")
   public final void setInput(String file) {
@@ -136,8 +134,7 @@ public class CliMainOptions {
 
   /** @param nonInteractive True if CLI runs without user interaction, such as piped input */
   @Option(
-      name = "n",
-      longName = "noninteract",
+      names = {"-n", "--noninteract"},
       description =
           "Non interactive mode. Use this mode if input doesn't come from human or jmxterm is embedded")
   public final void setNonInteractive(boolean nonInteractive) {
@@ -146,8 +143,7 @@ public class CliMainOptions {
 
   /** @param outputFile It can be a file or {@link #STDERR} or {@link #STDERR} */
   @Option(
-      name = "o",
-      longName = "output",
+      names = {"-o", "--output"},
       description = "Output file, stdout or stderr. Default value is stdout")
   public final void setOutput(String outputFile) {
     Objects.requireNonNull(outputFile, "Output file can't be NULL");
@@ -156,8 +152,7 @@ public class CliMainOptions {
 
   /** @param password Password for user/password authentication */
   @Option(
-      name = "p",
-      longName = "password",
+      names = {"-p", "--password"},
       description = "Password for user/password authentication")
   public final void setPassword(String password) {
     Objects.requireNonNull(password, "Password can't be NULL");
@@ -166,8 +161,7 @@ public class CliMainOptions {
 
   /** @param url MBean server URL */
   @Option(
-      name = "l",
-      longName = "url",
+      names = {"-l", "--url"},
       description = "Location of MBean service. It can be <host>:<port>, jmxmp://<host>:<port>, or full service URL.")
   public final void setUrl(String url) {
     Objects.requireNonNull(url, "URL can't be NULL");
@@ -175,7 +169,7 @@ public class CliMainOptions {
   }
 
   /** @param user User name for user/password authentication */
-  @Option(name = "u", longName = "user", description = "User name for user/password authentication")
+  @Option(names = {"-u", "--user"}, description = "User name for user/password authentication")
   public final void setUser(String user) {
     Objects.requireNonNull(user, "User can't be NULL");
     this.user = user;
@@ -183,8 +177,7 @@ public class CliMainOptions {
 
   /** @param verboseLevel Verbose level */
   @Option(
-      name = "v",
-      longName = "verbose",
+      names = {"-v", "--verbose"},
       description = "Verbose level, could be silent|brief|verbose. Default value is brief")
   public final void setVerboseLevel(String verboseLevel) {
     this.verboseLevel = verboseLevel;
@@ -192,8 +185,7 @@ public class CliMainOptions {
 
   /** @param appendToOutput True if outputfile is preserved */
   @Option(
-      name = "a",
-      longName = "appendtooutput",
+      names = {"-a", "--appendtooutput"},
       description = "With this flag, the outputfile is preserved and content is appended to it")
   public final void setAppendToOutput(boolean appendToOutput) {
     this.appendToOutput = appendToOutput;
@@ -204,8 +196,7 @@ public class CliMainOptions {
    *     (com.sun.management.jmxremote.registry.ssl=true)
    */
   @Option(
-      name = "s",
-      longName = "sslrmiregistry",
+      names = {"-s", "--sslrmiregistry"},
       description = "Whether the server's RMI registry is protected with SSL/TLS")
   public final void setSecureRmiRegistry(final boolean isSecureRmiRegistry) {
     this.isSecureRmiRegistry = isSecureRmiRegistry;

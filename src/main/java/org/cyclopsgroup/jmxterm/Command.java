@@ -6,8 +6,7 @@ import java.util.List;
 import javax.management.JMException;
 
 import java.util.Objects;
-import org.cyclopsgroup.jcli.AutoCompletable;
-import org.cyclopsgroup.jcli.annotation.Option;
+import picocli.CommandLine.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +17,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-public abstract class Command implements AutoCompletable {
+public abstract class Command implements Completable {
   private static final Logger LOG = LoggerFactory.getLogger(Command.class);
 
   private boolean help;
@@ -68,7 +67,7 @@ public abstract class Command implements AutoCompletable {
   }
 
   /** @param help True to display usage */
-  @Option(name = "h", longName = "help", description = "Display usage")
+  @Option(names = {"-h", "--help"}, usageHelp = true, description = "Display usage")
   public final void setHelp(boolean help) {
     this.help = help;
   }

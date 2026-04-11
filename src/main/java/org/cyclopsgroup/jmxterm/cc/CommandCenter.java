@@ -15,7 +15,6 @@ import javax.management.remote.JMXServiceURL;
 import java.util.Objects;
 import org.cyclopsgroup.caff.token.EscapingValueTokenizer;
 import org.cyclopsgroup.caff.token.ValueTokenizer;
-import org.cyclopsgroup.jcli.ArgumentProcessor;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.CommandFactory;
 import org.cyclopsgroup.jmxterm.JavaProcessManager;
@@ -24,6 +23,7 @@ import org.cyclopsgroup.jmxterm.io.CommandInput;
 import org.cyclopsgroup.jmxterm.io.CommandOutput;
 import org.cyclopsgroup.jmxterm.io.RuntimeIOException;
 import org.cyclopsgroup.jmxterm.io.VerboseLevel;
+import picocli.CommandLine;
 
 /**
  * Facade class where commands are maintained and executed
@@ -136,11 +136,17 @@ public class CommandCenter {
     if (cmd instanceof HelpCommand command) {
       command.setCommandCenter(this);
     }
-    ArgumentProcessor<Command> ap = ArgumentProcessor.forType(cmd.getClass());
-    ap.process(commandArgs, cmd);
+    CommandLine cl = new CommandLine(cmd);
+    cl.setUnmatchedOptionsArePositionalParams(true);    try {
+      cl.parseArgs(commandArgs);
+    } catch (CommandLine.ParameterException e) {
+      session.getOutput().printMessage(e.getMessage());
+      cl.usage(new PrintWriter(System.out, true));
+      return;
+    }
     // Print out usage if help option is specified
-    if (cmd.isHelp()) {
-      ap.printHelp(new PrintWriter(System.out, true));
+    if (cl.isUsageHelpRequested()) {
+      cl.usage(new PrintWriter(System.out, true));
       return;
     }
     cmd.setSession(session);
@@ -181,6 +187,14 @@ public class CommandCenter {
    */
   public Class<? extends Command> getCommandType(String name) {
     return commandFactory.getCommandTypes().get(name);
+  }
+
+  /**
+   * @param name Command name
+   * @return A new command instance for the given name
+   */
+  public Command createCommand(String name) {
+    return commandFactory.createCommand(name);
   }
 
   /** @return Java process manager implementation */
