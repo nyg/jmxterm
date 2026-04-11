@@ -22,7 +22,8 @@ and dependency graph. Items are organized by category. Each item is labeled with
 
 ## Dependency Cleanup
 
-- 🟡 **Evaluate migrating JCLI → Picocli** — JCLI (`org.cyclopsgroup:jcli:1.0.2`) is a low-activity library from ~2012. Picocli is actively maintained, has built-in completions, GraalVM support, and better documentation. The coupling is loose (annotations + `ArgumentProcessor`), making migration feasible but non-trivial.
+- ✅ ~~**Evaluate migrating JCLI → Picocli**~~ — Evaluation complete. See [`docs/dev/jcli-picocli-evaluation.md`](docs/dev/jcli-picocli-evaluation.md). Recommendation: **migrate**. UX improvements (colored help, better errors, tab completion) outweigh the ~3% jar size increase and one-time migration effort.
+- 🟡 **Implement JCLI → Picocli migration** — Based on the evaluation above, migrate ~24 command classes, `CommandCenter` argument processing, and tab completion from JCLI/caff to Picocli. See the phased strategy in the evaluation document.
 
 ## Build / POM
 
