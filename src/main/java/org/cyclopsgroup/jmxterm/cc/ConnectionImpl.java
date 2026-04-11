@@ -56,4 +56,18 @@ class ConnectionImpl implements Connection {
   public final JMXServiceURL getUrl() {
     return url;
   }
+
+  /**
+   * Check if the connection is still alive by performing a lightweight call.
+   *
+   * @return True if the connection is responsive, false if it appears broken
+   */
+  boolean isAlive() {
+    try {
+      connector.getConnectionId();
+      return true;
+    } catch (IOException e) {
+      return false;
+    }
+  }
 }

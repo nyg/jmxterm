@@ -47,6 +47,7 @@ sudo apt update && sudo apt install jmxsh
 - **Interactive REPL** with tab completion and command history (JLine)
 - **Remote & local connections** — connect via host:port, JMX URL, or local PID
 - **JMXMP protocol support** — connect via `jmxmp://host:port` in addition to the default RMI protocol
+- **Automatic reconnection** — transparently reconnects when a network connection is lost
 - **Full MBean support** — browse domains, read/write attributes, invoke operations
 - **Command chaining** — run multiple commands in one line with `&&`
 - **Script mode** — automate JMX operations via files or piped input
@@ -106,6 +107,21 @@ $> open jmxmp://localhost:9999
 ```
 
 Full service URLs are also supported: `open service:jmx:jmxmp://localhost:9999`
+
+### Connection Retry
+
+When a network connection to a remote JVM is interrupted (e.g., server restart, network outage),
+jmxsh automatically detects the broken connection and attempts to reconnect. The retry behavior:
+
+- Detects connection loss when a command fails with an I/O error
+- Attempts to reconnect every **5 seconds**, up to **12 attempts** (60 seconds total)
+- Preserves the selected domain and MBean across reconnection
+- Reports progress: `Reconnection attempt 1/12 in 5 seconds...`
+- On success: `Reconnected to <url>. Please retry your command.`
+- On failure: disconnects cleanly and reports the error
+
+Commands are **not automatically retried** after reconnection to avoid unintended side effects
+(e.g., double-invoking an operation). Simply re-run the failed command after reconnection.
 
 ### Non-Interactive Mode
 
