@@ -13,6 +13,8 @@ import picocli.CommandLine.Option;
 @Command(
     name = "jmxterm",
     description = "Main executable of JMX terminal CLI tool",
+    mixinStandardHelpOptions = true,
+    versionProvider = VersionProvider.class,
     footer =
         "Without any option, this command opens an interactive command line based console. With a given input file, commands in file will be executed and process ends after file is processed")
 public class CliMainOptions {
@@ -26,8 +28,6 @@ public class CliMainOptions {
   public static final String STDOUT = "stdout";
 
   private boolean exitOnFailure;
-
-  private boolean help;
 
   private String input = STDIN;
 
@@ -87,11 +87,6 @@ public class CliMainOptions {
     return appendToOutput;
   }
 
-  /** @return {@link #setHelp(boolean)} */
-  public final boolean isHelp() {
-    return help;
-  }
-
   /** @return True if CLI runs without user interaction, such as piped input */
   public final boolean isNonInteractive() {
     return nonInteractive;
@@ -111,12 +106,6 @@ public class CliMainOptions {
       description = "With this flag, terminal exits for any Exception")
   public final void setExitOnFailure(boolean exitOnFailure) {
     this.exitOnFailure = exitOnFailure;
-  }
-
-  /** @param help True to turn on <code>help</code> flag */
-  @Option(names = {"-h", "--help"}, usageHelp = true, description = "Show usage of this command line")
-  public final void setHelp(boolean help) {
-    this.help = help;
   }
 
   /** @param file Input script path or <code>stdin</code> as default value for console input */

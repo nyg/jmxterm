@@ -18,7 +18,6 @@ class PredefinedCommandFactory implements CommandFactory {
 
   private static final List<Class<? extends Command>> COMMAND_CLASSES =
       List.of(
-          AboutCommand.class,
           BeanCommand.class,
           BeansCommand.class,
           CloseCommand.class,

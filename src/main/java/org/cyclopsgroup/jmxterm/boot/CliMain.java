@@ -62,6 +62,10 @@ public class CliMain {
       cl.usage(STDOUT_WRITER);
       return 0;
     }
+    if (cl.isVersionHelpRequested()) {
+      cl.printVersionHelp(STDOUT_WRITER);
+      return 0;
+    }
 
     VerboseLevel verboseLevel;
     if (options.getVerboseLevel() != null) {

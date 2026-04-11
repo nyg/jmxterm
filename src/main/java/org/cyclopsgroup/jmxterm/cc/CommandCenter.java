@@ -13,8 +13,6 @@ import javax.management.JMException;
 import javax.management.remote.JMXServiceURL;
 
 import java.util.Objects;
-import org.cyclopsgroup.caff.token.EscapingValueTokenizer;
-import org.cyclopsgroup.caff.token.ValueTokenizer;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.CommandFactory;
 import org.cyclopsgroup.jmxterm.JavaProcessManager;
@@ -23,6 +21,7 @@ import org.cyclopsgroup.jmxterm.io.CommandInput;
 import org.cyclopsgroup.jmxterm.io.CommandOutput;
 import org.cyclopsgroup.jmxterm.io.RuntimeIOException;
 import org.cyclopsgroup.jmxterm.io.VerboseLevel;
+import org.cyclopsgroup.jmxterm.utils.EscapingTokenizer;
 import picocli.CommandLine;
 
 /**
@@ -33,9 +32,6 @@ import picocli.CommandLine;
 public class CommandCenter {
   private static final String COMMAND_DELIMITER = "&&";
   static final String ESCAPE_CHAR_REGEX = "(?<!\\\\)#";
-
-  /** Argument tokenizer that parses arguments */
-  final ValueTokenizer argTokenizer = new EscapingValueTokenizer();
 
   /** Command factory that creates commands */
   final CommandFactory commandFactory;
@@ -114,11 +110,7 @@ public class CommandCenter {
     }
 
     // Take the first argument out since it's command name
-    final List<String> args = new ArrayList<>();
-    argTokenizer.parse(
-        command,
-        event ->
-            args.add(event.getToken()));
+    final List<String> args = new ArrayList<>(EscapingTokenizer.tokenize(command));
     String commandName = args.remove(0);
     // Leave the rest of arguments for command
     String[] commandArgs = args.toArray(new String[0]);
