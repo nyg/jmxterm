@@ -1,7 +1,7 @@
 # Changelog
 
 
-## [unreleased]
+## [1.2.0](https://github.com/nyg/jmxsh/compare/v1.1.0..v1.2.0) - 2026-04-11
 
 ### ⛰️  Features
 
@@ -32,6 +32,7 @@
 
 ### ⚙️ Miscellaneous
 
+- [`bf3efa8`](https://github.com/nyg/jmxsh/commit/bf3efa8b0c75f0e798b33bde9bef6552d00a4eef) Add CHANGELOG.md, update script ([#28](https://github.com/nyg/jmxsh/issues/28))
 - [`48dd1a2`](https://github.com/nyg/jmxsh/commit/48dd1a23bc6b95e414b1f6938fb3faf70dfba12d) *(ci)* Remove archived kenji-miyake/setup-git-cliff action ([#22](https://github.com/nyg/jmxsh/issues/22))
 - [`2a4025c`](https://github.com/nyg/jmxsh/commit/2a4025cc3cbf24ec1e988d47ae9be422e197be28) *(deps)* Update orhun/git-cliff-action digest to c93ef52 ([#21](https://github.com/nyg/jmxsh/issues/21))
 - [`abb51c4`](https://github.com/nyg/jmxsh/commit/abb51c4f40b5e96d4d5ac14e81aeaacd1ca7fe12) *(build)* Move DEB/RPM packaging to CI, remove Docker ([#17](https://github.com/nyg/jmxsh/issues/17))
@@ -86,8 +87,6 @@
 
 ### Others
 
-- [`c623b07`](https://github.com/nyg/jmxsh/commit/c623b07c3af562674aa9d1b12ac4a4602f04bba6) Fixes
-- [`7e261bb`](https://github.com/nyg/jmxsh/commit/7e261bb728e75dd66ae96e23c6f082265086e11d) Update CHANGELOG.md with previous versions
 - [`b4151bf`](https://github.com/nyg/jmxsh/commit/b4151bf882bd946c0087fdca4a08457d723e5e8b) Add Python files to .gitignore
 
 ## [1.1.0-lemyst](https://github.com/LeMyst/jmxterm/compare/v1.0.11..v1.1.0-lemyst) - 2025-10-19
