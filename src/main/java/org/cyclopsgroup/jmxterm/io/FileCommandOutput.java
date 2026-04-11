@@ -1,9 +1,11 @@
 package org.cyclopsgroup.jmxterm.io;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 import java.util.Objects;
 
@@ -29,7 +31,11 @@ public class FileCommandOutput extends CommandOutput {
         throw new IOException("Couldn't make directory " + af.getParentFile());
       }
 
-    fileWriter = new PrintWriter(new FileWriter(af, appendToOutput));
+    var openOptions = appendToOutput
+        ? new StandardOpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.APPEND}
+        : new StandardOpenOption[]{StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING};
+    fileWriter = new PrintWriter(
+        Files.newBufferedWriter(af.toPath(), StandardCharsets.UTF_8, openOptions));
     output = new WriterCommandOutput(fileWriter, new PrintWriter(System.err, true));
   }
 

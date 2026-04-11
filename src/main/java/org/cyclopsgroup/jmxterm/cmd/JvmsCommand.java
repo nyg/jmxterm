@@ -24,10 +24,10 @@ public class JvmsCommand extends Command {
     List<JavaProcess> processList = session.getProcessManager().list();
     for (JavaProcess p : processList) {
       if (pidOnly) {
-        session.output.println(String.valueOf(p.getProcessId()));
+        session.getOutput().println(String.valueOf(p.getProcessId()));
       } else {
 
-        session.output.println(
+        session.getOutput().println(
             "%-8d (%s) - %s".formatted(
                 p.getProcessId(), p.isManageable() ? "m" : " ", p.getDisplayName()));
       }
