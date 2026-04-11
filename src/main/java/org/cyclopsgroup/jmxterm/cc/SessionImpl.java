@@ -132,14 +132,14 @@ class SessionImpl extends Session {
     closeConnection();
 
     for (int attempt = 1; attempt <= maxAttempts; attempt++) {
-      output.printMessage(
+      getOutput().printMessage(
           "Reconnection attempt %d/%d in %d seconds..."
               .formatted(attempt, maxAttempts, intervalSeconds));
       try {
         Thread.sleep(intervalSeconds * 1000L);
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
-        output.printMessage("Reconnection interrupted.");
+        getOutput().printMessage("Reconnection interrupted.");
         fullDisconnect();
         return false;
       }
@@ -151,7 +151,7 @@ class SessionImpl extends Session {
         // Will retry
       }
     }
-    output.printMessage("All reconnection attempts failed.");
+    getOutput().printMessage("All reconnection attempts failed.");
     fullDisconnect();
     return false;
   }

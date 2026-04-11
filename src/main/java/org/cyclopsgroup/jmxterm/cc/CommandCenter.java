@@ -149,7 +149,7 @@ public class CommandCenter {
       cmd.execute();
     } catch (IOException e) {
       if (attemptReconnect(e)) {
-        session.output.printMessage(
+        session.getOutput().printMessage(
             "Reconnected to " + ((SessionImpl) session).getConnection().getUrl()
                 + ". Please retry your command.");
       }
@@ -178,7 +178,7 @@ public class CommandCenter {
     if (sessionImpl.isConnectionAlive()) {
       return false;
     }
-    session.output.printMessage("Connection lost: " + cause.getMessage());
+    session.getOutput().printMessage("Connection lost: " + cause.getMessage());
     return sessionImpl.reconnect(
         SessionImpl.DEFAULT_RETRY_INTERVAL_SECONDS, SessionImpl.DEFAULT_MAX_RETRY_ATTEMPTS);
   }
