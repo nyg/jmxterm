@@ -1,5 +1,7 @@
 # jmxsh
 
+[![Homebrew](https://img.shields.io/badge/homebrew-nyg%2Fjmxsh-FBB040?logo=homebrew&logoColor=FBB040)](https://github.com/nyg/homebrew-jmxsh)
+
 > Interactive command-line JMX client for monitoring and managing Java applications.
 
 **Website: [jmx.sh](https://jmx.sh)**
@@ -89,6 +91,12 @@ echo "open localhost:9999 && beans" | java -jar jmxsh-<version>.jar -n
 ```
 
 ## Installation
+
+### Homebrew (macOS & Linux)
+
+```bash
+brew install nyg/jmxsh/jmxsh
+```
 
 ### JAR (all platforms)
 
