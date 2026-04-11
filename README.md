@@ -1,19 +1,19 @@
 <p align="center">
-  <img src="docs/favicon.png" alt="jmxsh" width="100">
-  <br><br>
+  <img src="docs/favicon.png" alt="jmxsh" width="130">
+  <br>
   <a href="https://github.com/nyg/homebrew-jmxsh"><img src="https://img.shields.io/badge/homebrew-nyg%2Fjmxsh-FBB040?logo=homebrew&logoColor=FBB040" alt="Homebrew"></a>
   <a href="https://jmx.sh/apt"><img src="https://img.shields.io/badge/apt-jmx.sh%2Fapt-A80030?logo=debian&logoColor=white" alt="APT Repository"></a>
   <br><br>
   <strong><a href="https://jmx.sh">jmx.sh</a></strong>
 </p>
 
-jmxsh lets you connect to any JMX-enabled JVM, browse MBeans, read and write attributes, and
-invoke operations — all from the comfort of your terminal. Think of it as a Swiss Army knife for JMX.
+**jmx.sh** lets you connect to any JMX-enabled JVM, browse MBeans, read and write attributes, and
+invoke operations — all from the comfort of your terminal.
 
 > **Fork notice** — jmxsh is an actively maintained fork of
 > [jiaqi/jmxterm](https://github.com/jiaqi/jmxterm), incorporating contributions from
 > [LeMyst/jmxterm](https://github.com/LeMyst/jmxterm). The goal is to keep the project alive with
-> regular updates, dependency maintenance, and new features.
+> regular updates and releases, dependency maintenance, and new features.
 
 ## Installation
 
