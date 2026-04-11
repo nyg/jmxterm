@@ -8,11 +8,7 @@ and dependency graph. Items are organized by category. Each item is labeled with
 - 🟡 **Medium** — Worth doing but lower urgency
 - 🟢 **Low** — Polish and nice-to-haves
 
----
-
 ## Java Language Modernization
-
-Target: **Java 25** (current build target).
 
 - 🟠 **Replace `FileReader`/`FileWriter` with NIO APIs** — These don't specify a charset and are effectively deprecated. Use `Files.newBufferedReader(path, charset)` / `Files.newBufferedWriter(path, charset)`. Affected files: `FileCommandInput.java`, `FileCommandOutput.java`.
 - 🟡 **Replace `StringBuffer` with `StringBuilder`** — `StringBuffer` is synchronized and unnecessary here. Affected file: `WatchCommand.java:170`.
@@ -24,13 +20,9 @@ Target: **Java 25** (current build target).
 - 🟢 **Evaluate `Optional` for nullable return types** — Many methods return null to signal absence; `Optional` would make intent clearer at API boundaries.
 - 🟢 **Explore Java 25 features** — Structured concurrency, scoped values, string templates (if stabilized), unnamed patterns, and other features that may simplify existing code.
 
----
-
 ## Dependency Cleanup
 
 - 🟡 **Evaluate migrating JCLI → Picocli** — JCLI (`org.cyclopsgroup:jcli:1.0.2`) is a low-activity library from ~2012. Picocli is actively maintained, has built-in completions, GraalVM support, and better documentation. The coupling is loose (annotations + `ArgumentProcessor`), making migration feasible but non-trivial.
-
----
 
 ## Build / POM
 
@@ -39,25 +31,11 @@ Target: **Java 25** (current build target).
 - 🟡 **Add `.editorconfig`** — Not present. Ensures consistent indentation, charset, and line endings across IDEs and editors.
 - 🟡 **Add `.gitattributes`** — Not present. Normalizes line endings (`* text=auto`, `*.java text eol=lf`, `*.sh text eol=lf`) and marks binary files.
 
----
-
 ## GitHub Actions / CI
 
 - 🟡 **Enable CodeQL scanning** — No SAST (static application security testing) is configured. Add a CodeQL workflow for Java to catch security issues in PRs.
-- 🟢 **Verify action versions stay current** — Dependabot covers this, but worth auditing periodically. The major versions (checkout, setup-java, upload/download-artifact) should all be on their latest major.
-
----
 
 ## Testing
 
 - 🟡 **Add test coverage reporting (JaCoCo)** — No coverage tool is configured. Add `jacoco-maven-plugin` to generate reports and optionally enforce minimum coverage thresholds.
 - 🟢 **Address existing TODO in `WatchCommand`** — Line 28: `TODO Consider the use case for CSV file backend generation`. Decide whether to implement or remove the comment.
-
----
-
-## Documentation / Project Metadata
-
-- 🟡 **Add `SECURITY.md`** — No vulnerability disclosure policy exists. Document how to report security issues (email, GitHub Security Advisories, etc.).
-- 🟡 **Add `CONTRIBUTING.md`** — No contributor guide exists. Document build steps, testing expectations, commit conventions, and PR process.
-- 🟢 **Add PR template** — `.github/PULL_REQUEST_TEMPLATE.md` helps standardize pull request descriptions.
-- 🟢 **Add issue templates** — `.github/ISSUE_TEMPLATE/` with bug report and feature request templates improves issue quality.
