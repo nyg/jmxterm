@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
@@ -13,15 +14,13 @@ import javax.management.ObjectName;
 import javax.management.RuntimeMBeanException;
 import javax.management.openmbean.CompositeDataSupport;
 
-
-import java.util.Objects;
+import org.cyclopsgroup.jmxterm.Command;
+import org.cyclopsgroup.jmxterm.Session;
+import org.cyclopsgroup.jmxterm.io.ValueOutputFormat;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
-import org.cyclopsgroup.jmxterm.Command;
-import org.cyclopsgroup.jmxterm.Session;
-import org.cyclopsgroup.jmxterm.io.ValueOutputFormat;
 
 /**
  * Get value of MBean attribute(s)

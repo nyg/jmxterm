@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -12,7 +13,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.management.JMException;
 import javax.management.remote.JMXServiceURL;
 
-import java.util.Objects;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.CommandFactory;
 import org.cyclopsgroup.jmxterm.JavaProcessManager;
@@ -22,6 +22,7 @@ import org.cyclopsgroup.jmxterm.io.CommandOutput;
 import org.cyclopsgroup.jmxterm.io.RuntimeIOException;
 import org.cyclopsgroup.jmxterm.io.VerboseLevel;
 import org.cyclopsgroup.jmxterm.utils.EscapingTokenizer;
+
 import picocli.CommandLine;
 
 /**

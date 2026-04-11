@@ -1,18 +1,18 @@
 package org.cyclopsgroup.jmxterm.cc;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import java.util.Objects;
+
 import org.cyclopsgroup.jmxterm.Command;
 import org.jline.reader.Candidate;
 import org.jline.reader.Completer;
 import org.jline.reader.LineReader;
 import org.jline.reader.ParsedLine;
-import picocli.CommandLine;
-import picocli.CommandLine.Model.OptionSpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import picocli.CommandLine;
+import picocli.CommandLine.Model.OptionSpec;
 
 /**
  * JLine completor that handles tab key

@@ -10,10 +10,11 @@ import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
-import picocli.CommandLine;
-import picocli.CommandLine.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
+
+import picocli.CommandLine;
+import picocli.CommandLine.Option;
 
 /**
  * Command to subscribe to an MBean notification

@@ -1,11 +1,10 @@
 package org.cyclopsgroup.jmxterm.cc;
 
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import java.util.Objects;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;

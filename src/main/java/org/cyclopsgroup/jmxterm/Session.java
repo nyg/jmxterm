@@ -3,8 +3,10 @@ package org.cyclopsgroup.jmxterm;
 import java.io.IOError;
 import java.io.IOException;
 import java.util.Map;
-import javax.management.remote.JMXServiceURL;
 import java.util.Objects;
+
+import javax.management.remote.JMXServiceURL;
+
 import org.cyclopsgroup.jmxterm.io.CommandInput;
 import org.cyclopsgroup.jmxterm.io.CommandOutput;
 import org.cyclopsgroup.jmxterm.io.UnimplementedCommandInput;

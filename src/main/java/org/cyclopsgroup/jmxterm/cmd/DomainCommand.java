@@ -3,14 +3,14 @@ package org.cyclopsgroup.jmxterm.cmd;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-
 import java.util.Objects;
 
-import picocli.CommandLine;
-import picocli.CommandLine.Parameters;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 import org.cyclopsgroup.jmxterm.SyntaxUtils;
+
+import picocli.CommandLine;
+import picocli.CommandLine.Parameters;
 
 /**
  * Get or set current selected domain

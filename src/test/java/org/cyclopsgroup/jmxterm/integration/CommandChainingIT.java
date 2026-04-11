@@ -1,8 +1,9 @@
 package org.cyclopsgroup.jmxterm.integration;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.StringWriter;
+
 import org.cyclopsgroup.jmxterm.cc.CommandCenter;
 import org.cyclopsgroup.jmxterm.io.WriterCommandOutput;
 import org.junit.jupiter.api.AfterEach;

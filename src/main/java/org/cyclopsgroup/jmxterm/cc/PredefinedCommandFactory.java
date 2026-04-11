@@ -3,9 +3,26 @@ package org.cyclopsgroup.jmxterm.cc;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.CommandFactory;
-import org.cyclopsgroup.jmxterm.cmd.*;
+import org.cyclopsgroup.jmxterm.cmd.BeanCommand;
+import org.cyclopsgroup.jmxterm.cmd.BeansCommand;
+import org.cyclopsgroup.jmxterm.cmd.CloseCommand;
+import org.cyclopsgroup.jmxterm.cmd.DomainCommand;
+import org.cyclopsgroup.jmxterm.cmd.DomainsCommand;
+import org.cyclopsgroup.jmxterm.cmd.GetCommand;
+import org.cyclopsgroup.jmxterm.cmd.InfoCommand;
+import org.cyclopsgroup.jmxterm.cmd.JvmsCommand;
+import org.cyclopsgroup.jmxterm.cmd.OpenCommand;
+import org.cyclopsgroup.jmxterm.cmd.OptionCommand;
+import org.cyclopsgroup.jmxterm.cmd.QuitCommand;
+import org.cyclopsgroup.jmxterm.cmd.RunCommand;
+import org.cyclopsgroup.jmxterm.cmd.SetCommand;
+import org.cyclopsgroup.jmxterm.cmd.SubscribeCommand;
+import org.cyclopsgroup.jmxterm.cmd.UnsubscribeCommand;
+import org.cyclopsgroup.jmxterm.cmd.WatchCommand;
+
 import picocli.CommandLine;
 
 /**

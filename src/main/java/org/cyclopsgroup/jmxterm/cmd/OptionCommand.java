@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import picocli.CommandLine;
-import picocli.CommandLine.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 import org.cyclopsgroup.jmxterm.io.VerboseLevel;
+
+import picocli.CommandLine;
+import picocli.CommandLine.Option;
 
 /**
  * Command to change/display console options

@@ -2,13 +2,14 @@ package org.cyclopsgroup.jmxterm;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import javax.management.JMException;
 
-import java.util.Objects;
-import picocli.CommandLine.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import picocli.CommandLine.Option;
 
 /**
  * Base class of all commands. Command is executed in single thread. Extending classes don't need to

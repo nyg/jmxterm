@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm.cc;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.cyclopsgroup.jmxterm.cmd.QuitCommand;
 import org.junit.jupiter.api.Test;
