@@ -4,28 +4,30 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
 import javax.management.Attribute;
 import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
-import java.util.Objects;
-import org.cyclopsgroup.jcli.annotation.Argument;
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.MultiValue;
-import org.cyclopsgroup.jcli.annotation.Option;
+
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 import org.cyclopsgroup.jmxterm.SyntaxUtils;
 import org.cyclopsgroup.jmxterm.utils.ValueFormat;
+
+import picocli.CommandLine;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 
 /**
  * Command to set an attribute
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(name = "set", description = "Set value of an MBean attribute")
+@CommandLine.Command(name = "set", description = "Set value of an MBean attribute")
 public class SetCommand extends Command {
   private List<String> arguments = Collections.emptyList();
 
@@ -96,8 +98,7 @@ public class SetCommand extends Command {
   }
 
   /** @param arguments Argument list. The first argument is attribute name */
-  @MultiValue(listType = ArrayList.class, minValues = 2)
-  @Argument(description = "name, value, value2...")
+  @Parameters(description = "name, value, value2...", arity = "2..*")
   public final void setArguments(List<String> arguments) {
     Objects.requireNonNull(arguments, "Arguments can't be NULL");
     this.arguments = arguments;
@@ -105,15 +106,14 @@ public class SetCommand extends Command {
 
   /** @param bean Bean where the attribute is */
   @Option(
-      name = "b",
-      longName = "bean",
+      names = {"-b", "--bean"},
       description = "MBean name where the attribute is. Optional if bean has been set")
   public final void setBean(String bean) {
     this.bean = bean;
   }
 
   /** @param domain Domain where the bean is */
-  @Option(name = "d", longName = "domain", description = "Domain under which the bean is")
+  @Option(names = {"-d", "--domain"}, description = "Domain under which the bean is")
   public final void setDomain(String domain) {
     this.domain = domain;
   }

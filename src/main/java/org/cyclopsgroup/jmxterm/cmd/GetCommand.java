@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
@@ -13,25 +14,23 @@ import javax.management.ObjectName;
 import javax.management.RuntimeMBeanException;
 import javax.management.openmbean.CompositeDataSupport;
 
-
-import java.util.Objects;
-import org.cyclopsgroup.jcli.annotation.Argument;
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.MultiValue;
-import org.cyclopsgroup.jcli.annotation.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 import org.cyclopsgroup.jmxterm.io.ValueOutputFormat;
+
+import picocli.CommandLine;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 
 /**
  * Get value of MBean attribute(s)
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(
+@CommandLine.Command(
     name = "get",
     description = "Get value of MBean attribute(s)",
-    note = "* stands for all attributes. eg. get Attribute1 Attribute2 or get *")
+    footer = "* stands for all attributes. eg. get Attribute1 Attribute2 or get *")
 public class GetCommand extends Command {
   private List<String> attributes = new ArrayList<>();
 
@@ -157,8 +156,7 @@ public class GetCommand extends Command {
   }
 
   /** @param attributes List of attribute names */
-  @MultiValue(listType = ArrayList.class, minValues = 1)
-  @Argument(displayName = "attr", description = "Name of attributes to select")
+  @Parameters(paramLabel = "attr", description = "Name of attributes to select", arity = "1..*")
   public final void setAttributes(List<String> attributes) {
     Objects.requireNonNull(attributes, "Attributes can't be NULL");
     this.attributes = attributes;
@@ -166,35 +164,33 @@ public class GetCommand extends Command {
 
   /** @param bean Bean under which attribute is get */
   @Option(
-      name = "b",
-      longName = "bean",
+      names = {"-b", "--bean"},
       description = "MBean name where the attribute is. Optional if bean has been set")
   public final void setBean(String bean) {
     this.bean = bean;
   }
 
   /** @param domain Domain under which bean is selected */
-  @Option(name = "d", longName = "domain", description = "Domain of bean, optional")
+  @Option(names = {"-d", "--domain"}, description = "Domain of bean, optional")
   public final void setDomain(String domain) {
     this.domain = domain;
   }
 
   /** @param showDescription True to show detail description */
-  @Option(name = "i", longName = "info", description = "Show detail information of each attribute")
+  @Option(names = {"-i", "--info"}, description = "Show detail information of each attribute")
   public final void setShowDescription(boolean showDescription) {
     this.showDescription = showDescription;
   }
 
   /** @param noQuotationMarks True if value is not surrounded by quotation marsk */
-  @Option(name = "q", longName = "quots", description = "Quotation marks around value")
+  @Option(names = {"-q", "--quots"}, description = "Quotation marks around value")
   public final void setShowQuotationMarks(boolean noQuotationMarks) {
     this.showQuotationMarks = noQuotationMarks;
   }
 
   /** @param simpleFormat True if value is printed out in a simple format without full expression */
   @Option(
-      name = "s",
-      longName = "simple",
+      names = {"-s", "--simple"},
       description = "Print simple expression of value without full expression")
   public final void setSimpleFormat(boolean simpleFormat) {
     this.simpleFormat = simpleFormat;
@@ -205,24 +201,21 @@ public class GetCommand extends Command {
    *     line expression
    */
   @Option(
-      name = "f",
-      longName = "completeLine",
+      names = {"-f", "--completeLine"},
       description = "Print expression with bean and value in single line with '#' delimiter.")
   public final void setCompleteLine(boolean completeLine) {
     this.completeLine = completeLine;
   }
 
   @Option(
-      name = "l",
-      longName = "delimiter",
+      names = {"-l", "--delimiter"},
       description = "Sets an optional delimiter to be printed after the value")
   public final void setDelimiter(String delimiter) {
     this.delimiter = delimiter;
   }
 
   @Option(
-      name = "n",
-      longName = "singleLine",
+      names = {"-n", "--singleLine"},
       description = "Prints result without a newline - default is false")
   public final void setSingleLine(boolean singleLine) {
     this.singleLine = singleLine;

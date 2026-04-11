@@ -2,10 +2,12 @@ package org.cyclopsgroup.jmxterm.cc;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
+
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
-import java.util.Objects;
+
 import org.cyclopsgroup.jmxterm.Connection;
 import org.cyclopsgroup.jmxterm.JavaProcessManager;
 import org.cyclopsgroup.jmxterm.Session;

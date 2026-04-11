@@ -7,20 +7,21 @@ import java.util.List;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
+
+import picocli.CommandLine;
+import picocli.CommandLine.Option;
 
 /**
  * Command that shows list of beans
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(
+@CommandLine.Command(
     name = "beans",
     description = "List available beans under a domain or all domains",
-    note =
+    footer =
         "Without -d option, current select domain is applied. If there's no domain specified, all beans are listed. Example:\n beans\n beans -d java.lang")
 public class BeansCommand extends Command {
   /**
@@ -73,9 +74,8 @@ public class BeansCommand extends Command {
 
   /** @param domain Domain under which beans are listed */
   @Option(
-      name = "d",
-      longName = "domain",
-      displayName = "domain",
+      names = {"-d", "--domain"},
+      paramLabel = "domain",
       description = "Name of domain under which beans are listed")
   public final void setDomain(String domain) {
     this.domain = domain;

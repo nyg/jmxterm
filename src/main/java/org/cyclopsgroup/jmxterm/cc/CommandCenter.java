@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -12,10 +13,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.management.JMException;
 import javax.management.remote.JMXServiceURL;
 
-import java.util.Objects;
-import org.cyclopsgroup.caff.token.EscapingValueTokenizer;
-import org.cyclopsgroup.caff.token.ValueTokenizer;
-import org.cyclopsgroup.jcli.ArgumentProcessor;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.CommandFactory;
 import org.cyclopsgroup.jmxterm.JavaProcessManager;
@@ -24,6 +21,9 @@ import org.cyclopsgroup.jmxterm.io.CommandInput;
 import org.cyclopsgroup.jmxterm.io.CommandOutput;
 import org.cyclopsgroup.jmxterm.io.RuntimeIOException;
 import org.cyclopsgroup.jmxterm.io.VerboseLevel;
+import org.cyclopsgroup.jmxterm.utils.EscapingTokenizer;
+
+import picocli.CommandLine;
 
 /**
  * Facade class where commands are maintained and executed
@@ -33,9 +33,6 @@ import org.cyclopsgroup.jmxterm.io.VerboseLevel;
 public class CommandCenter {
   private static final String COMMAND_DELIMITER = "&&";
   static final String ESCAPE_CHAR_REGEX = "(?<!\\\\)#";
-
-  /** Argument tokenizer that parses arguments */
-  final ValueTokenizer argTokenizer = new EscapingValueTokenizer();
 
   /** Command factory that creates commands */
   final CommandFactory commandFactory;
@@ -114,11 +111,7 @@ public class CommandCenter {
     }
 
     // Take the first argument out since it's command name
-    final List<String> args = new ArrayList<>();
-    argTokenizer.parse(
-        command,
-        event ->
-            args.add(event.getToken()));
+    final List<String> args = new ArrayList<>(EscapingTokenizer.tokenize(command));
     String commandName = args.remove(0);
     // Leave the rest of arguments for command
     String[] commandArgs = args.toArray(new String[0]);
@@ -136,11 +129,17 @@ public class CommandCenter {
     if (cmd instanceof HelpCommand command) {
       command.setCommandCenter(this);
     }
-    ArgumentProcessor<Command> ap = ArgumentProcessor.forType(cmd.getClass());
-    ap.process(commandArgs, cmd);
+    CommandLine cl = new CommandLine(cmd);
+    cl.setUnmatchedOptionsArePositionalParams(true);    try {
+      cl.parseArgs(commandArgs);
+    } catch (CommandLine.ParameterException e) {
+      session.getOutput().printMessage(e.getMessage());
+      cl.usage(new PrintWriter(System.out, true));
+      return;
+    }
     // Print out usage if help option is specified
-    if (cmd.isHelp()) {
-      ap.printHelp(new PrintWriter(System.out, true));
+    if (cl.isUsageHelpRequested()) {
+      cl.usage(new PrintWriter(System.out, true));
       return;
     }
     cmd.setSession(session);
@@ -212,6 +211,14 @@ public class CommandCenter {
    */
   public Class<? extends Command> getCommandType(String name) {
     return commandFactory.getCommandTypes().get(name);
+  }
+
+  /**
+   * @param name Command name
+   * @return A new command instance for the given name
+   */
+  public Command createCommand(String name) {
+    return commandFactory.createCommand(name);
   }
 
   /** @return Java process manager implementation */

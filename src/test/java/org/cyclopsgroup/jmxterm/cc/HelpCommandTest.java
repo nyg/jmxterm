@@ -1,11 +1,15 @@
 package org.cyclopsgroup.jmxterm.cc;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -45,6 +49,8 @@ class HelpCommandTest {
 
     doReturn(SelfRecordingCommand.class).when(cc).getCommandType("a");
     doReturn(SelfRecordingCommand.class).when(cc).getCommandType("b");
+    doReturn(new SelfRecordingCommand(new ArrayList<>())).when(cc).createCommand("a");
+    doReturn(new SelfRecordingCommand(new ArrayList<>())).when(cc).createCommand("b");
     command.setSession(new MockSession(output, null));
     command.execute();
     verify(cc).getCommandType("a");
@@ -63,6 +69,8 @@ class HelpCommandTest {
     when(cc.getCommandNames()).thenReturn(new HashSet<String>(Arrays.asList("a", "b")));
     doReturn(SelfRecordingCommand.class).when(cc).getCommandType("a");
     doReturn(SelfRecordingCommand.class).when(cc).getCommandType("b");
+    doReturn(new SelfRecordingCommand(new ArrayList<>())).when(cc).createCommand("a");
+    doReturn(new SelfRecordingCommand(new ArrayList<>())).when(cc).createCommand("b");
     command.setSession(new MockSession(output, null));
     command.execute();
     assertThat(output.toString().trim())

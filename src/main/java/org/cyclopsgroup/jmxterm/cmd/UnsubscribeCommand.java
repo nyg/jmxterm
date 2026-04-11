@@ -7,10 +7,11 @@ import javax.management.MBeanServerConnection;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
+
+import picocli.CommandLine;
+import picocli.CommandLine.Option;
 
 /**
  * Command to subscribe to an MBean notification
@@ -18,10 +19,10 @@ import org.cyclopsgroup.jmxterm.Session;
  * <p>Remove the subscription of an already subscribed notification listener. Notifications will no
  * longer be sent to the session output.
  */
-@Cli(
+@CommandLine.Command(
     name = "unsubscribe",
     description = "Unsubscribe the notifications of an earlier subscribed bean",
-    note = "Syntax is \n unsubscribe <bean>")
+    footer = "Syntax is \n unsubscribe <bean>")
 public class UnsubscribeCommand extends Command {
   private String bean;
 
@@ -47,13 +48,13 @@ public class UnsubscribeCommand extends Command {
   }
 
   /** @param bean Bean under which the operation is */
-  @Option(name = "b", longName = "bean", description = "MBean to invoke")
+  @Option(names = {"-b", "--bean"}, description = "MBean to invoke")
   public final void setBean(String bean) {
     this.bean = bean;
   }
 
   /** @param domain Domain under which is bean is */
-  @Option(name = "d", longName = "domain", description = "Domain of MBean to invoke")
+  @Option(names = {"-d", "--domain"}, description = "Domain of MBean to invoke")
   public final void setDomain(String domain) {
     this.domain = domain;
   }
