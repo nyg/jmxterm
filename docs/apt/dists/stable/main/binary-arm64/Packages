@@ -1,0 +1,15 @@
+Package: jmxsh
+Architecture: all
+Version: 1.2.2
+Priority: optional
+Section: misc
+Maintainer: nyg
+Filename: pool/main/jmxsh-1.2.2.deb
+Size: 5763314
+MD5sum: 89d479273eb6c37c23610e983a31cea9
+SHA1: 98acab270709c2b2d3d4faa45d57c2bc35d4401d
+SHA256: 036a9430294cc3dd3cdbc533e116c9c9f76286dc076d226174c753f7032e5655
+SHA512: ec8cb7a4c7639a681799b09d1a3bba45ed2cf61a43374b875b0f8a5961b2765689deac50c0c7c9a5be46d803c829667c4ad05a292331a1a4ccfc24deb194a128
+Description: Interactive command-line JMX client
+Distribution: development
+

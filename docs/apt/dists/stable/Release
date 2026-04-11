@@ -1,0 +1,40 @@
+Architectures: amd64 arm64 all
+Codename: stable
+Components: main
+Date: Sat, 11 Apr 2026 17:44:14 +0000
+Description: jmxsh apt repository
+Label: jmxsh
+Origin: jmxsh
+Suite: stable
+MD5Sum:
+ 33fe386496225f4b6fe4a0b7499c1e20              178 Release
+ 6896b5fcc3529554679869393738611d              521 main/binary-all/Packages
+ dec443a77b4cf1d7f176f5d0b9e8db5a              398 main/binary-all/Packages.gz
+ 6896b5fcc3529554679869393738611d              521 main/binary-amd64/Packages
+ dec443a77b4cf1d7f176f5d0b9e8db5a              398 main/binary-amd64/Packages.gz
+ 6896b5fcc3529554679869393738611d              521 main/binary-arm64/Packages
+ dec443a77b4cf1d7f176f5d0b9e8db5a              398 main/binary-arm64/Packages.gz
+SHA1:
+ c8cd6fa21f1f80be037226aeb24dfacb58769c0c              178 Release
+ 392982ac5c61374ed7ae9570a24703d83d2f8ff1              521 main/binary-all/Packages
+ d27d07b44d1a3cd840821cb341eb9b6dc2680e34              398 main/binary-all/Packages.gz
+ 392982ac5c61374ed7ae9570a24703d83d2f8ff1              521 main/binary-amd64/Packages
+ d27d07b44d1a3cd840821cb341eb9b6dc2680e34              398 main/binary-amd64/Packages.gz
+ 392982ac5c61374ed7ae9570a24703d83d2f8ff1              521 main/binary-arm64/Packages
+ d27d07b44d1a3cd840821cb341eb9b6dc2680e34              398 main/binary-arm64/Packages.gz
+SHA256:
+ acdd0b2e606c51c339b752337aae274a045a13fc21e8d4bb50d3283205e3fab4              178 Release
+ fe55736b85575aa80969951bb15f1340f378778162d55885ab716d0113dcbeeb              521 main/binary-all/Packages
+ 6a05b4ff0e6da098c286af7ac729894fbb0e7a592a2594a9ffb54c63db533218              398 main/binary-all/Packages.gz
+ fe55736b85575aa80969951bb15f1340f378778162d55885ab716d0113dcbeeb              521 main/binary-amd64/Packages
+ 6a05b4ff0e6da098c286af7ac729894fbb0e7a592a2594a9ffb54c63db533218              398 main/binary-amd64/Packages.gz
+ fe55736b85575aa80969951bb15f1340f378778162d55885ab716d0113dcbeeb              521 main/binary-arm64/Packages
+ 6a05b4ff0e6da098c286af7ac729894fbb0e7a592a2594a9ffb54c63db533218              398 main/binary-arm64/Packages.gz
+SHA512:
+ fc8e5ee21936e6fa69c17a0ea72eb3e446bb618bd75589ce6e9ee3f541f6606e5ab58995b06cf0e173653406677743be6989b676caf72a5131a3f76da5040ffb              178 Release
+ 39d873cccc8274dbfb7381ee5594e4721b554bc973729e5a24bb75b76ac9a6c7854dab333b6e51db3407a6184deabdaeeb7031876fd0ec5f1151df5458cacf76              521 main/binary-all/Packages
+ e718f94f5166b4e5dfdc1e04e9477195183b6167f49aa3a9a9a6246fa97b6889c168111bc8e292ea8bb99a07a56a1efe1e399f3882273e8f804753ae118eb578              398 main/binary-all/Packages.gz
+ 39d873cccc8274dbfb7381ee5594e4721b554bc973729e5a24bb75b76ac9a6c7854dab333b6e51db3407a6184deabdaeeb7031876fd0ec5f1151df5458cacf76              521 main/binary-amd64/Packages
+ e718f94f5166b4e5dfdc1e04e9477195183b6167f49aa3a9a9a6246fa97b6889c168111bc8e292ea8bb99a07a56a1efe1e399f3882273e8f804753ae118eb578              398 main/binary-amd64/Packages.gz
+ 39d873cccc8274dbfb7381ee5594e4721b554bc973729e5a24bb75b76ac9a6c7854dab333b6e51db3407a6184deabdaeeb7031876fd0ec5f1151df5458cacf76              521 main/binary-arm64/Packages
+ e718f94f5166b4e5dfdc1e04e9477195183b6167f49aa3a9a9a6246fa97b6889c168111bc8e292ea8bb99a07a56a1efe1e399f3882273e8f804753ae118eb578              398 main/binary-arm64/Packages.gz
