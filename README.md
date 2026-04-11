@@ -107,8 +107,12 @@ java -jar jmxsh-<version>.jar
 ### Debian/Ubuntu
 
 ```bash
-sudo dpkg -i jmxsh-<version>.deb
-jmxsh
+# Add the GPG key and repository
+curl -fsSL https://jmx.sh/apt/gpg.asc | sudo gpg --dearmor -o /usr/share/keyrings/jmxsh.gpg
+echo "deb [signed-by=/usr/share/keyrings/jmxsh.gpg] https://jmx.sh/apt stable main" | sudo tee /etc/apt/sources.list.d/jmxsh.list
+
+# Install
+sudo apt update && sudo apt install jmxsh
 ```
 
 ## Features
