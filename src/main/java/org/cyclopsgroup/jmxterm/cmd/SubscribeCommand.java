@@ -48,7 +48,7 @@ public class SubscribeCommand extends Command {
       sb.append(",type=").append(notification.getType());
       sb.append(",message=").append(notification.getMessage());
 
-      session.output.println(sb.toString());
+      session.getOutput().println(sb.toString());
     }
   }
 
@@ -73,7 +73,7 @@ public class SubscribeCommand extends Command {
       con.addNotificationListener(name, listener, null, null);
       listeners.put(name, listener);
 
-      session.output.printMessage("Subscribed to " + name);
+      session.getOutput().printMessage("Subscribed to " + name);
     }
   }
 

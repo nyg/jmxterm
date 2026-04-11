@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 import javax.management.JMException;
 import org.apache.commons.configuration2.Configuration;
@@ -30,16 +29,15 @@ public class AboutCommand extends Command {
             "META-INF/cyclopsgroup/jmxsh.properties", getClass().getClassLoader());
     ValueOutputFormat format = new ValueOutputFormat(2, showDescription, true);
     Configuration subset = props.subset("jmxsh.about");
-    for (Iterator<String> iterator = subset.getKeys(); iterator.hasNext(); ) {
-      String key = iterator.next();
-      format.printExpression(session.output, key, subset.getProperty(key), null);
+    for (String key : (Iterable<String>) subset::getKeys) {
+      format.printExpression(session.getOutput(), key, subset.getProperty(key), null);
     }
 
     // output Java runtime properties
     for (Map.Entry<Object, Object> entry : System.getProperties().entrySet()) {
       String keyName = entry.toString();
       if (keyName.startsWith("java.")) {
-        format.printExpression(session.output, keyName, entry.getValue(), null);
+        format.printExpression(session.getOutput(), keyName, entry.getValue(), null);
       }
     }
   }

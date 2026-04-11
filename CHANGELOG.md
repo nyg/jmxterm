@@ -1,6 +1,20 @@
 # Changelog
 
 
+## [1.2.3](https://github.com/nyg/jmxsh/compare/v1.2.2..v1.2.3) - 2026-04-11
+
+### 🐛 Bug Fixes
+
+- [`b216aeb`](https://github.com/nyg/jmxsh/commit/b216aeb45069c5edd21aaabf588ca87f980577cd) *(build)* Correct patch release version calculation and update README ([#35](https://github.com/nyg/jmxsh/issues/35))
+
+### 🚜 Refactor
+
+- [`7e83d7f`](https://github.com/nyg/jmxsh/commit/7e83d7f36a69a29cb1a9b41a1b6fd967d3caf32f) Java language modernization ([#37](https://github.com/nyg/jmxsh/issues/37))
+
+### 📚 Documentation
+
+- [`8c29928`](https://github.com/nyg/jmxsh/commit/8c29928f4232d8ba40e34cb4f17031a7b6d809d3) Update TODO.md ([#36](https://github.com/nyg/jmxsh/issues/36))
+
 ## [1.2.2](https://github.com/nyg/jmxsh/compare/v1.2.0..v1.2.2) - 2026-04-11
 
 ### 🐛 Bug Fixes

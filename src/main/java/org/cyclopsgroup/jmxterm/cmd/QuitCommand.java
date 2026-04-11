@@ -17,6 +17,6 @@ public class QuitCommand extends Command {
     Session session = getSession();
     session.disconnect();
     session.close();
-    session.output.printMessage("bye");
+    session.getOutput().printMessage("bye");
   }
 }

@@ -55,15 +55,15 @@ public class InfoCommand extends Command {
     Session session = getSession();
     MBeanAttributeInfo[] attrInfos = info.getAttributes();
     if (attrInfos.length == 0) {
-      session.output.printMessage("there is no attribute");
+      session.getOutput().printMessage("there is no attribute");
       return;
     }
     int index = 0;
-    session.output.println(TEXT_ATTRIBUTES);
+    session.getOutput().println(TEXT_ATTRIBUTES);
     List<MBeanAttributeInfo> infos = Stream.of(attrInfos).sorted(INFO_COMPARATOR).toList();
     for (MBeanAttributeInfo attr : infos) {
       String rw = (attr.isReadable() ? "r" : "") + (attr.isWritable() ? "w" : "");
-      session.output.println(
+      session.getOutput().println(
           String.format(
               "  %%%-3d - %s (%s, %s)" + (showDescription ? ", %s" : ""),
               index++,
@@ -78,13 +78,13 @@ public class InfoCommand extends Command {
     Session session = getSession();
     MBeanNotificationInfo[] notificationInfos = info.getNotifications();
     if (notificationInfos.length == 0) {
-      session.output.printMessage("there's no notifications");
+      session.getOutput().printMessage("there's no notifications");
       return;
     }
     int index = 0;
-    session.output.println(TEXT_NOTIFICATIONS);
+    session.getOutput().println(TEXT_NOTIFICATIONS);
     for (MBeanNotificationInfo notification : notificationInfos) {
-      session.output.println(
+      session.getOutput().println(
           String.format(
               "  %%%-3d - %s(%s)" + (showDescription ? ", %s" : ""),
               index++,
@@ -98,11 +98,11 @@ public class InfoCommand extends Command {
     Session session = getSession();
     MBeanOperationInfo[] operationInfos = info.getOperations();
     if (operationInfos.length == 0) {
-      session.output.printMessage("there's no operations");
+      session.getOutput().printMessage("there's no operations");
       return;
     }
     List<MBeanOperationInfo> operations = Stream.of(operationInfos).sorted(INFO_COMPARATOR).toList();
-    session.output.println(TEXT_OPERATIONS);
+    session.getOutput().println(TEXT_OPERATIONS);
     int index = 0;
     for (MBeanOperationInfo op : operations) {
       MBeanParameterInfo[] paramInfos = op.getSignature();
@@ -115,7 +115,7 @@ public class InfoCommand extends Command {
       String parameters = String.join(",", paramTypes);
       String parametersDesc =
           paramDescriptions.isEmpty() ? "" : '\n' + String.join("\n", paramDescriptions);
-      session.output.println(
+      session.getOutput().println(
           String.format(
               "  %%%-3d - %s %s(%s)" + (showDescription ? ", %s%s" : ""),
               index++,
@@ -131,10 +131,10 @@ public class InfoCommand extends Command {
     Session session = getSession();
     MBeanOperationInfo[] operationInfos = info.getOperations();
     if (operationInfos.length == 0) {
-      session.output.printMessage("there's no operations");
+      session.getOutput().printMessage("there's no operations");
       return;
     }
-    session.output.println(TEXT_OPERATIONS);
+    session.getOutput().println(TEXT_OPERATIONS);
     int index = 0;
     boolean found = false;
     for (MBeanOperationInfo op : operationInfos) {
@@ -153,18 +153,18 @@ public class InfoCommand extends Command {
                   paramInfo.getDescription()));
           paramTypes.add(paramInfo.getType() + " " + parameter);
         }
-        session.output.println(
+        session.getOutput().println(
             "  %%%-3d - %s %s(%s), %s".formatted(
                 index++,
                 op.getReturnType(),
                 opName,
                 String.join(",", paramTypes),
                 op.getDescription()));
-        session.output.println(paramsDesc.toString());
+        session.getOutput().println(paramsDesc.toString());
       }
     }
     if (!found) {
-      session.output.printMessage(
+      session.getOutput().printMessage(
           "The operation '%s' is not found in the bean.".formatted(operation));
     }
   }
@@ -180,10 +180,10 @@ public class InfoCommand extends Command {
     ObjectName name = new ObjectName(beanName);
     MBeanServerConnection con = session.getConnection().getServerConnection();
     MBeanInfo info = con.getMBeanInfo(name);
-    session.output.printMessage("mbean = " + beanName);
-    session.output.printMessage("class name = " + info.getClassName());
+    session.getOutput().printMessage("mbean = " + beanName);
+    session.getOutput().printMessage("class name = " + info.getClassName());
     if (this.showDescription) {
-      session.output.printMessage("description: " + info.getDescription());
+      session.getOutput().printMessage("description: " + info.getDescription());
     }
     if (operation == null) {
       for (char t : type.toCharArray()) {
@@ -203,7 +203,7 @@ public class InfoCommand extends Command {
         }
       }
     } else {
-      session.output.printMessage("operation = " + operation);
+      session.getOutput().printMessage("operation = " + operation);
       displaySingleOperation(info);
     }
   }
