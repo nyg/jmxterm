@@ -2,16 +2,15 @@ package org.cyclopsgroup.jmxterm;
 
 import java.util.List;
 
-import org.cyclopsgroup.jcli.annotation.Argument;
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.MultiValue;
+import picocli.CommandLine;
+import picocli.CommandLine.Parameters;
 
 /**
  * A command for testing that records parameters passed in
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(name = "test", description = "desc")
+@CommandLine.Command(name = "test", description = "desc")
 public class SelfRecordingCommand extends Command {
   private List<String> arguments;
 
@@ -38,8 +37,7 @@ public class SelfRecordingCommand extends Command {
   }
 
   /** @param arguments Arguments */
-  @MultiValue
-  @Argument
+  @Parameters(arity = "0..*")
   public void setArguments(List<String> arguments) {
     this.arguments = arguments;
   }

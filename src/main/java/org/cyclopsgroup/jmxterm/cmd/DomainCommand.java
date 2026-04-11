@@ -3,23 +3,24 @@ package org.cyclopsgroup.jmxterm.cmd;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
-
 import java.util.Objects;
-import org.cyclopsgroup.jcli.annotation.Argument;
-import org.cyclopsgroup.jcli.annotation.Cli;
+
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 import org.cyclopsgroup.jmxterm.SyntaxUtils;
+
+import picocli.CommandLine;
+import picocli.CommandLine.Parameters;
 
 /**
  * Get or set current selected domain
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(
+@CommandLine.Command(
     name = "domain",
     description = "Display or set current selected domain. ",
-    note =
+    footer =
         "With a parameter, parameter defined domain is selected, otherwise it displays current selected domain."
             + " eg. domain java.lang")
 public class DomainCommand extends Command {
@@ -81,7 +82,7 @@ public class DomainCommand extends Command {
   }
 
   /** @param domain Domain to select */
-  @Argument(displayName = "domain", description = "Name of domain to set")
+  @Parameters(paramLabel = "domain", description = "Name of domain to set", arity = "0..1")
   public final void setDomain(String domain) {
     this.domain = domain;
   }

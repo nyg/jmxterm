@@ -8,30 +8,31 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
-import org.cyclopsgroup.jcli.annotation.Argument;
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.MultiValue;
-import org.cyclopsgroup.jcli.annotation.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 import org.cyclopsgroup.jmxterm.io.CommandOutput;
 import org.cyclopsgroup.jmxterm.io.JlineCommandInput;
 import org.jline.reader.impl.LineReaderImpl;
 
+import picocli.CommandLine;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
+
 /**
  * Command to watch an MBean attribute TODO Consider the use case for CSV file backend generation
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(
+@CommandLine.Command(
     name = "watch",
     description = "Watch the value of one MBean attribute constantly",
-    note = "DO NOT call this command in a script and expect decent output")
+    footer = "DO NOT call this command in a script and expect decent output")
 public class WatchCommand extends Command {
   private static final class ConsoleOutput extends Output {
     private final LineReaderImpl console;
@@ -191,17 +192,15 @@ public class WatchCommand extends Command {
   }
 
   /** @param attributes Name of attributes to watch */
-  @MultiValue(listType = ArrayList.class, minValues = 1)
-  @Argument(displayName = "attr", description = "Name of attributes to watch")
+  @Parameters(paramLabel = "attr", description = "Name of attributes to watch", arity = "1..*")
   public final void setAttributes(List<String> attributes) {
     this.attributes = attributes;
   }
 
   /** @param outputFormat Pattern used in {@link MessageFormat} */
   @Option(
-      name = "f",
-      longName = "format",
-      displayName = "expr",
+      names = {"-f", "--format"},
+      paramLabel = "expr",
       description = "Java pattern(java.text.MessageFormat) to print attribute values")
   public final void setOutputFormat(String outputFormat) {
     this.outputFormat = outputFormat;
@@ -209,9 +208,8 @@ public class WatchCommand extends Command {
 
   /** @param refreshInterval Refreshing interval in seconds */
   @Option(
-      name = "i",
-      longName = "interval",
-      displayName = "sec",
+      names = {"-i", "--interval"},
+      paramLabel = "sec",
       description = "Optional number of seconds between consecutive poll, default is 1 second",
       defaultValue = "1")
   public final void setRefreshInterval(int refreshInterval) {
@@ -222,16 +220,15 @@ public class WatchCommand extends Command {
   }
 
   /** @param report True to output result line by line as report */
-  @Option(name = "r", longName = "report", description = "Output result line by line as report")
+  @Option(names = {"-r", "--report"}, description = "Output result line by line as report")
   public final void setReport(boolean report) {
     this.report = report;
   }
 
   /** @param stopAfter After this number of seconds, stop watching */
   @Option(
-      name = "s",
-      longName = "stopafter",
-      displayName = "sec",
+      names = {"-s", "--stopafter"},
+      paramLabel = "sec",
       description = "Stop after watching a number of seconds")
   public final void setStopAfter(int stopAfter) {
     if (stopAfter < 0) {

@@ -1,13 +1,18 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.io.StringWriter;
+
 import javax.management.JMException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
+
 import org.cyclopsgroup.jmxterm.MockSession;
 import org.junit.jupiter.api.Test;
 

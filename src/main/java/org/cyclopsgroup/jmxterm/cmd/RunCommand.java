@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.management.JMException;
 import javax.management.MBeanInfo;
@@ -13,26 +14,25 @@ import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
-import java.util.Objects;
-import org.cyclopsgroup.jcli.annotation.Argument;
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.MultiValue;
-import org.cyclopsgroup.jcli.annotation.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 import org.cyclopsgroup.jmxterm.SyntaxUtils;
 import org.cyclopsgroup.jmxterm.io.ValueOutputFormat;
 import org.cyclopsgroup.jmxterm.utils.ValueFormat;
 
+import picocli.CommandLine;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
+
 /**
  * Command to run an MBean operation
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(
+@CommandLine.Command(
     name = "run",
     description = "Invoke an MBean operation",
-    note = "Syntax is \n run <operationName> [parameter1] [parameter2]")
+    footer = "Syntax is \n run <operationName> [parameter1] [parameter2]")
 public class RunCommand extends Command {
   private String bean;
 
@@ -173,45 +173,43 @@ public class RunCommand extends Command {
   }
 
   /** @param bean Bean under which the operation is */
-  @Option(name = "b", longName = "bean", description = "MBean to invoke")
+  @Option(names = {"-b", "--bean"}, description = "MBean to invoke")
   public final void setBean(String bean) {
     this.bean = bean;
   }
 
   /** @param domain Domain under which is bean is */
-  @Option(name = "d", longName = "domain", description = "Domain of MBean to invoke")
+  @Option(names = {"-d", "--domain"}, description = "Domain of MBean to invoke")
   public final void setDomain(String domain) {
     this.domain = domain;
   }
 
   /** @param measure True if you want to display latency */
   @Option(
-      name = "m",
-      longName = "measure",
+      names = {"-m", "--measure"},
       description = "Measure the time spent on the invocation of operation")
   public final void setMeasure(boolean measure) {
     this.measure = measure;
   }
 
   @Option(
-      name = "t",
-      longName = "types",
+      names = {"-t", "--types"},
       description = "Require parameters to have specific types (comma separated)")
   public final void setTypes(String types) {
     this.types = types;
   }
 
   /** @param parameters List of parameters. The first parameter is operation name */
-  @MultiValue(listType = ArrayList.class, minValues = 1)
-  @Argument(
-      description = "The first parameter is operation name, which is followed by list of arguments")
+  @Parameters(
+      description = "The first parameter is operation name, which is followed by list of arguments",
+      arity = "1..*")
   public final void setParameters(List<String> parameters) {
     Objects.requireNonNull(parameters, "Parameters can't be NULL");
     this.parameters = parameters;
   }
 
   /** @param showQuotationMarks True if output is surrounded by quotation marks */
-  @Option(name = "q", longName = "quots", description = "Flag for quotation marks")
+  @Option(names = {"-q", "--quots"}, description = "Flag for quotation marks")
   public final void setShowQuotationMarks(boolean showQuotationMarks) {
     this.showQuotationMarks = showQuotationMarks;
   }
