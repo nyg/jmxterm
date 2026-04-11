@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.management.remote.JMXConnector;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
+
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import org.cyclopsgroup.jmxterm.Command;
@@ -17,7 +19,7 @@ import org.cyclopsgroup.jmxterm.SyntaxUtils;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(
+@CommandLine.Command(
     name = "open",
     description = "Open JMX session or display current connection",
     footer =

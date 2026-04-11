@@ -14,6 +14,8 @@ import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
 import java.util.Objects;
+
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import org.cyclopsgroup.jmxterm.Command;
@@ -27,7 +29,7 @@ import org.cyclopsgroup.jmxterm.utils.ValueFormat;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(
+@CommandLine.Command(
     name = "run",
     description = "Invoke an MBean operation",
     footer = "Syntax is \n run <operationName> [parameter1] [parameter2]")

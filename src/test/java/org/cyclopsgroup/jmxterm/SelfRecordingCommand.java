@@ -2,6 +2,7 @@ package org.cyclopsgroup.jmxterm;
 
 import java.util.List;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Parameters;
 
 /**
@@ -9,7 +10,7 @@ import picocli.CommandLine.Parameters;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(name = "test", description = "desc")
+@CommandLine.Command(name = "test", description = "desc")
 public class SelfRecordingCommand extends Command {
   private List<String> arguments;
 

@@ -3,6 +3,8 @@ package org.cyclopsgroup.jmxterm.cmd;
 import java.io.IOException;
 import java.util.List;
 import javax.management.JMException;
+
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.JavaProcess;
@@ -13,7 +15,7 @@ import org.cyclopsgroup.jmxterm.Session;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(name = "jvms", description = "List all running local JVM processes")
+@CommandLine.Command(name = "jvms", description = "List all running local JVM processes")
 public class JvmsCommand extends Command {
   private boolean pidOnly;
 

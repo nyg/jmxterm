@@ -10,6 +10,7 @@ import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
@@ -21,7 +22,7 @@ import org.cyclopsgroup.jmxterm.Session;
  * timestamp=xxx,class=xxx,source=xxx,type=xxx,message=xxx To remove the subscription call the
  * unsubscribe in the terminal.
  */
-@picocli.CommandLine.Command(
+@CommandLine.Command(
     name = "subscribe",
     description = "Subscribe to the notifications of a bean",
     footer = "Syntax is \n subscribe <bean>")

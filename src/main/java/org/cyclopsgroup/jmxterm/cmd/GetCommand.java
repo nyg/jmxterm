@@ -15,6 +15,8 @@ import javax.management.openmbean.CompositeDataSupport;
 
 
 import java.util.Objects;
+
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import org.cyclopsgroup.jmxterm.Command;
@@ -26,7 +28,7 @@ import org.cyclopsgroup.jmxterm.io.ValueOutputFormat;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(
+@CommandLine.Command(
     name = "get",
     description = "Get value of MBean attribute(s)",
     footer = "* stands for all attributes. eg. get Attribute1 Attribute2 or get *")

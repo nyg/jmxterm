@@ -7,6 +7,7 @@ import java.util.List;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
@@ -16,7 +17,7 @@ import org.cyclopsgroup.jmxterm.Session;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(
+@CommandLine.Command(
     name = "beans",
     description = "List available beans under a domain or all domains",
     footer =

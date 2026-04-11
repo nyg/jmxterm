@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Map;
 import javax.management.JMException;
 import org.apache.commons.configuration2.Configuration;
+
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
@@ -15,7 +17,7 @@ import org.cyclopsgroup.jmxterm.utils.ConfigurationUtils;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(name = "about", description = "Display about page")
+@CommandLine.Command(name = "about", description = "Display about page")
 public class AboutCommand extends Command {
   private boolean showDescription;
 

@@ -11,6 +11,8 @@ import javax.management.MBeanInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import java.util.Objects;
+
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import org.cyclopsgroup.jmxterm.Command;
@@ -23,7 +25,7 @@ import org.cyclopsgroup.jmxterm.utils.ValueFormat;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(name = "set", description = "Set value of an MBean attribute")
+@CommandLine.Command(name = "set", description = "Set value of an MBean attribute")
 public class SetCommand extends Command {
   private List<String> arguments = Collections.emptyList();
 

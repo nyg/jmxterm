@@ -17,6 +17,7 @@ import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
@@ -26,7 +27,7 @@ import org.cyclopsgroup.jmxterm.Session;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(
+@CommandLine.Command(
     name = "info",
     description = "Display detail information about an MBean",
     footer = "If -b option is not specified, current selected MBean is applied")

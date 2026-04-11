@@ -7,6 +7,7 @@ import javax.management.MBeanServerConnection;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
@@ -17,7 +18,7 @@ import org.cyclopsgroup.jmxterm.Session;
  * <p>Remove the subscription of an already subscribed notification listener. Notifications will no
  * longer be sent to the session output.
  */
-@picocli.CommandLine.Command(
+@CommandLine.Command(
     name = "unsubscribe",
     description = "Unsubscribe the notifications of an earlier subscribed bean",
     footer = "Syntax is \n unsubscribe <bean>")

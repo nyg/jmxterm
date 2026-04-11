@@ -8,12 +8,14 @@ import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 import org.cyclopsgroup.jmxterm.io.RuntimeIOException;
 
+import picocli.CommandLine;
+
 /**
  * List domains for JMX connection
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(name = "domains", description = "List all available domain names")
+@CommandLine.Command(name = "domains", description = "List all available domain names")
 public class DomainsCommand extends Command {
   /**
    * Gets list of domains for current JMX connection.

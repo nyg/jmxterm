@@ -3,6 +3,8 @@ package org.cyclopsgroup.jmxterm.cmd;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
@@ -13,7 +15,7 @@ import org.cyclopsgroup.jmxterm.io.VerboseLevel;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(name = "option", description = "Set options for command session")
+@CommandLine.Command(name = "option", description = "Set options for command session")
 public class OptionCommand extends Command {
   private static final List<String> VERBOSE_LEVEL_VALUES;
 

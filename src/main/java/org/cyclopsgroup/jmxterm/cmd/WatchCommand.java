@@ -13,6 +13,7 @@ import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import org.cyclopsgroup.jmxterm.Command;
@@ -26,7 +27,7 @@ import org.jline.reader.impl.LineReaderImpl;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(
+@CommandLine.Command(
     name = "watch",
     description = "Watch the value of one MBean attribute constantly",
     footer = "DO NOT call this command in a script and expect decent output")

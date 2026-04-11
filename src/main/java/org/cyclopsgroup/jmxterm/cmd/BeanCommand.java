@@ -9,6 +9,8 @@ import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.util.Objects;
+
+import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import org.cyclopsgroup.jmxterm.Command;
@@ -21,11 +23,10 @@ import org.cyclopsgroup.jmxterm.io.RuntimeIOException;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(
+@CommandLine.Command(
     name = "bean",
     description = "Display or set current selected MBean. ",
-    footer =
-        "Without any parameter, it displays current selected bean, "
+    footer = "Without any parameter, it displays current selected bean, "
             + "otherwise it selects the bean defined by the first parameter. eg. bean java.lang:type=Memory")
 public class BeanCommand extends Command {
   /**

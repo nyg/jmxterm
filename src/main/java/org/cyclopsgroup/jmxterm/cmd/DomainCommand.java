@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 
 import java.util.Objects;
+
+import picocli.CommandLine;
 import picocli.CommandLine.Parameters;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
@@ -15,7 +17,7 @@ import org.cyclopsgroup.jmxterm.SyntaxUtils;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@picocli.CommandLine.Command(
+@CommandLine.Command(
     name = "domain",
     description = "Display or set current selected domain. ",
     footer =
