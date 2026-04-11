@@ -80,7 +80,7 @@ protect_breaking_commits = false
 filter_commits = false
 
 # regex for matching git tags
-tag_pattern = "v[0-9].*"
+tag_pattern = "v[0-9]+\\.[0-9]+\\.[0-9]+(-lemyst)?$"
 
 # sort the commits inside sections by oldest/newest order
 sort_commits = "newest"
