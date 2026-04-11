@@ -1,7 +1,6 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
 import java.io.IOException;
-import java.text.FieldPosition;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,7 +58,7 @@ public class WatchCommand extends Command {
     private final CommandOutput out;
 
     private ReportOutput(Session session) {
-      this.out = session.output;
+      this.out = session.getOutput();
     }
 
     @Override
@@ -121,7 +120,7 @@ public class WatchCommand extends Command {
       output = new ReportOutput(session);
     } else {
       output = new ConsoleOutput(session);
-      getSession().output.printMessage("press any key to stop. DO NOT press Ctrl+C !!!");
+      getSession().getOutput().printMessage("press any key to stop. DO NOT press Ctrl+C !!!");
     }
 
     final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
@@ -130,7 +129,7 @@ public class WatchCommand extends Command {
           try {
             printValues(name, con, output);
           } catch (IOException e) {
-            getSession().output.printError(e);
+            getSession().getOutput().printError(e);
           }
         },
         0,
@@ -148,7 +147,7 @@ public class WatchCommand extends Command {
       executor.shutdownNow();
     }
 
-    session.output.println("");
+    session.getOutput().println("");
   }
 
   private Object getAttributeValue(
@@ -167,27 +166,28 @@ public class WatchCommand extends Command {
 
   private void printValues(ObjectName beanName, MBeanServerConnection connection, Output output)
       throws IOException {
-    StringBuffer result = new StringBuffer();
+    String result;
     if (outputFormat == null) {
+      var sb = new StringBuilder();
       boolean first = true;
       for (String attributeName : attributes) {
         if (first) {
           first = false;
         } else {
-          result.append(", ");
+          sb.append(", ");
         }
-        result.append(getAttributeValue(beanName, attributeName, connection));
+        sb.append(getAttributeValue(beanName, attributeName, connection));
       }
+      result = sb.toString();
     } else {
       Object[] values = new Object[attributes.size()];
       int i = 0;
       for (String attributeNamne : attributes) {
         values[i++] = getAttributeValue(beanName, attributeNamne, connection);
       }
-      MessageFormat format = new MessageFormat(outputFormat);
-      format.format(values, result, new FieldPosition(0));
+      result = new MessageFormat(outputFormat).format(values);
     }
-    output.printLine(result.toString());
+    output.printLine(result);
   }
 
   /** @param attributes Name of attributes to watch */

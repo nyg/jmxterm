@@ -55,7 +55,7 @@ public class GetCommand extends Command {
     Session session = getSession();
     String beanName = BeanCommand.getBeanName(bean, domain, session);
     ObjectName name = new ObjectName(beanName);
-    session.output.printMessage("mbean = " + beanName + ":");
+    session.getOutput().printMessage("mbean = " + beanName + ":");
     MBeanServerConnection con = session.getConnection().getServerConnection();
     MBeanAttributeInfo[] ais = con.getMBeanInfo(name).getAttributes();
     Map<String, MBeanAttributeInfo> attributeNames =
@@ -95,7 +95,7 @@ public class GetCommand extends Command {
         try {
           result = con.getAttribute(name, attributeNameToRequest);
         } catch (RuntimeMBeanException e) {
-          session.output.printMessage(
+          session.getOutput().printMessage(
               "Could not get attribute " + attributeNameToRequest + ": " + e.getMessage());
         }
 
@@ -104,20 +104,20 @@ public class GetCommand extends Command {
         }
 
         if (simpleFormat) {
-          format.printValue(session.output, result);
+          format.printValue(session.getOutput(), result);
         } else if (completeLine) {
           format.printValue(
-              session.output,
+              session.getOutput(),
               "mbean = %s # %s = %s".formatted(beanName, attributeName, result));
         } else {
-          format.printExpression(session.output, attributeName, result, i.getDescription());
+          format.printExpression(session.getOutput(), attributeName, result, i.getDescription());
         }
-        session.output.print(delimiter);
+        session.getOutput().print(delimiter);
         if (!singleLine) {
-          session.output.println("");
+          session.getOutput().println("");
         }
       } else {
-        session.output.printMessage(i.getName() + " is not readable");
+        session.getOutput().printMessage(i.getName() + " is not readable");
       }
     }
   }

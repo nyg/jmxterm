@@ -37,11 +37,11 @@ public class OptionCommand extends Command {
   public void execute() {
     Session session = getSession();
     if (verboseLevel == null) {
-      session.output.printMessage("no change for verbose, verbose = " + session.getVerboseLevel());
+      session.getOutput().printMessage("no change for verbose, verbose = " + session.getVerboseLevel());
     } else {
       VerboseLevel v = VerboseLevel.valueOf(verboseLevel.toUpperCase());
       session.setVerboseLevel(v);
-      session.output.printMessage("verbose option is turned to " + v);
+      session.getOutput().printMessage("verbose option is turned to " + v);
     }
   }
 

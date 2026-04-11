@@ -42,7 +42,7 @@ public class UnsubscribeCommand extends Command {
       MBeanServerConnection con = session.getConnection().getServerConnection();
       con.removeNotificationListener(name, listener);
 
-      session.output.printMessage("Unsubscribed from " + name);
+      session.getOutput().printMessage("Unsubscribed from " + name);
     }
   }
 
