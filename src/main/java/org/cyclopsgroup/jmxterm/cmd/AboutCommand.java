@@ -1,16 +1,17 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
+import java.util.Properties;
+import java.util.TreeMap;
 import javax.management.JMException;
-import org.apache.commons.configuration2.Configuration;
 
 import picocli.CommandLine;
 import picocli.CommandLine.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 import org.cyclopsgroup.jmxterm.io.ValueOutputFormat;
-import org.cyclopsgroup.jmxterm.utils.ConfigurationUtils;
 
 /**
  * Command to show about page
@@ -24,14 +25,18 @@ public class AboutCommand extends Command {
   @Override
   public void execute() throws IOException, JMException {
     Session session = getSession();
-    // output predefined about properties
-    Configuration props =
-        ConfigurationUtils.loadFromOverlappingResources(
-            "META-INF/cyclopsgroup/jmxsh.properties", getClass().getClassLoader());
     ValueOutputFormat format = new ValueOutputFormat(2, showDescription, true);
-    Configuration subset = props.subset("jmxsh.about");
-    for (String key : (Iterable<String>) subset::getKeys) {
-      format.printExpression(session.getOutput(), key, subset.getProperty(key), null);
+
+    // output predefined about properties
+    Properties props = new Properties();
+    try (InputStream in =
+        getClass().getClassLoader().getResourceAsStream("META-INF/jmxsh/about.properties")) {
+      if (in != null) {
+        props.load(in);
+      }
+    }
+    for (String key : new TreeMap<>(props).keySet().stream().map(Object::toString).toList()) {
+      format.printExpression(session.getOutput(), key, props.getProperty(key), null);
     }
 
     // output Java runtime properties

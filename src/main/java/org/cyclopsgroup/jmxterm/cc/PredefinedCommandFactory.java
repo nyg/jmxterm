@@ -1,67 +1,54 @@
 package org.cyclopsgroup.jmxterm.cc;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import org.apache.commons.configuration2.Configuration;
-import java.util.Objects;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.CommandFactory;
-import org.cyclopsgroup.jmxterm.utils.ConfigurationUtils;
+import org.cyclopsgroup.jmxterm.cmd.*;
+import picocli.CommandLine;
 
 /**
- * Factory class of commands which knows how to create Command class with given command name
+ * Factory class of commands which knows how to create Command class with given command name.
+ * Commands are discovered via their {@link CommandLine.Command} annotations.
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
 class PredefinedCommandFactory implements CommandFactory {
+
+  private static final List<Class<? extends Command>> COMMAND_CLASSES =
+      List.of(
+          AboutCommand.class,
+          BeanCommand.class,
+          BeansCommand.class,
+          CloseCommand.class,
+          DomainCommand.class,
+          DomainsCommand.class,
+          GetCommand.class,
+          InfoCommand.class,
+          JvmsCommand.class,
+          OpenCommand.class,
+          OptionCommand.class,
+          QuitCommand.class,
+          RunCommand.class,
+          SetCommand.class,
+          SubscribeCommand.class,
+          UnsubscribeCommand.class,
+          WatchCommand.class);
+
   private final CommandFactory delegate;
 
-  /**
-   * Default constructor
-   *
-   * @throws IOException Thrown when Jar is corrupted
-   */
-  PredefinedCommandFactory() throws IOException {
-    this("META-INF/cyclopsgroup/jmxsh.properties");
-  }
-
-  /**
-   * Constructor which builds up command types
-   *
-   * @param configPath Path of configuration file in classpath
-   * @throws IOException Thrown when Jar is corrupted
-   */
-  @SuppressWarnings("unchecked")
-  public PredefinedCommandFactory(String configPath) throws IOException {
-    Objects.requireNonNull(configPath, "configPath can't be NULL");
-    ClassLoader classLoader = getClass().getClassLoader();
-    Configuration props = ConfigurationUtils.loadFromOverlappingResources(configPath, classLoader);
-    if (props == null) {
-      throw new FileNotFoundException(
-          "Couldn't load configuration from " + configPath + ", classpath has problem");
-    }
-    props = props.subset("jmxsh.commands");
-    if (props == null) {
-      throw new IOException("Expected configuration doesn't appear in " + configPath);
-    }
-    HashMap<String, Class<? extends Command>> commands =
-        new HashMap<>();
-    for (String name : props.getStringArray("name")) {
-      String type = props.getString(name + ".type");
-      Class<? extends Command> commandType;
-      try {
-        commandType = (Class<? extends Command>) classLoader.loadClass(type);
-      } catch (ClassNotFoundException e) {
-        throw new RuntimeException("Couldn't load type " + type, e);
+  PredefinedCommandFactory() {
+    HashMap<String, Class<? extends Command>> commands = new HashMap<>();
+    for (Class<? extends Command> commandClass : COMMAND_CLASSES) {
+      CommandLine.Command annotation = commandClass.getAnnotation(CommandLine.Command.class);
+      if (annotation == null) {
+        throw new IllegalStateException(
+            "@Command annotation missing on " + commandClass.getName());
       }
-      commands.put(name, commandType);
-      String[] aliases = props.getStringArray(name + ".alias");
-      if (aliases != null && aliases.length != 0) {
-        for (String alias : aliases) {
-          commands.put(alias, commandType);
-        }
+      commands.put(annotation.name(), commandClass);
+      for (String alias : annotation.aliases()) {
+        commands.put(alias, commandClass);
       }
     }
     commands.put("help", HelpCommand.class);

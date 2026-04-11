@@ -11,7 +11,7 @@ import picocli.CommandLine;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@CommandLine.Command(name = "quit", description = "Terminate console and exit")
+@CommandLine.Command(name = "quit", aliases = {"exit", "bye"}, description = "Terminate console and exit")
 public class QuitCommand extends Command {
   @Override
   public void execute() throws IOException {

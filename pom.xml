@@ -39,7 +39,6 @@
 
     <!-- Third-party dependencies -->
     <slf4j.version>2.0.17</slf4j.version>
-    <commons-configuration2.version>2.14.0</commons-configuration2.version>
     <picocli.version>4.7.7</picocli.version>
     <caff.version>0.4.2</caff.version>
     <jline.version>4.0.12</jline.version>
@@ -63,17 +62,6 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-configuration2</artifactId>
-      <version>${commons-configuration2.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
     <dependency>
       <groupId>info.picocli</groupId>
       <artifactId>picocli</artifactId>
@@ -142,6 +130,22 @@
 
   <build>
     <finalName>${dist.finalName}</finalName>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>META-INF/jmxsh/**</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>META-INF/jmxsh/**</exclude>
+        </excludes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
