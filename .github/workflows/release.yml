@@ -70,7 +70,7 @@ jobs:
           patch=${BASH_REMATCH[3]}
 
           case "${{ inputs.bump }}" in
-            patch) release="${major}.${minor}.$((patch + 1))" ;;
+            patch) release="${major}.${minor}.${patch}" ;;
             minor) release="${major}.$((minor + 1)).0" ;;
             major) release="$((major + 1)).0.0" ;;
             *)
