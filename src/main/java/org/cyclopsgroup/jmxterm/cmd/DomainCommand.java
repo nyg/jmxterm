@@ -62,21 +62,21 @@ public class DomainCommand extends Command {
     Session session = getSession();
     if (domain == null) {
       if (session.getDomain() == null) {
-        session.output.printMessage("domain is not set");
-        session.output.println(SyntaxUtils.NULL);
+        session.getOutput().printMessage("domain is not set");
+        session.getOutput().println(SyntaxUtils.NULL);
       } else {
-        session.output.printMessage("domain = " + session.getDomain());
-        session.output.println(session.getDomain());
+        session.getOutput().printMessage("domain = " + session.getDomain());
+        session.getOutput().println(session.getDomain());
       }
       return;
     }
     String domainName = getDomainName(domain, session);
     if (domainName == null) {
       session.unsetDomain();
-      session.output.printMessage("domain is unset");
+      session.getOutput().printMessage("domain is unset");
     } else {
       session.setDomain(domainName);
-      session.output.printMessage("domain is set to " + session.getDomain());
+      session.getOutput().printMessage("domain is set to " + session.getDomain());
     }
   }
 

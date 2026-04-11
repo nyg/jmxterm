@@ -45,10 +45,10 @@ public class OpenCommand extends Command {
     if (url == null) {
       Connection con = session.getConnection();
       if (con == null) {
-        session.output.printMessage("not connected");
-        session.output.println(SyntaxUtils.NULL);
+        session.getOutput().printMessage("not connected");
+        session.getOutput().println(SyntaxUtils.NULL);
       } else {
-        session.output.println("%s,%s".formatted(con.getConnectorId(), con.getUrl()));
+        session.getOutput().println("%s,%s".formatted(con.getConnectorId(), con.getUrl()));
       }
       return;
     }
@@ -67,10 +67,10 @@ public class OpenCommand extends Command {
     try {
       session.connect(
           SyntaxUtils.getUrl(url, session.getProcessManager()), env.isEmpty() ? null : env);
-      session.output.printMessage("Connection to " + url + " is opened");
+      session.getOutput().printMessage("Connection to " + url + " is opened");
     } catch (IOException e) {
       if (SyntaxUtils.isDigits(url)) {
-        session.output.printMessage(
+        session.getOutput().printMessage(
             "Couldn't connect to PID "
                 + url
                 + ", it's likely that your version of JDK doesn't allow to connect to a process directly");

@@ -149,7 +149,7 @@ public class RunCommand extends Command {
       params[i] = paramValue;
       signatures[i] = paramInfo.getType();
     }
-    session.output.printMessage(
+    session.getOutput().printMessage(
         "calling operation %s of mbean %s with params %s".formatted(
             operationName, beanName, Arrays.toString(params)));
 
@@ -161,15 +161,15 @@ public class RunCommand extends Command {
         result = con.invoke(name, operationName, params, signatures);
       } finally {
         long latency = System.currentTimeMillis() - start;
-        session.output.printMessage(latency + "ms is taken by invocation");
+        session.getOutput().printMessage(latency + "ms is taken by invocation");
       }
     } else {
       result = con.invoke(name, operationName, params, signatures);
     }
-    session.output.printMessage("operation returns: ");
-    new ValueOutputFormat(2, false, showQuotationMarks).printValue(session.output, result);
+    session.getOutput().printMessage("operation returns: ");
+    new ValueOutputFormat(2, false, showQuotationMarks).printValue(session.getOutput(), result);
     // Finish with an empty line
-    session.output.println("");
+    session.getOutput().println("");
   }
 
   /** @param bean Bean under which the operation is */

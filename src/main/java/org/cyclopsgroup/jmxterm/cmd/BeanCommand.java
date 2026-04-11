@@ -111,23 +111,23 @@ public class BeanCommand extends Command {
     Session session = getSession();
     if (bean == null) {
       if (session.getBean() == null) {
-        session.output.println(SyntaxUtils.NULL);
+        session.getOutput().println(SyntaxUtils.NULL);
       } else {
-        session.output.println(session.getBean());
+        session.getOutput().println(session.getBean());
       }
       return;
     }
     String beanName = getBeanName(bean, domain, session);
     if (beanName == null) {
       session.setBean(null);
-      session.output.printMessage("bean is unset");
+      session.getOutput().printMessage("bean is unset");
       return;
     }
     ObjectName name = new ObjectName(beanName);
     MBeanServerConnection con = session.getConnection().getServerConnection();
     con.getMBeanInfo(name);
     session.setBean(beanName);
-    session.output.printMessage("bean is set to " + beanName);
+    session.getOutput().printMessage("bean is set to " + beanName);
   }
 
   /**

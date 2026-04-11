@@ -36,9 +36,9 @@ public class DomainsCommand extends Command {
   public void execute() throws IOException {
     Session session = getSession();
 
-    session.output.printMessage("following domains are available");
+    session.getOutput().printMessage("following domains are available");
     for (String domain : getCandidateDomains(session)) {
-      session.output.println(domain);
+      session.getOutput().println(domain);
     }
   }
 }

@@ -10,13 +10,6 @@ and dependency graph. Items are organized by category. Each item is labeled with
 
 ## Java Language Modernization
 
-- 🟠 **Replace `FileReader`/`FileWriter` with NIO APIs** — These don't specify a charset and are effectively deprecated. Use `Files.newBufferedReader(path, charset)` / `Files.newBufferedWriter(path, charset)`. Affected files: `FileCommandInput.java`, `FileCommandOutput.java`.
-- 🟡 **Replace `StringBuffer` with `StringBuilder`** — `StringBuffer` is synchronized and unnecessary here. Affected file: `WatchCommand.java:170`.
-- 🟡 **Replace `java.util.Date` with `java.time.Instant`** — The old Date API is discouraged since Java 8. Affected file: `WatchCommand.java:159`.
-- 🟡 **Replace `Charset.forName("UTF-8")` with `StandardCharsets.UTF_8`** — Avoids runtime lookup. Affected file: `FileCommandOutputTest.java`.
-- 🟡 **Modernize loop patterns** — Convert old-style indexed for-loops and explicit `Iterator` loops to enhanced for or streams where readability improves. Affected files: `RunCommand.java`, `ValueOutputFormat.java`, `AboutCommand.java`.
-- 🟡 **Make `Session.output` private** — Currently a `public final` field with an existing TODO comment requesting this change. Add a getter method and update all callers. Affected file: `Session.java:34`.
-- 🟡 **Convert try-finally to try-with-resources** — Where the resource implements `AutoCloseable`. Affected file: `SessionImpl.java`.
 - 🟢 **Evaluate `Optional` for nullable return types** — Many methods return null to signal absence; `Optional` would make intent clearer at API boundaries.
 - 🟢 **Explore Java 25 features** — Structured concurrency, scoped values, string templates (if stabilized), unnamed patterns, and other features that may simplify existing code.
 
