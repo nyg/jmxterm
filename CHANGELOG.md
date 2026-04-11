@@ -1,6 +1,22 @@
 # Changelog
 
 
+## [1.2.2](https://github.com/nyg/jmxsh/compare/v1.2.0..v1.2.2) - 2026-04-11
+
+### 🐛 Bug Fixes
+
+- [`b252556`](https://github.com/nyg/jmxsh/commit/b2525567bc5097e282994bf0668d0bf2f24b6082) *(deps)* Update dependency org.jline:jline to v4.0.12 ([#34](https://github.com/nyg/jmxsh/issues/34))
+
+### 📚 Documentation
+
+- [`70d5cbe`](https://github.com/nyg/jmxsh/commit/70d5cbeb28677e6cb5c9b99d1bbeb5c5fd68cf01) Add Homebrew installation instructions ([#30](https://github.com/nyg/jmxsh/issues/30))
+
+### ⚙️ Miscellaneous
+
+- [`b8bbc5e`](https://github.com/nyg/jmxsh/commit/b8bbc5ea97f803205f1e41b9e18c7579dd412036) *(deps)* Update peter-evans/repository-dispatch action to v4 ([#33](https://github.com/nyg/jmxsh/issues/33))
+- [`8e33650`](https://github.com/nyg/jmxsh/commit/8e33650c9b87eae6997cbd795b73099a911bdf3f) Add self-hosted apt repository at jmx.sh/apt ([#32](https://github.com/nyg/jmxsh/issues/32))
+- [`255274d`](https://github.com/nyg/jmxsh/commit/255274d2229703f86f39f1e626e4f561ca89c4fe) Dispatch to Homebrew tap after release ([#31](https://github.com/nyg/jmxsh/issues/31))
+
 ## [1.2.0](https://github.com/nyg/jmxsh/compare/v1.1.0..v1.2.0) - 2026-04-11
 
 ### ⛰️  Features
