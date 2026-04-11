@@ -34,11 +34,11 @@ public class HelpCommand extends Command {
     Objects.requireNonNull(commandCenter, "Command center hasn't been set yet");
     if (argNames.isEmpty()) {
       List<String> commandNames = commandCenter.getCommandNames().stream().sorted().toList();
-      getSession().output.printMessage("following commands are available to use:");
+      getSession().getOutput().printMessage("following commands are available to use:");
       for (String commandName : commandNames) {
         Class<? extends Command> commandType = commandCenter.getCommandType(commandName);
         org.cyclopsgroup.jcli.spi.Cli cli = ArgumentProcessor.forType(commandType).createParsingContext().cli();
-        getSession().output.println("%-8s - %s".formatted(commandName, cli.getDescription()));
+        getSession().getOutput().println("%-8s - %s".formatted(commandName, cli.getDescription()));
       }
     } else {
       for (String argName : argNames) {

@@ -1,10 +1,10 @@
 package org.cyclopsgroup.jmxterm.io;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Objects;
 
 /**
@@ -19,11 +19,11 @@ public class FileCommandInput extends CommandInput {
    * Read input from a given file
    *
    * @param inputFile Given input file
-   * @throws FileNotFoundException Thrown when file doesn't exist
+   * @throws IOException Thrown when file doesn't exist or can't be read
    */
-  public FileCommandInput(File inputFile) throws FileNotFoundException {
+  public FileCommandInput(File inputFile) throws IOException {
     Objects.requireNonNull(inputFile, "Input can't be NULL");
-    this.in = new LineNumberReader(new FileReader(inputFile));
+    this.in = new LineNumberReader(Files.newBufferedReader(inputFile.toPath(), StandardCharsets.UTF_8));
   }
 
   @Override

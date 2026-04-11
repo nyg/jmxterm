@@ -64,9 +64,9 @@ public class BeansCommand extends Command {
       domains.add(domainName);
     }
     for (String d : domains) {
-      session.output.printMessage("domain = " + d + ":");
+      session.getOutput().printMessage("domain = " + d + ":");
       for (String bean : getBeans(session, d)) {
-        session.output.println(bean);
+        session.getOutput().println(bean);
       }
     }
   }

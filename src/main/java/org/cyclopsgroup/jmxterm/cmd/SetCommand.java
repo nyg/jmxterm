@@ -92,7 +92,7 @@ public class SetCommand extends Command {
     }
     Object value = SyntaxUtils.parse(inputValue, attributeInfo.getType());
     con.setAttribute(name, new Attribute(attributeName, value));
-    session.output.printMessage("Value of attribute " + attributeName + " is set to " + inputValue);
+    session.getOutput().printMessage("Value of attribute " + attributeName + " is set to " + inputValue);
   }
 
   /** @param arguments Argument list. The first argument is attribute name */

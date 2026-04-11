@@ -27,11 +27,7 @@ public abstract class Session implements VerboseCommandOutputConfig {
 
   private final CommandInput input;
 
-  /**
-   * Public output field. TODO Reevaluate if this field should be public or exposed by a getter
-   * method
-   */
-  public final CommandOutput output;
+  private final CommandOutput output;
 
   private final JavaProcessManager processManager;
 
@@ -90,6 +86,11 @@ public abstract class Session implements VerboseCommandOutputConfig {
   /** @return Current domain */
   public final String getDomain() {
     return domain;
+  }
+
+  /** @return Command output destination */
+  public final CommandOutput getOutput() {
+    return output;
   }
 
   /**

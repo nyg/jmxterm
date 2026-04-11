@@ -14,6 +14,6 @@ public class CloseCommand extends Command {
   @Override
   public void execute() throws IOException {
     getSession().disconnect();
-    getSession().output.printMessage("disconnected");
+    getSession().getOutput().printMessage("disconnected");
   }
 }

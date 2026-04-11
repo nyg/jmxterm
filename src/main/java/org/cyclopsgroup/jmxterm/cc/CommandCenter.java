@@ -196,7 +196,7 @@ public class CommandCenter {
       doExecute(command);
       return true;
     } catch (JMException | RuntimeException e) {
-      session.output.printError(e);
+      session.getOutput().printError(e);
       return false;
     }
   }
