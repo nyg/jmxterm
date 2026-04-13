@@ -2,14 +2,14 @@ package org.cyclopsgroup.jmxterm;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import javax.management.JMException;
 
-import java.util.Objects;
-import org.cyclopsgroup.jcli.AutoCompletable;
-import org.cyclopsgroup.jcli.annotation.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import picocli.CommandLine.Option;
 
 /**
  * Base class of all commands. Command is executed in single thread. Extending classes don't need to
@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-public abstract class Command implements AutoCompletable {
+public abstract class Command implements Completable {
   private static final Logger LOG = LoggerFactory.getLogger(Command.class);
 
   private boolean help;
@@ -68,7 +68,7 @@ public abstract class Command implements AutoCompletable {
   }
 
   /** @param help True to display usage */
-  @Option(name = "h", longName = "help", description = "Display usage")
+  @Option(names = {"-h", "--help"}, usageHelp = true, description = "Display usage")
   public final void setHelp(boolean help) {
     this.help = help;
   }

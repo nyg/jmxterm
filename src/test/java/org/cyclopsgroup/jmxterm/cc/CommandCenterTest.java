@@ -1,6 +1,6 @@
 package org.cyclopsgroup.jmxterm.cc;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.cyclopsgroup.jmxterm.cc.CommandCenter.ESCAPE_CHAR_REGEX;
 
 import java.io.IOException;

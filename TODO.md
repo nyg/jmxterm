@@ -13,10 +13,6 @@ and dependency graph. Items are organized by category. Each item is labeled with
 - 🟢 **Evaluate `Optional` for nullable return types** — Many methods return null to signal absence; `Optional` would make intent clearer at API boundaries.
 - 🟢 **Explore Java 25 features** — Structured concurrency, scoped values, string templates (if stabilized), unnamed patterns, and other features that may simplify existing code.
 
-## Dependency Cleanup
-
-- 🟡 **Evaluate migrating JCLI → Picocli** — JCLI (`org.cyclopsgroup:jcli:1.0.2`) is a low-activity library from ~2012. Picocli is actively maintained, has built-in completions, GraalVM support, and better documentation. The coupling is loose (annotations + `ArgumentProcessor`), making migration feasible but non-trivial.
-
 ## Build / POM
 
 - 🟡 **Add static analysis plugin** — No static analysis is currently configured. Consider SpotBugs (`spotbugs-maven-plugin`), Checkstyle (`maven-checkstyle-plugin`), or ErrorProne for compile-time bug detection.

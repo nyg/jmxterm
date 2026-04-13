@@ -2,19 +2,22 @@ package org.cyclopsgroup.jmxterm.cmd;
 
 import java.io.IOException;
 import java.util.List;
+
 import javax.management.JMException;
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.Option;
+
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.JavaProcess;
 import org.cyclopsgroup.jmxterm.Session;
+
+import picocli.CommandLine;
+import picocli.CommandLine.Option;
 
 /**
  * Command to list all running local JVM processes
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(name = "jvms", description = "List all running local JVM processes")
+@CommandLine.Command(name = "jvms", description = "List all running local JVM processes")
 public class JvmsCommand extends Command {
   private boolean pidOnly;
 
@@ -35,7 +38,7 @@ public class JvmsCommand extends Command {
   }
 
   /** @param pidOnly Flag to notify command to only print out PID instead of more details */
-  @Option(name = "p", longName = "pidonly", description = "Only print out PID")
+  @Option(names = {"-p", "--pidonly"}, description = "Only print out PID")
   public final void setPidOnly(boolean pidOnly) {
     this.pidOnly = pidOnly;
   }

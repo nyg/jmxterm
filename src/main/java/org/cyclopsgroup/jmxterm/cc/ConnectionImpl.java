@@ -1,10 +1,12 @@
 package org.cyclopsgroup.jmxterm.cc;
 
 import java.io.IOException;
+import java.util.Objects;
+
 import javax.management.MBeanServerConnection;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXServiceURL;
-import java.util.Objects;
+
 import org.cyclopsgroup.jmxterm.Connection;
 
 /**

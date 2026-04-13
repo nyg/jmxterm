@@ -1,11 +1,12 @@
 package org.cyclopsgroup.jmxterm.io;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 import org.junit.jupiter.api.Test;
 
 /**

@@ -4,14 +4,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.management.remote.JMXConnector;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
 
-import org.cyclopsgroup.jcli.ArgumentProcessor;
-import org.cyclopsgroup.jcli.GnuParser;
 import org.cyclopsgroup.jmxterm.SyntaxUtils;
 import org.cyclopsgroup.jmxterm.cc.CommandCenter;
 import org.cyclopsgroup.jmxterm.cc.ConsoleCompletor;
@@ -23,10 +24,13 @@ import org.cyclopsgroup.jmxterm.io.InputStreamCommandInput;
 import org.cyclopsgroup.jmxterm.io.JlineCommandInput;
 import org.cyclopsgroup.jmxterm.io.PrintStreamCommandOutput;
 import org.cyclopsgroup.jmxterm.io.VerboseLevel;
+import org.cyclopsgroup.jmxterm.utils.XdgDirectories;
 import org.jline.reader.History;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.impl.LineReaderImpl;
+
+import picocli.CommandLine;
 
 /**
  * Main class invoked directly from command line
@@ -50,12 +54,21 @@ public class CliMain {
    * @throws Exception Allow any exceptions
    */
   int execute(String[] args) throws Exception {
-    ArgumentProcessor<CliMainOptions> ap =
-        ArgumentProcessor.newInstance(CliMainOptions.class, new GnuParser());
     CliMainOptions options = new CliMainOptions();
-    ap.process(args, options);
-    if (options.isHelp()) {
-      ap.printHelp(STDOUT_WRITER);
+    CommandLine cl = new CommandLine(options);
+    try {
+      cl.parseArgs(args);
+    } catch (CommandLine.ParameterException e) {
+      STDOUT_WRITER.println(e.getMessage());
+      cl.usage(STDOUT_WRITER);
+      return 1;
+    }
+    if (cl.isUsageHelpRequested()) {
+      cl.usage(STDOUT_WRITER);
+      return 0;
+    }
+    if (cl.isVersionHelpRequested()) {
+      cl.printVersionHelp(STDOUT_WRITER);
       return 0;
     }
 
@@ -80,11 +93,10 @@ public class CliMain {
           input = new InputStreamCommandInput(System.in);
         } else {
           LineReaderImpl consoleReader = (LineReaderImpl) LineReaderBuilder.builder().build();
-          File historyFile = new File(System.getProperty("user.home"), ".jmxterm_history");
-          output.printMessage(
-              "Delete "
-                  + historyFile.getAbsolutePath()
-                  + " if you encounter error right after launching me.");
+          Path historyPath = XdgDirectories.INSTANCE.getHistoryFile();
+          migrateHistory(XdgDirectories.INSTANCE.getLegacyHistoryFile(), historyPath);
+          Files.createDirectories(historyPath.getParent());
+          File historyFile = historyPath.toFile();
           consoleReader.setVariable(LineReader.HISTORY_FILE, historyFile);
           History history = consoleReader.getHistory();
           history.load();
@@ -159,6 +171,17 @@ public class CliMain {
       }
     } finally {
       output.close();
+    }
+  }
+
+  /**
+   * Copies the legacy history file ({@code ~/.jmxterm_history}) to the XDG location if the legacy
+   * file exists and the target does not.
+   */
+  static void migrateHistory(Path legacyPath, Path xdgPath) throws IOException {
+    if (Files.isRegularFile(legacyPath) && !Files.exists(xdgPath)) {
+      Files.createDirectories(xdgPath.getParent());
+      Files.copy(legacyPath, xdgPath, StandardCopyOption.COPY_ATTRIBUTES);
     }
   }
 }

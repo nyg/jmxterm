@@ -1,8 +1,9 @@
 package org.cyclopsgroup.jmxterm.cmd;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.StringWriter;
+
 import org.cyclopsgroup.jmxterm.MockSession;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

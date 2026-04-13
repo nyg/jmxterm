@@ -17,20 +17,21 @@ import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.Option;
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
+
+import picocli.CommandLine;
+import picocli.CommandLine.Option;
 
 /**
  * Command that displays attributes and operations of an MBean
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(
+@CommandLine.Command(
     name = "info",
     description = "Display detail information about an MBean",
-    note = "If -b option is not specified, current selected MBean is applied")
+    footer = "If -b option is not specified, current selected MBean is applied")
 public class InfoCommand extends Command {
   private static final Comparator<MBeanFeatureInfo> INFO_COMPARATOR =
       Comparator.comparing(MBeanFeatureInfo::getName).thenComparingInt(MBeanFeatureInfo::hashCode);
@@ -209,7 +210,7 @@ public class InfoCommand extends Command {
   }
 
   /** @param bean Bean for which information is displayed */
-  @Option(name = "b", longName = "bean", description = "Name of MBean")
+  @Option(names = {"-b", "--bean"}, description = "Name of MBean")
   public final void setBean(String bean) {
     this.bean = bean;
   }
@@ -219,21 +220,20 @@ public class InfoCommand extends Command {
    *
    * @param domain Domain name
    */
-  @Option(name = "d", longName = "domain", description = "Domain for bean")
+  @Option(names = {"-d", "--domain"}, description = "Domain for bean")
   public final void setDomain(String domain) {
     this.domain = domain;
   }
 
   /** @param showDescription True to show detail description */
-  @Option(name = "e", longName = "detail", description = "Show description")
+  @Option(names = {"-e", "--detail"}, description = "Show description")
   public final void setShowDescription(boolean showDescription) {
     this.showDescription = showDescription;
   }
 
   /** @param type Type of detail to display */
   @Option(
-      name = "t",
-      longName = "type",
+      names = {"-t", "--type"},
       description =
           "Types(a|o|u) to display, for example aon for all attributes, operations and notifications")
   public void setType(String type) {
@@ -247,8 +247,7 @@ public class InfoCommand extends Command {
   }
 
   @Option(
-      name = "o",
-      longName = "op",
+      names = {"-o", "--op"},
       description = "Show a single operation with more details (including parameters information)")
   public void setOperation(String operation) {
     if (operation == null || operation.isEmpty()) {

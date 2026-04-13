@@ -3,30 +3,32 @@ package org.cyclopsgroup.jmxterm.cmd;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import javax.management.InstanceNotFoundException;
 import javax.management.JMException;
 import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-import java.util.Objects;
-import org.cyclopsgroup.jcli.annotation.Argument;
-import org.cyclopsgroup.jcli.annotation.Cli;
-import org.cyclopsgroup.jcli.annotation.Option;
+
 import org.cyclopsgroup.jmxterm.Command;
 import org.cyclopsgroup.jmxterm.Session;
 import org.cyclopsgroup.jmxterm.SyntaxUtils;
 import org.cyclopsgroup.jmxterm.io.RuntimeIOException;
+
+import picocli.CommandLine;
+import picocli.CommandLine.Option;
+import picocli.CommandLine.Parameters;
 
 /**
  * Command to display or set current bean
  *
  * @author <a href="mailto:jiaqi.guo@gmail.com">Jiaqi Guo</a>
  */
-@Cli(
+@CommandLine.Command(
     name = "bean",
     description = "Display or set current selected MBean. ",
-    note =
-        "Without any parameter, it displays current selected bean, "
+    footer = "Without any parameter, it displays current selected bean, "
             + "otherwise it selects the bean defined by the first parameter. eg. bean java.lang:type=Memory")
 public class BeanCommand extends Command {
   /**
@@ -135,7 +137,7 @@ public class BeanCommand extends Command {
    *
    * @param bean Bean to set
    */
-  @Argument(displayName = "bean", description = "MBean name with or without domain")
+  @Parameters(paramLabel = "bean", description = "MBean name with or without domain", arity = "0..1")
   public final void setBean(String bean) {
     this.bean = bean;
   }
@@ -145,7 +147,7 @@ public class BeanCommand extends Command {
    *
    * @param domain Domain option to set
    */
-  @Option(name = "d", longName = "domain", description = "Domain name")
+  @Option(names = {"-d", "--domain"}, description = "Domain name")
   public final void setDomain(String domain) {
     this.domain = domain;
   }
