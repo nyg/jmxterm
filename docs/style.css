@@ -88,6 +88,15 @@ code {
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
+/* Quick Start: 2 cards side-by-side, Debian/Ubuntu full width below */
+.grid-quickstart {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.card-fullwidth {
+  margin-top: 1.5rem;
+}
+
 /* ---- Cards ---- */
 
 .card {
@@ -140,6 +149,12 @@ code {
   font-weight: 800;
   letter-spacing: -0.03em;
   font-family: var(--font-mono);
+}
+
+.hero-icon {
+  display: block;
+  margin: 0 auto 1.5rem;
+  border-radius: 20px;
 }
 
 .hero .accent { color: var(--accent); }
@@ -319,5 +334,6 @@ tbody td code {
   .hero .tagline { font-size: 1rem; }
   .section { padding: 3rem 1rem; }
   .grid { grid-template-columns: 1fr; }
+  .grid-quickstart { grid-template-columns: 1fr; }
   .terminal { font-size: 0.75rem; }
 }

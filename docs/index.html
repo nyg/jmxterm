@@ -13,6 +13,7 @@
   <!-- Hero -->
   <header class="hero">
     <div class="container">
+      <img src="favicon.png" alt="" class="hero-icon" width="100" height="100">
       <h1>jmx<span class="accent">.sh</span></h1>
       <p class="tagline">Interactive command-line JMX client for monitoring and managing Java applications.</p>
       <div class="hero-actions">
@@ -26,7 +27,7 @@
   <section class="section" id="quickstart">
     <div class="container">
       <h2>Quick Start</h2>
-      <div class="grid">
+      <div class="grid grid-quickstart">
         <div class="card">
           <h3>Homebrew</h3>
           <p>Install on macOS or Linux with Homebrew:</p>
@@ -37,19 +38,13 @@
           <p>Download the release JAR and run it directly:</p>
           <pre><code>java -jar jmxsh-&lt;version&gt;.jar</code></pre>
         </div>
-        <div class="card">
-          <h3>Debian/Ubuntu</h3>
-          <p>Add the repository and install:</p>
-          <pre><code>curl -fsSL https://jmx.sh/apt/gpg.asc \
-  | sudo gpg --dearmor \
-    -o /usr/share/keyrings/jmxsh.gpg
-
-echo "deb [signed-by=/usr/share/keyrings/jmxsh.gpg] \
-  https://jmx.sh/apt stable main" \
-  | sudo tee /etc/apt/sources.list.d/jmxsh.list
-
+      </div>
+      <div class="card card-fullwidth">
+        <h3>Debian/Ubuntu</h3>
+        <p>Add the repository and install:</p>
+        <pre><code>curl -fsSL https://jmx.sh/apt/gpg.asc | sudo gpg --dearmor -o /usr/share/keyrings/jmxsh.gpg
+echo "deb [signed-by=/usr/share/keyrings/jmxsh.gpg] https://jmx.sh/apt stable main" | sudo tee /etc/apt/sources.list.d/jmxsh.list
 sudo apt update &amp;&amp; sudo apt install jmxsh</code></pre>
-        </div>
       </div>
     </div>
   </section>
@@ -181,6 +176,11 @@ null
           <div class="feature-icon">🔊</div>
           <h3>Verbose Control</h3>
           <p>Silent, brief, or verbose output modes.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📂</div>
+          <h3>XDG Compliant</h3>
+          <p>Follows the XDG Base Directory spec — keeps your home directory clean.</p>
         </div>
       </div>
     </div>

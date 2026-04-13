@@ -52,6 +52,7 @@ sudo apt update && sudo apt install jmxsh
 - **Script mode** — automate JMX operations via files or piped input
 - **Verbose control** — silent, brief, or verbose output modes
 - **Cross-platform** — runs anywhere Java runs (JAR, DEB, RPM)
+- **XDG Base Directory compliance** — command history stored in `$XDG_STATE_HOME/jmxsh/` (defaults to `~/.local/state/jmxsh/`), keeping your home directory clean
 
 ## Usage
 
