@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +24,7 @@ import org.cyclopsgroup.jmxterm.io.InputStreamCommandInput;
 import org.cyclopsgroup.jmxterm.io.JlineCommandInput;
 import org.cyclopsgroup.jmxterm.io.PrintStreamCommandOutput;
 import org.cyclopsgroup.jmxterm.io.VerboseLevel;
+import org.cyclopsgroup.jmxterm.utils.XdgDirectories;
 import org.jline.reader.History;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
@@ -89,11 +93,10 @@ public class CliMain {
           input = new InputStreamCommandInput(System.in);
         } else {
           LineReaderImpl consoleReader = (LineReaderImpl) LineReaderBuilder.builder().build();
-          File historyFile = new File(System.getProperty("user.home"), ".jmxterm_history");
-          output.printMessage(
-              "Delete "
-                  + historyFile.getAbsolutePath()
-                  + " if you encounter error right after launching me.");
+          Path historyPath = XdgDirectories.INSTANCE.getHistoryFile();
+          migrateHistory(XdgDirectories.INSTANCE.getLegacyHistoryFile(), historyPath);
+          Files.createDirectories(historyPath.getParent());
+          File historyFile = historyPath.toFile();
           consoleReader.setVariable(LineReader.HISTORY_FILE, historyFile);
           History history = consoleReader.getHistory();
           history.load();
@@ -168,6 +171,17 @@ public class CliMain {
       }
     } finally {
       output.close();
+    }
+  }
+
+  /**
+   * Copies the legacy history file ({@code ~/.jmxterm_history}) to the XDG location if the legacy
+   * file exists and the target does not.
+   */
+  static void migrateHistory(Path legacyPath, Path xdgPath) throws IOException {
+    if (Files.isRegularFile(legacyPath) && !Files.exists(xdgPath)) {
+      Files.createDirectories(xdgPath.getParent());
+      Files.copy(legacyPath, xdgPath, StandardCopyOption.COPY_ATTRIBUTES);
     }
   }
 }
