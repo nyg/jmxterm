@@ -43,7 +43,7 @@
         <h3>Debian/Ubuntu</h3>
         <p>Add the repository and install:</p>
         <pre><code>curl -fsSL https://jmx.sh/apt/gpg.asc | sudo gpg --dearmor -o /usr/share/keyrings/jmxsh.gpg
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/jmxsh.gpg] https://jmx.sh/apt stable main" | sudo tee /etc/apt/sources.list.d/jmxsh.list
+echo "deb [signed-by=/usr/share/keyrings/jmxsh.gpg] https://jmx.sh/apt stable main" | sudo tee /etc/apt/sources.list.d/jmxsh.list
 sudo apt update &amp;&amp; sudo apt install jmxsh</code></pre>
       </div>
     </div>

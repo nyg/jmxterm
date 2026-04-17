@@ -229,8 +229,8 @@ jobs:
           apt-ftparchive packages pool/main > dists/stable/main/binary-all/Packages
           gzip -kf dists/stable/main/binary-all/Packages
 
-          # Copy to arch-specific dirs so apt finds packages on amd64/arm64 hosts
-          for arch in amd64 arm64; do
+          # Copy to arch-specific dirs so apt finds packages on amd64/arm64/i386 hosts
+          for arch in amd64 arm64 i386; do
             mkdir -p "dists/stable/main/binary-${arch}"
             cp dists/stable/main/binary-all/Packages "dists/stable/main/binary-${arch}/"
             cp dists/stable/main/binary-all/Packages.gz "dists/stable/main/binary-${arch}/"
