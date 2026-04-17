@@ -1,6 +1,17 @@
 # Changelog
 
 
+## [1.3.0](https://github.com/nyg/jmxsh/compare/v1.2.3..v1.3.0) - 2026-04-17
+
+### ⛰️  Features
+
+- [`60335ca`](https://github.com/nyg/jmxsh/commit/60335ca3731589c90c1d1a83500e25a0ccf51915) XDG Base Directory compliance for command history ([#41](https://github.com/nyg/jmxsh/issues/41))
+- [`3a646c4`](https://github.com/nyg/jmxsh/commit/3a646c4ff78d2d605b8d5795ba6ca44f3594f013) *(deps)* Migrate from JCLI to Picocli for argument parsing ([#38](https://github.com/nyg/jmxsh/issues/38))
+
+### ⚙️ Miscellaneous
+
+- [`58f9333`](https://github.com/nyg/jmxsh/commit/58f93332f2b5eb1d61219e5e76d61e9d1ddfae87) Add i386 architecture support to apt repository ([#43](https://github.com/nyg/jmxsh/issues/43))
+
 ## [1.2.3](https://github.com/nyg/jmxsh/compare/v1.2.2..v1.2.3) - 2026-04-11
 
 ### 🐛 Bug Fixes
